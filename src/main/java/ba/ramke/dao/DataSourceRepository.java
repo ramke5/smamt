@@ -12,7 +12,7 @@ public class DataSourceRepository {
 	private MongoTemplate mongoTemplate;
 	public static final String COLLECTION_NAME = "datasource";
 	
-	public void addPersonToCollection(DataSource ds) {
+	public void addUserToCollection(DataSource ds) {
 		mongoTemplate.insert(ds, COLLECTION_NAME);
 	}
 }

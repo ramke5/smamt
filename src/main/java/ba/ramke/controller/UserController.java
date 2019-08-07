@@ -32,7 +32,7 @@ public class UserController {
 		System.out.println(user.toString());
 		DataSource ds = new DataSource(user.getId());
 		userDao.addUser(user);
-		dataSourceDao.addPersonToCollection(ds);
+		dataSourceDao.addUserToCollection(ds);
 		return new RedirectView("/");
 	}
 

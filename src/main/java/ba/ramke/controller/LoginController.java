@@ -47,13 +47,18 @@ public class LoginController {
 		}
 	}
 	
+	@RequestMapping(value = "registration", method = RequestMethod.GET)
+	public String registration(ModelMap model) {
+		return "registration";
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ModelAndView login(@ModelAttribute User user, ModelMap model, HttpServletResponse response) throws NoSuchAlgorithmException, IOException {
 
 		User u = userDao.login(user.getName(), PasswordConversion.hashPassword(user.getPassword()));
 
 		if (u != null) {
-			ModelAndView modelAndView = new ModelAndView("homepage");
+			ModelAndView modelAndView = new ModelAndView("manage-categories");
 			modelAndView.addObject("username", u.getName());
 			modelAndView.addObject("userId", u.getId());
 			Cookie cookieUid = new Cookie("session", u.getId());
@@ -66,5 +71,16 @@ public class LoginController {
 		} else {
 			return new ModelAndView("login", "error", "Wrong username or password.");
 		}
+	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public void logout(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Cookie[] cookies = request.getCookies();
+		for (Cookie c : cookies) {
+			c.setMaxAge(0);
+			c.setValue("");
+			response.addCookie(c);
+		}
+		response.sendRedirect("/");
 	}
 }

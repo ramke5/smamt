@@ -19,7 +19,6 @@ public class UserRepository {
 	public MongoTemplate mongoTemplate;
 	public static final String COLLECTION_NAME = "user";
 
-	
 	public void addUser(User user) throws NoSuchAlgorithmException {
 		System.out.println("Adding user - start");
 		if (!mongoTemplate.collectionExists(User.class)) {
