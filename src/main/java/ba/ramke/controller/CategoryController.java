@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ba.ramke.dao.CategoryRepository;
+import ba.ramke.helper.Serialize;
 import ba.ramke.model.Category;
 
 @Controller
@@ -76,6 +77,14 @@ public class CategoryController {
 			modelAndView.addObject("username", username);
 			return modelAndView;
 		}
+	}
+	
+	@RequestMapping(value = "/sma/activecategories", method = RequestMethod.GET)
+	public @ResponseBody Serialize getAllActiveCategories(ModelMap model, @ModelAttribute("userId") String userId) {
+		Serialize serializedObj = new Serialize();
+		serializedObj.setElements(categoryDao.getAllCategoriesWithValidStatusByUserId(userId));
+		System.out.println("Obj is " + serializedObj.getElements());
+		return serializedObj;
 	}
 	
 	@RequestMapping(value = "/smamt/addcategory", method = RequestMethod.POST)

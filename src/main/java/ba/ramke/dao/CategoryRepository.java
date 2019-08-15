@@ -1,5 +1,6 @@
 package ba.ramke.dao;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +29,28 @@ public class CategoryRepository {
 		mongoTemplate.findAndModify(select, update, User.class);
 		
 		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
+		
+//		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
+//		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), "user");
 		System.out.println("Everything is ok. Collection is updated");
-		
-		
-		
-		
-		
+	}
+	
+	public List<User> getAllCategoriesWithValidStatusByUserId(String id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id).and("categories.categoryStatus").is(1).and("categories").elemMatch(Criteria.where("categoryStatus").is(1)));
+		List<User> user = mongoTemplate.find(query, User.class);
+		Iterator<User> personIterator = user.iterator();
+		while (personIterator.hasNext()) {
+			User u = personIterator.next();
+			Iterator<Category> categoryIterator = u.getCategories().iterator();
+			while (categoryIterator.hasNext()) {
+				Category category = categoryIterator.next();
+				if (category.categoryStatus == 0 || category.getCategoryName() == "") {
+					categoryIterator.remove();
+				}
+			}
+		}
+		return user;
 	}
 	
 }
-
-
-
-//public void addCategoriesToUser(String id, List<Category> category) throws UnknownHostException {
-//	Object[] categories = category.toArray();
-//	BasicDBObject setNewFieldQuery = new BasicDBObject().append("$set", new BasicDBObject().append("categories", categories));
-//	MongoClient mc = new MongoClient();
-//	mc.getDB("smamt").getCollection("user").update(new BasicDBObject().append("_id", id), setNewFieldQuery);
-//	DB db = mc.getDB("smamt");
-//	DBCollection collection = db.getCollection("user");
-//	String test = collection.findOne().get("categories").toString();
-//	System.out.println("Test: " + test);
-////	mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
-//	System.out.println("Everything is ok. Collection is updated");
-//}
