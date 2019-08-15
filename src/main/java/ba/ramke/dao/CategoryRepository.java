@@ -21,17 +21,8 @@ public class CategoryRepository {
 	
 	public void addCategoriesToUser(String id, List<Category> category) {
 		
-		Object[] categories = category.toArray();
-		
-		Query select = Query.query(Criteria.where("firstName").is("Ramiz"));
-		Update update = new Update();
-		update.set("lastName", "novooo");
-		mongoTemplate.findAndModify(select, update, User.class);
-		
-		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
-		
-//		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
-//		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), "user");
+		Object[] categories = category.toArray();	
+		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().push("categories", categories),  User.class);
 		System.out.println("Everything is ok. Collection is updated");
 	}
 	

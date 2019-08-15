@@ -31,9 +31,6 @@ public class UserRepository {
 
 		String password = PasswordConversion.hashPassword(user.getPassword());
 		user.setPassword(password);
-		
-		//Setting initial category
-		user = setInitialCategory(user);
 
 		mongoTemplate.insert(user, COLLECTION_NAME);
 	}
@@ -58,19 +55,6 @@ public class UserRepository {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(string));
 		return mongoTemplate.find(query, User.class);
-	}
-	
-	private User setInitialCategory(User user) {
-		String categoryId = UUID.randomUUID().toString();
-		String categoryName = "initialCategory";
-		int categoryStatus = 1;
-		
-		Category initCategory = new Category(categoryId, categoryName, categoryStatus);
-		List<Category> categories = new ArrayList<Category>();
-		categories.add(initCategory);
-		user.setCategories(categories);
-		
-		return user;
 	}
 	
 }
