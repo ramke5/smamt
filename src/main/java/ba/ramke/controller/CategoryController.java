@@ -1,9 +1,6 @@
 package ba.ramke.controller;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -79,7 +76,7 @@ public class CategoryController {
 		}
 	}
 	
-	@RequestMapping(value = "/sma/activecategories", method = RequestMethod.GET)
+	@RequestMapping(value = "/smamt/activecategories", method = RequestMethod.GET)
 	public @ResponseBody Serialize getAllActiveCategories(ModelMap model, @ModelAttribute("userId") String userId) {
 		Serialize serializedObj = new Serialize();
 		serializedObj.setElements(categoryDao.getAllCategoriesWithValidStatusByUserId(userId));
@@ -90,20 +87,9 @@ public class CategoryController {
 	@RequestMapping(value = "/smamt/addcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public void addCategory(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("categoryName") String categoryName) throws UnknownHostException {
-
-		List<Category> categories = new ArrayList<Category>();
-
-		if (categoryName.length() != 0) {
-			List<String> rawCategories = Arrays.asList(categoryName.split(","));
-			for (String category : rawCategories) {
-				String trimedCategoryName = category.replaceAll("\\s", "");
-				categories.add(new Category(UUID.randomUUID().toString(), trimedCategoryName, 1));
-			}
-			categoryDao.addCategoriesToUser(userId, categories);
-		} else {
-			System.out.println("Empty");
-			modelMap.put("error", "Please fill field");
-		}
+		
+		Category cat = new Category(UUID.randomUUID().toString(), categoryName, 1);
+		categoryDao.addCategoryToUser(userId, cat);
 	}
 
 }

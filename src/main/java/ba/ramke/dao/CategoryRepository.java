@@ -19,12 +19,13 @@ public class CategoryRepository {
 	@Autowired
 	public MongoTemplate mongoTemplate;
 	
-	public void addCategoriesToUser(String id, List<Category> category) {
+	public void addCategoryToUser(String id, Category category) {
 		
-		Object[] categories = category.toArray();	
-		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().push("categories", categories),  User.class);
+		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().push("categories", category),  User.class);
 		System.out.println("Everything is ok. Collection is updated");
-	}
+	}	
+	
+	
 	
 	public List<User> getAllCategoriesWithValidStatusByUserId(String id) {
 		Query query = new Query();
