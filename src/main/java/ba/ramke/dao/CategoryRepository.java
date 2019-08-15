@@ -27,7 +27,7 @@ public class CategoryRepository {
 		update.set("lastName", "novooo");
 		mongoTemplate.findAndModify(select, update, User.class);
 		
-//		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
+		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), new Update().pushAll("categories", categories), User.class);
 		System.out.println("Everything is ok. Collection is updated");
 		
 		

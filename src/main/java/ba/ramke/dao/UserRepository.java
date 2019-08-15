@@ -1,7 +1,9 @@
 package ba.ramke.dao;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import ba.ramke.helper.PasswordConversion;
+import ba.ramke.model.Category;
 import ba.ramke.model.User;
 
 @Repository
@@ -27,8 +30,10 @@ public class UserRepository {
 		}
 
 		String password = PasswordConversion.hashPassword(user.getPassword());
-
 		user.setPassword(password);
+		
+		//Setting initial category
+		user = setInitialCategory(user);
 
 		mongoTemplate.insert(user, COLLECTION_NAME);
 	}
@@ -54,4 +59,18 @@ public class UserRepository {
 		query.addCriteria(Criteria.where("_id").is(string));
 		return mongoTemplate.find(query, User.class);
 	}
+	
+	private User setInitialCategory(User user) {
+		String categoryId = UUID.randomUUID().toString();
+		String categoryName = "initialCategory";
+		int categoryStatus = 1;
+		
+		Category initCategory = new Category(categoryId, categoryName, categoryStatus);
+		List<Category> categories = new ArrayList<Category>();
+		categories.add(initCategory);
+		user.setCategories(categories);
+		
+		return user;
+	}
+	
 }
