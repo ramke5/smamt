@@ -33,7 +33,7 @@ public class UserController {
 		DataSource ds = new DataSource(user.getId());
 		userDao.addUser(user);
 		dataSourceDao.addUserToCollection(ds);
-		return new RedirectView("/");
+		return new RedirectView("/smamt");
 	}
 
 }
