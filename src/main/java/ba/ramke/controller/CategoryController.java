@@ -90,9 +90,14 @@ public class CategoryController {
 	@RequestMapping(value = "/smamt/addcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public void addCategory(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("categoryName") String categoryName) throws UnknownHostException {
-		
-		Category cat = new Category(UUID.randomUUID().toString(), categoryName, 1);
-		categoryDao.addCategoryToUser(userId, cat);
+		if (categoryName.length() != 0) {
+			Category cat = new Category(UUID.randomUUID().toString(), categoryName, 1);
+			categoryDao.addCategoryToUser(userId, cat);
+		}
+		else {
+			System.out.println("Empty");
+			modelMap.put("error", "Please fill field");
+		}
 	}
 	
 	@RequestMapping(value = "/smamt/categoryName", method = RequestMethod.POST)

@@ -1,5 +1,7 @@
 package ba.ramke.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 
 public class Category {
@@ -10,7 +12,7 @@ public class Category {
 	public String categoryId;
 	public String categoryName;
 	public int categoryStatus;
-//	public List<Keyword> keywords;
+	public List<Keyword> keywords;
 
 	public Category() {
 	}
@@ -21,12 +23,12 @@ public class Category {
 		this.categoryStatus = categoryStatus;
 	}
 
-//	public Category(String categoryId, String categoryName, int categoryStatus, List<Keyword> keywords) {
-//		this.categoryId = categoryId;
-//		this.categoryName = categoryName;
-//		this.categoryStatus = categoryStatus;
-//		this.keywords = keywords;
-//	}
+	public Category(String categoryId, String categoryName, int categoryStatus, List<Keyword> keywords) {
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+		this.categoryStatus = categoryStatus;
+		this.keywords = keywords;
+	}
 
 	public String getCategoryId() {
 		return categoryId;
@@ -52,13 +54,13 @@ public class Category {
 		this.categoryStatus = categoryStatus;
 	}
 
-//	public List<Keyword> getKeywords() {
-//		return keywords;
-//	}
-//
-//	public void setKeywords(List<Keyword> keywords) {
-//		this.keywords = keywords;
-//	}
+	public List<Keyword> getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(List<Keyword> keywords) {
+		this.keywords = keywords;
+	}
 
 	@Override
 	public String toString() {
