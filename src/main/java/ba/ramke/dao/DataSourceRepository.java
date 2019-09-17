@@ -29,6 +29,9 @@ public class DataSourceRepository {
 	public static final String APP_ID = "371307700457729";
 	public static final String APP_SECRET = "e2100b59c8d1eea3f802d25f83410098";
 	
+//	public static final String APP_ID = "404089976681963";
+//	public static final String APP_SECRET = "697326b1494f55535728cb5d4be9a69f";
+	
 	public void addUserToCollection(DataSource ds) {
 		mongoTemplate.insert(ds, COLLECTION_NAME);
 	}
@@ -62,7 +65,9 @@ public class DataSourceRepository {
 			System.out.println(token);
 			int index = url.lastIndexOf('/');
 			String pageName = url.substring(index + 1, url.length());
-			pageName = "https://www.facebook.com/Klix.ba/"; 
+//			pageName = "https://www.facebook.com/Klix.ba/"; 
+			pageName = "https://www.facebook.com/korda.ramiz"; 
+			
 			System.out.println(pageName);
 			if (newClient.fetchObject(pageName, Page.class) != null) {
 				addFacebookPage(userId, url, pageName);
@@ -75,28 +80,28 @@ public class DataSourceRepository {
 		}
 	}
 	
-//	public List<DataSource> getAllFacebookPagesWithValidStatusByUserId(String userId) {
-//		Query query = new Query();
-//		query.addCriteria(Criteria.where("_id").is(userId));
-//		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
-//		Iterator<DataSource> dataSourceIterator = datasource.iterator();
-//		while (dataSourceIterator.hasNext()) {
-//			DataSource ds = dataSourceIterator.next();
-//			System.out.println("Hamdija ga sejva " + ds.toString());
-//			if (ds.getFacebookPages() == null)
-//				break;
-//			else {
-//				Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
-//				while (dspIterator.hasNext()) {
-//					DataSourcePage dsp = dspIterator.next();
-//					if (dsp.getStatus() == 0) {
-//						dspIterator.remove();
-//					}
-//				}
-//			}
-//		}
-//		return datasource;
-//	}
+	public List<DataSource> getAllFacebookPagesWithValidStatusByUserId(String userId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(userId));
+		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
+		Iterator<DataSource> dataSourceIterator = datasource.iterator();
+		while (dataSourceIterator.hasNext()) {
+			DataSource ds = dataSourceIterator.next();
+			System.out.println("Hamdija ga sejva " + ds.toString());
+			if (ds.getFacebookPages() == null)
+				break;
+			else {
+				Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
+				while (dspIterator.hasNext()) {
+					DataSourcePage dsp = dspIterator.next();
+					if (dsp.getStatus() == 0) {
+						dspIterator.remove();
+					}
+				}
+			}
+		}
+		return datasource;
+	}
 
 //	public List<DataSource> getAllDeletedFacebookPagesByUserId(String userId) {
 //		Query query = new Query();

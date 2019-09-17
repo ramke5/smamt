@@ -1,5 +1,7 @@
 package ba.ramke.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +10,8 @@ public class DataSource {
 
 	@Id
 	public String userId;
-	String facebookPages;
+//	String facebookPages;
+	List<DataSourcePage> facebookPages;
 
 	public DataSource() {
 
@@ -19,7 +22,7 @@ public class DataSource {
 		this.userId = userId;
 	}
 
-	public DataSource(String userId, String facebookPages) {
+	public DataSource(String userId, List<DataSourcePage> facebookPages) {
 		super();
 		this.userId = userId;
 		this.facebookPages = facebookPages;
@@ -33,11 +36,19 @@ public class DataSource {
 		this.userId = userId;
 	}
 
-	public String getFacebookPages() {
+//	public String getFacebookPages() {
+//		return facebookPages;
+//	}
+//
+//	public void setFacebookPages(String facebookPages) {
+//		this.facebookPages = facebookPages;
+//	}
+	
+	public List<DataSourcePage> getFacebookPages() {
 		return facebookPages;
 	}
 
-	public void setFacebookPages(String facebookPages) {
+	public void setFacebookPages(List<DataSourcePage> facebookPages) {
 		this.facebookPages = facebookPages;
 	}
 

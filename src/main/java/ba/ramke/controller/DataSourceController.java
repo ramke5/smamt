@@ -70,11 +70,11 @@ public class DataSourceController {
 		dataSourceDao.restoreFacebookPageById(userId, pageId);
 	}
 	
-//	@RequestMapping(value = "/sma/facebookpages", method = RequestMethod.GET)
-//	@ResponseBody
-//	public List<DataSource> getActiveFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
-//		return dataSourceDao.getAllFacebookPagesWithValidStatusByUserId(userId);
-//	}
+	@RequestMapping(value = "/smamt/facebookpages", method = RequestMethod.GET)
+	@ResponseBody
+	public List<DataSource> getActiveFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
+		return dataSourceDao.getAllFacebookPagesWithValidStatusByUserId(userId);
+	}
 //
 //	@RequestMapping(value = "/sma/deletedfacebookpages", method = RequestMethod.GET)
 //	@ResponseBody
