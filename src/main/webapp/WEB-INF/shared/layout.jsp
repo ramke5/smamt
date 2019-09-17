@@ -43,7 +43,7 @@
         				<li ><a href="${home}active-categories">Manage Categories</a></li>
         			</ul>
         		</li>
-<%-- 				<li><a href="${home}datasources"><span class="glyphicon glyphicon-cloud"></span> My Pages</a></li> --%>
+				<li><a href="${home}datasources"><span class="glyphicon glyphicon-cloud"></span> My Pages</a></li>
 <%-- 				<li><a href="${home}feeds"><span class="glyphicon glyphicon-comment"></span> Feeds</a></li> --%>
 			</ul>
       		<ul class="nav navbar-nav navbar-right">
