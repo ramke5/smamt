@@ -1,6 +1,5 @@
 package ba.ramke.dao;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -41,8 +40,9 @@ public class DataSourceRepository {
 	}
 	
 	public void addFacebookPage(String userId, String url, String pageName) {
-		List<DataSourcePage> page = Arrays.asList(new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded"));
-		Object[] newPage = page.toArray();
+//		List<DataSourcePage> page = Arrays.asList(new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded"));
+//		Object[] newPage = page.toArray();
+		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded");
 		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("facebookPages", newPage), COLLECTION_NAME);
 		System.out.println("Everything is ok. Collection is updated");
 	}
@@ -103,22 +103,22 @@ public class DataSourceRepository {
 		return datasource;
 	}
 
-//	public List<DataSource> getAllDeletedFacebookPagesByUserId(String userId) {
-//		Query query = new Query();
-//		query.addCriteria(Criteria.where("_id").is(userId));
-//		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
-//		Iterator<DataSource> dataSourceIterator = datasource.iterator();
-//		while (dataSourceIterator.hasNext()) {
-//			DataSource ds = dataSourceIterator.next();
-//			Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
-//			while (dspIterator.hasNext()) {
-//				DataSourcePage dsp = dspIterator.next();
-//				System.out.println(dsp.name);
-//				if (dsp.getStatus() == 1) {
-//					dspIterator.remove();
-//				}
-//			}
-//		}
-//		return datasource;
-//	}
+	public List<DataSource> getAllDeletedFacebookPagesByUserId(String userId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(userId));
+		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
+		Iterator<DataSource> dataSourceIterator = datasource.iterator();
+		while (dataSourceIterator.hasNext()) {
+			DataSource ds = dataSourceIterator.next();
+			Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
+			while (dspIterator.hasNext()) {
+				DataSourcePage dsp = dspIterator.next();
+				System.out.println(dsp.name);
+				if (dsp.getStatus() == 1) {
+					dspIterator.remove();
+				}
+			}
+		}
+		return datasource;
+	}
 }

@@ -75,11 +75,11 @@ public class DataSourceController {
 	public List<DataSource> getActiveFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
 		return dataSourceDao.getAllFacebookPagesWithValidStatusByUserId(userId);
 	}
-//
-//	@RequestMapping(value = "/sma/deletedfacebookpages", method = RequestMethod.GET)
-//	@ResponseBody
-//	public List<DataSource> getDeletedFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
-//		return dataSourceDao.getAllDeletedFacebookPagesByUserId(userId);
-//	}
+
+	@RequestMapping(value = "/smamt/deletedfacebookpages", method = RequestMethod.GET)
+	@ResponseBody
+	public List<DataSource> getDeletedFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
+		return dataSourceDao.getAllDeletedFacebookPagesByUserId(userId);
+	}
 
 }

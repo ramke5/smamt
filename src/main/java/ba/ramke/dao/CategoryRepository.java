@@ -27,8 +27,6 @@ public class CategoryRepository {
 		System.out.println("Everything is ok. Collection is updated");
 	}	
 	
-	
-	
 	public List<User> getAllCategoriesWithValidStatusByUserId(String id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id).and("categories.categoryStatus").is(1).and("categories").elemMatch(Criteria.where("categoryStatus").is(1)));

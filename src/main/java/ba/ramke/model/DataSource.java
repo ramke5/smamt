@@ -10,8 +10,7 @@ public class DataSource {
 
 	@Id
 	public String userId;
-//	String facebookPages;
-	List<DataSourcePage> facebookPages;
+	public List<DataSourcePage> facebookPages;
 
 	public DataSource() {
 
@@ -35,14 +34,6 @@ public class DataSource {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-//	public String getFacebookPages() {
-//		return facebookPages;
-//	}
-//
-//	public void setFacebookPages(String facebookPages) {
-//		this.facebookPages = facebookPages;
-//	}
 	
 	public List<DataSourcePage> getFacebookPages() {
 		return facebookPages;

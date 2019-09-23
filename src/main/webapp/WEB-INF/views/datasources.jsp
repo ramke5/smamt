@@ -17,7 +17,7 @@
 		Add Page
 		</button>
 	<div class="btn-group">
-  		<button class="btn btn-primary btn-sm">Facebook</button>
+<!--   		<button class="btn btn-primary btn-sm">Facebook</button> -->
     	<button onclick="populateTableWithActiveFacebookPages()" type="button" class="btn btn-success btn-sm">Active Pages</button>
     	<button onclick="populateTableWithDeletedFacebookPages()" type="button" class="btn btn-danger btn-sm">Deleted Pages</button>
  	</div>
