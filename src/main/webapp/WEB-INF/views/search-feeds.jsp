@@ -55,7 +55,7 @@
 			$
 					.ajax({
 						type : "GET",
-						url : "${home}search-feedk?userId=${userId}&keyword=dodik&skip=0",
+						url : "${home}search-feedk?userId=${userId}&keyword=Fudbal&skip=0",
 						success : function(data) {
 							showSearchedFeeds(data);
 						},
