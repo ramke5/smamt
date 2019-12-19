@@ -179,7 +179,7 @@
 		var pageUrl = $("#page").val();
 		$.ajax({
 			type : "POST",
-			url : "${home}addfacebookpage?userId=${userId}&pageUrl=" + pageUrl,
+			url : "${home}addtwitteraccount?userId=${userId}&pageUrl=" + pageUrl,
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
@@ -204,7 +204,7 @@
 			if (this.id == 'btnDeletePage') {
 			$.ajax({
 				type : "POST",
-				url : "${home}deletefbpage?userId=${userId}&pageId=" + id,
+				url : "${home}deletetwitteraccount?userId=${userId}&pageId=" + id,
 				timeout : 100000,
 				success : function(data) {
 				$('#deletePageModal').modal('hide');

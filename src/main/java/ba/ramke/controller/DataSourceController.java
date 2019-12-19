@@ -50,18 +50,18 @@ public class DataSourceController {
 		}
 	}
 	
-	@RequestMapping(value = "/smamt/addfacebookpage", method = RequestMethod.POST)
+	@RequestMapping(value = "/smamt/addtwitteraccount", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> addFacebookPage(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageUrl") String pageUrl) throws Exception {
-		if (dataSourceDao.isFacebookPageValid(userId, pageUrl) == false)
-			return new ResponseEntity<String>("hamdija", HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<String>("beca", HttpStatus.OK);
+	public ResponseEntity<String> addTwitterAccount(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageUrl") String pageUrl) throws Exception {
+		if (dataSourceDao.isTwitterAccountValid(userId, pageUrl) == false)
+			return new ResponseEntity<String>("badRequest", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("goodRequest", HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/smamt/deletefbpage", method = RequestMethod.POST)
+	@RequestMapping(value = "/smamt/deletetwitteraccount", method = RequestMethod.POST)
 	@ResponseBody
-	public void deleteFacebookPage(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageId") String pageId) {
-		dataSourceDao.deleteFacebookPageById(userId, pageId);
+	public void deleteTwitterAccount(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageId") String pageId) {
+		dataSourceDao.deleteTwitterAccountById(userId, pageId);
 	}
 
 	@RequestMapping(value = "/smamt/restorefbpage", method = RequestMethod.POST)

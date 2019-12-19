@@ -19,6 +19,10 @@ import com.restfb.types.Page;
 
 import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+import twitter4j.conf.ConfigurationBuilder;
 
 @Repository
 public class DataSourceRepository {
@@ -28,8 +32,12 @@ public class DataSourceRepository {
 	public static final String APP_ID = "371307700457729";
 	public static final String APP_SECRET = "e2100b59c8d1eea3f802d25f83410098";
 	
-//	public static final String APP_ID = "404089976681963";
-//	public static final String APP_SECRET = "697326b1494f55535728cb5d4be9a69f";
+	private static final String Twitter_API_key = "aZ6BgT892x8Xg3qPB8lk6y16H";
+	private static final String Twitter_API_secret_key = "mMR2AoQww0rB8HdzcJmU97mDNABQvDVpJUjGGd0HPxEFdkh9aX";
+	private static final String Twitter_API_access_token = "1144923975241392129-mgPNdmimWsnBVgUrHn7wFArXORuZBp";
+	private static final String Twitter_API_access_token_secret = "6rdaqWaucP6jSSdOvQw3c0Jrp22DN6CuLOD70tsozDwSN";
+
+	
 	
 	public void addUserToCollection(DataSource ds) {
 		mongoTemplate.insert(ds, COLLECTION_NAME);
@@ -39,15 +47,13 @@ public class DataSourceRepository {
 		mongoTemplate.remove(ds, COLLECTION_NAME);
 	}
 	
-	public void addFacebookPage(String userId, String url, String pageName) {
-//		List<DataSourcePage> page = Arrays.asList(new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded"));
-//		Object[] newPage = page.toArray();
+	public void addTwitterAccount(String userId, String url, String pageName) {
 		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded");
 		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("facebookPages", newPage), COLLECTION_NAME);
 		System.out.println("Everything is ok. Collection is updated");
 	}
 	
-	public void deleteFacebookPageById(String userId, String pageId) {
+	public void deleteTwitterAccountById(String userId, String pageId) {
 		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
 		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.status", 0), DataSource.class, COLLECTION_NAME);
 	}
@@ -57,27 +63,34 @@ public class DataSourceRepository {
 		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.status", 1), DataSource.class, COLLECTION_NAME);
 	}
 	
-	public boolean isFacebookPageValid(String userId, String url) {
-		AccessToken token = new DefaultFacebookClient(Version.LATEST).obtainAppAccessToken(APP_ID, APP_SECRET);
-		FacebookClient newClient = new DefaultFacebookClient(token.getAccessToken(), Version.LATEST);
+	public boolean isTwitterAccountValid(String userId, String url) {
 		try {
-			System.out.println("BECIR TOKEN");
-			System.out.println(token);
+			System.out.println("in: isTwitterAccountValid");
 			int index = url.lastIndexOf('/');
-			String pageName = url.substring(index + 1, url.length());
-//			pageName = "https://www.facebook.com/Klix.ba/"; 
-			pageName = "https://www.facebook.com/korda.ramiz"; 
+			String accountName = url.substring(index + 1, url.length());
 			
-			System.out.println(pageName);
-			if (newClient.fetchObject(pageName, Page.class) != null) {
-				addFacebookPage(userId, url, pageName);
-				return true;
-			} else
+			ConfigurationBuilder cb = new ConfigurationBuilder();
+			cb.setDebugEnabled(true)
+			  .setOAuthConsumerKey(Twitter_API_key)
+			  .setOAuthConsumerSecret(Twitter_API_secret_key)
+			  .setOAuthAccessToken(Twitter_API_access_token)
+			  .setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
+			TwitterFactory taf = new TwitterFactory(cb.build());
+			Twitter twitter = taf.getInstance();
+			
+			try {
+				User us = twitter.showUser(accountName);
+				System.out.println("Account: " + us.getName() + " is valid!");
+				addTwitterAccount(userId, url, accountName);
+			} catch (Exception e) {
+				System.out.println("This is not an account. Please give valid link to Twitter account.");
 				return false;
+			}
 		} catch (Exception e) {
-			System.out.println("This is not a page. Please give valid link to facebook page.");
+			System.out.println("This is not an account. Please give valid link to Twitter account.");
 			return false;
 		}
+		return true;
 	}
 	
 	public List<DataSource> getAllFacebookPagesWithValidStatusByUserId(String userId) {
