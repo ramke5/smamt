@@ -10,7 +10,7 @@ public class Feed {
 	@Id
 	public String id;
 	public String user_id;
-	public String feedId;
+	public Long feedId;
 	public String message;
 	public List<String> feedKeywords;
 	public Date dateOfCreation;
@@ -22,7 +22,7 @@ public class Feed {
 	public List<String> categoryId;
 	public List<String> criteriaId;
 
-	public Feed(String id, String user_id, String feedId, String message, List<String> feedKeywords, Date dateOfCreation, String url, String source, String type, String fb_userid, String userName, List<String> categoryId, List<String> criteriaId) {
+	public Feed(String id, String user_id, Long feedId, String message, List<String> feedKeywords, Date dateOfCreation, String url, String source, String type, String fb_userid, String userName, List<String> categoryId, List<String> criteriaId) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
@@ -55,11 +55,11 @@ public class Feed {
 		this.user_id = user_id;
 	}
 
-	public String getFeedId() {
+	public Long getFeedId() {
 		return feedId;
 	}
 
-	public void setFeedId(String feedId) {
+	public void setFeedId(Long feedId) {
 		this.feedId = feedId;
 	}
 

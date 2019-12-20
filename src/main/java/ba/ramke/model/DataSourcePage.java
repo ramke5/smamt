@@ -8,9 +8,9 @@ public class DataSourcePage {
 	public String url;
 	public String name;
 	public int status;
-	public String lastSavedFeedId;
+	public Long lastSavedFeedId;
 
-	public DataSourcePage(String pageId, String url, String name, int status, String lastSavedFeedId) {
+	public DataSourcePage(String pageId, String url, String name, int status, Long lastSavedFeedId) {
 		super();
 		this.pageId = pageId;
 		this.url = url;
@@ -51,11 +51,11 @@ public class DataSourcePage {
 		this.status = status;
 	}
 
-	public String getLastSavedFeedId() {
+	public Long getLastSavedFeedId() {
 		return lastSavedFeedId;
 	}
 
-	public void setLastSavedFeedId(String lastSavedFeedId) {
+	public void setLastSavedFeedId(Long lastSavedFeedId) {
 		this.lastSavedFeedId = lastSavedFeedId;
 	}
 

@@ -31,6 +31,7 @@ import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Feed;
 import twitter4j.Paging;
+import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -74,10 +75,16 @@ public class CategorizeEngine {
 	public void setMongoTemplate(MongoTemplate mongoTemplate2) {
 		mongoTemplate = mongoTemplate2;
 	}
+	
+	static void sleep(long ms) {
+	    try { Thread.sleep(ms); }
+	    catch(InterruptedException ex) { Thread.currentThread().interrupt(); }
+	    }
 		
 	public void categorize(DataSource user, Map<String, Map<String, String>> crawlCriteria) {
 		System.out.println("In method");
-		String lastCrawlFeedId = "";
+//		String lastCrawlFeedId = "";
+		Long lastCrawlFeedId = 0L;
 		List<String> feedKeywords = new ArrayList<String>();
 		List<Feed> feeds = new ArrayList<Feed>();
 		List<String> criteriId = new ArrayList<String>();
@@ -98,34 +105,33 @@ public class CategorizeEngine {
 			TwitterFactory taf = new TwitterFactory(cb.build());
 			Twitter twitter = taf.getInstance();
 			
+		    String screenName = "ramke5";
+
+			ArrayList<Status> statuses = new ArrayList<>();
 			int pageno = 1;
-		    String acc = "radiosarajevo";
-		    List<Status> statusS = new ArrayList<>();
-
-		    while (true) {
-		        try {
-		          int size = statusS.size(); 
-		          Paging page = new Paging(pageno++, 100);
-//		          statusS.addAll(twitter.getUserTimeline(acc, page));
-		          statusS = twitter.getUserTimeline(acc, page);
-
-		          //ONAKO SETAM NA 100
-//		          if (statuses.size() == size)
-		          if (statusS.size() == 100)
-		            break;
-		        }
-		        catch(TwitterException e) {
-		          e.printStackTrace();
-		        }
-		      }
-		      System.out.println("Total: "+statusS.size());
+			while(true) {
+			    try {
+			        System.out.println("getting tweets");
+			        int size = statuses.size(); // actual tweets count we got
+			        Paging page = new Paging(pageno, 200);
+			        statuses.addAll(twitter.getUserTimeline(screenName, page));
+			        System.out.println("total got : " + statuses.size());
+			        if (statuses.size() == size) { break; } // we did not get new tweets so we have done the job
+			        pageno++;
+			        sleep(1000); // 900 rqt / 15 mn <=> 1 rqt/s
+			        }
+			    catch (TwitterException e) {
+			        System.out.println(e.getErrorMessage());
+			        }
+			    } // while(true)
 
 		      
-			for (Status status : statusS) {
+			for (Status status : statuses) {
 				System.out.println(i + " feeds crawled ############################");
 					FacebookType feed = null;
 					if (j == 1) {
-						lastCrawlFeedId = feed.getId();
+						lastCrawlFeedId=status.getId();
+//						lastCrawlFeedId = feed.getId();
 						j++;
 					} else if (i == 2000) {
 						System.out.println(i + " FEEDS crawled. Stop");
@@ -136,14 +142,16 @@ public class CategorizeEngine {
 						i = 1;
 						j = 1;
 						continue mainLoop;
-					} else if (dsp.getLastSavedFeedId().equals(feed.getId())) {
+					} else if (dsp.getLastSavedFeedId().equals(status.getId())) {
 						System.out.println("We came to last crawled feed. Stop");
 						setLastCrawledFeed(user.getUserId(), dsp.getPageId(), lastCrawlFeedId);
 						i = 1;
 						j = 1;
 						continue mainLoop;
-					} else if (((Comment) feed).getMessage() != null) {
-						feedKeywords = getFeedKeywords(((Comment) feed).getMessage());
+					} else if (status.getText() != null) {
+//					} else if (((Comment) feed).getMessage() != null) {
+						feedKeywords = getFeedKeywords(status.getText());
+//						feedKeywords = getFeedKeywords(((Comment) feed).getMessage());
 						if (!feedKeywords.isEmpty()) {
 
 							for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
@@ -163,7 +171,7 @@ public class CategorizeEngine {
 							}
 
 							if (!criteriId.isEmpty()) {
-								feeds.add(new Feed(new UID().toString(), user.getUserId(), feed.getId(), ((Comment) feed).getMessage(), feedKeywords, ((Comment) feed).getCreatedTime(), "facebook.com/".concat(feed.getId()), dsp.getName(), "post", dsp.getName(), dsp.getName(), categoryId, criteriId));
+								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "facebook.com/"+(status.getId()), dsp.getName(), "post", dsp.getName(), dsp.getName(), categoryId, criteriId));
 								criteriId.toString();
 								criteriId = new ArrayList<String>();
 								categoryId = new ArrayList<String>();
@@ -171,53 +179,60 @@ public class CategorizeEngine {
 							} else {
 								categoryId.add("uncategorized");
 								criteriId.add("uncategorized");
-								feeds.add(new Feed(new UID().toString(), user.getUserId(), feed.getId(), ((Comment) feed).getMessage(), feedKeywords, ((Comment) feed).getCreatedTime(), "facebook.com/".concat(feed.getId()), dsp.getName(), "post", dsp.getPageId(), dsp.getName(), categoryId, criteriId));
+								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "facebook.com/"+(status.getId()), dsp.getName(), "post", dsp.getPageId(), dsp.getName(), categoryId, criteriId));
 								criteriId = new ArrayList<String>();
 								categoryId = new ArrayList<String>();
 								feedKeywords = new ArrayList<String>();
 							}
 						}
 					}
-
-					Connection<Comment> feedComments = fbClient.fetchConnection(feed.getId().concat("/comments"), Comment.class);
-					for (List<Comment> comments : feedComments) {
-						for (Comment comment : comments) {
-							if (comment.getMessage() != null) {
-								feedKeywords = getFeedKeywords(comment.getMessage());
-								if (!feedKeywords.isEmpty()) {
-									for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
-										for (Entry<String, String> ient : ent.getValue().entrySet()) {
-											for (String f : feedKeywords) {
-												if (f.equals(ient.getValue().toLowerCase())) {
-													if (categoryId.contains(ent.getKey())) {
-														criteriId.add(ient.getKey().toString());
-														continue;
-													} else {
-														categoryId.add(ent.getKey().toString());
-														criteriId.add(ient.getKey().toString());
-														continue;
-													}
-												}
-											}
-										}
-									}
-									if (!criteriId.isEmpty()) {
-										feeds.add(new Feed(new UID().toString(), user.getUserId(), comment.getId(), comment.getMessage(), feedKeywords, comment.getCreatedTime(), "facebook.com/".concat(comment.getId()), dsp.getName(), "comment", (comment.getFrom() == null) ? "N/A" : comment.getFrom().getId(), (comment.getFrom() == null) ? "N/A" : comment.getFrom().getName(), categoryId, criteriId));
-										criteriId = new ArrayList<String>();
-										categoryId = new ArrayList<String>();
-										feedKeywords = new ArrayList<String>();
-									} else {
-										categoryId.add("uncategorized");
-										criteriId.add("uncategorized");
-										feeds.add(new Feed(new UID().toString(), user.getUserId(), comment.getId(), comment.getMessage(), feedKeywords, comment.getCreatedTime(), "facebook.com/".concat(comment.getId()), dsp.getName(), "comment", (comment.getFrom() == null) ? "N/A" : comment.getFrom().getId(), (comment.getFrom() == null) ? "N/A" : comment.getFrom().getName(), categoryId, criteriId));
-										criteriId = new ArrayList<String>();
-										categoryId = new ArrayList<String>();
-										feedKeywords = new ArrayList<String>();
-									}
-								}
-							}
-						}
+					
+					try {
+						ResponseList<Status> retweet = twitter.getRetweets(status.getId());
+					} catch (TwitterException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+
+//					Connection<Comment> feedComments = fbClient.fetchConnection(feed.getId().concat("/comments"), Comment.class);
+//					for (List<Comment> comments : feedComments) {
+//						for (Comment comment : comments) {
+//							if (comment.getMessage() != null) {
+//								feedKeywords = getFeedKeywords(comment.getMessage());
+//								if (!feedKeywords.isEmpty()) {
+//									for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
+//										for (Entry<String, String> ient : ent.getValue().entrySet()) {
+//											for (String f : feedKeywords) {
+//												if (f.equals(ient.getValue().toLowerCase())) {
+//													if (categoryId.contains(ent.getKey())) {
+//														criteriId.add(ient.getKey().toString());
+//														continue;
+//													} else {
+//														categoryId.add(ent.getKey().toString());
+//														criteriId.add(ient.getKey().toString());
+//														continue;
+//													}
+//												}
+//											}
+//										}
+//									}
+//									if (!criteriId.isEmpty()) {
+//										feeds.add(new Feed(new UID().toString(), user.getUserId(), comment.getId(), comment.getMessage(), feedKeywords, comment.getCreatedTime(), "facebook.com/".concat(comment.getId()), dsp.getName(), "comment", (comment.getFrom() == null) ? "N/A" : comment.getFrom().getId(), (comment.getFrom() == null) ? "N/A" : comment.getFrom().getName(), categoryId, criteriId));
+//										criteriId = new ArrayList<String>();
+//										categoryId = new ArrayList<String>();
+//										feedKeywords = new ArrayList<String>();
+//									} else {
+//										categoryId.add("uncategorized");
+//										criteriId.add("uncategorized");
+//										feeds.add(new Feed(new UID().toString(), user.getUserId(), comment.getId(), comment.getMessage(), feedKeywords, comment.getCreatedTime(), "facebook.com/".concat(comment.getId()), dsp.getName(), "comment", (comment.getFrom() == null) ? "N/A" : comment.getFrom().getId(), (comment.getFrom() == null) ? "N/A" : comment.getFrom().getName(), categoryId, criteriId));
+//										criteriId = new ArrayList<String>();
+//										categoryId = new ArrayList<String>();
+//										feedKeywords = new ArrayList<String>();
+//									}
+//								}
+//							}
+//						}
+//					}
 					i++;
 				}
 			}
@@ -346,7 +361,13 @@ public class CategorizeEngine {
 		mongoTemplate.insert(d, COLLECTION_NAME_);
 	}
 
-	public void setLastCrawledFeed(String userId, String pageId, String feedId) {
+//	public void setLastCrawledFeed(String userId, String pageId, String feedId) {
+//		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
+//		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.lastSavedFeedId", feedId), DataSource.class, COLLECTION_NAME);
+//		System.out.println("OK");
+//	}
+	
+	public void setLastCrawledFeed(String userId, String pageId, Long feedId) {
 		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
 		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.lastSavedFeedId", feedId), DataSource.class, COLLECTION_NAME);
 		System.out.println("OK");

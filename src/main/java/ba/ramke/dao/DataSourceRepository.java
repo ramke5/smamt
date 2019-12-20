@@ -48,7 +48,7 @@ public class DataSourceRepository {
 	}
 	
 	public void addTwitterAccount(String userId, String url, String pageName) {
-		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, "recentlyAdded");
+		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, 123L);
 		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("facebookPages", newPage), COLLECTION_NAME);
 		System.out.println("Everything is ok. Collection is updated");
 	}
