@@ -178,7 +178,8 @@
 		<dependency>
 			<groupId>com.restfb</groupId>
 			<artifactId>restfb</artifactId>
-			<version>1.20.0</version>
+			<version>3.0.0</version>
+<!-- 			<version>1.20.0</version> -->
 		</dependency>
 
 		<!-- Test -->
@@ -188,6 +189,20 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency> 
+		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.10</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.twitter4j/twitter4j-core -->
+		<dependency>
+		    <groupId>org.twitter4j</groupId>
+		    <artifactId>twitter4j-core</artifactId>
+		    <version>4.0.7</version>
+		</dependency>
 	
 	</dependencies>
 

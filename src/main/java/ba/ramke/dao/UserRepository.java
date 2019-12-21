@@ -1,7 +1,9 @@
 package ba.ramke.dao;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import ba.ramke.helper.PasswordConversion;
+import ba.ramke.model.Category;
 import ba.ramke.model.User;
 
 @Repository
@@ -19,7 +22,6 @@ public class UserRepository {
 	public MongoTemplate mongoTemplate;
 	public static final String COLLECTION_NAME = "user";
 
-	
 	public void addUser(User user) throws NoSuchAlgorithmException {
 		System.out.println("Adding user - start");
 		if (!mongoTemplate.collectionExists(User.class)) {
@@ -28,7 +30,6 @@ public class UserRepository {
 		}
 
 		String password = PasswordConversion.hashPassword(user.getPassword());
-
 		user.setPassword(password);
 
 		mongoTemplate.insert(user, COLLECTION_NAME);
@@ -55,4 +56,5 @@ public class UserRepository {
 		query.addCriteria(Criteria.where("_id").is(string));
 		return mongoTemplate.find(query, User.class);
 	}
+	
 }

@@ -32,8 +32,8 @@ public class UserController {
 		System.out.println(user.toString());
 		DataSource ds = new DataSource(user.getId());
 		userDao.addUser(user);
-		dataSourceDao.addPersonToCollection(ds);
-		return new RedirectView("/");
+		dataSourceDao.addUserToCollection(ds);
+		return new RedirectView("/smamt");
 	}
 
 }

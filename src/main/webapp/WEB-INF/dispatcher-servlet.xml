@@ -41,50 +41,50 @@
 		<beans:property name="host" value="localhost" />
 	</beans:bean>
 	
-<!-- 	<beans:bean id="startScheduler" class="ba.ibu.edu.crawler.Scheduler"> -->
-<!-- 		<beans:property name="mongoTemplate" ref="mongoTemplate" /> -->
-<!-- 	</beans:bean> -->
+	<beans:bean id="startScheduler" class="ba.ramke.crawler.Scheduler">
+		<beans:property name="mongoTemplate" ref="mongoTemplate" />
+	</beans:bean>
 	
-	<!-- Quartz Scheduler Bean -->
-<!-- 	<beans:bean id="threadScheduler" -->
-<!-- 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
-<!-- 		<beans:property name="targetObject" ref="startScheduler" /> -->
-<!-- 		<beans:property name="targetMethod" value="startCrawler" /> -->
-<!-- 	</beans:bean> -->
+	<!--Quartz Scheduler Bean -->
+	<beans:bean id="threadScheduler"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<beans:property name="targetObject" ref="startScheduler" />
+		<beans:property name="targetMethod" value="startCrawler" />
+	</beans:bean>
 
-	<!-- Quartz Scheduler Bean Trigger -->
-<!-- 	<beans:bean id="threadTrigger" -->
-<!-- 		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"> -->
-<!-- 		<beans:property name="jobDetail" ref="threadScheduler" /> -->
-<!-- 		<beans:property name="startDelay" value="5000" /> -->
-<!-- 		<beans:property name="repeatInterval" value="80000000" /> -->
-<!-- 	</beans:bean> -->
+	<!--Quartz Scheduler Bean Trigger -->
+	<beans:bean id="threadTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<beans:property name="jobDetail" ref="threadScheduler" />
+		<beans:property name="startDelay" value="5000" />
+		<beans:property name="repeatInterval" value="80000000" />
+	</beans:bean>
 
-	<!-- Thread Pool Bean -->
-<!-- 	<beans:bean id="taskExecutor" -->
-<!-- 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"> -->
-<!-- 		<beans:property name="corePoolSize" value="5" /> -->
-<!-- 		<beans:property name="maxPoolSize" value="10" /> -->
-<!-- 		<beans:property name="waitForTasksToCompleteOnShutdown" -->
-<!-- 			value="true" /> -->
-<!-- 	</beans:bean> -->
+	<!--Thread Pool Bean -->
+	<beans:bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<beans:property name="corePoolSize" value="5" />
+		<beans:property name="maxPoolSize" value="10" />
+		<beans:property name="waitForTasksToCompleteOnShutdown"
+			value="true" />
+	</beans:bean>
 
-<!-- 	<beans:bean -->
-<!-- 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
-<!-- 		<beans:property name="jobDetails"> -->
-<!-- 			<beans:list> -->
-<!-- 				<beans:ref bean="threadScheduler" /> -->
-<!-- 			</beans:list> -->
-<!-- 		</beans:property> -->
+	<beans:bean
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<beans:property name="jobDetails">
+			<beans:list>
+				<beans:ref bean="threadScheduler" />
+			</beans:list>
+		</beans:property>
 
-<!-- 		<beans:property name="triggers"> -->
-<!-- 			<beans:list> -->
-<!-- 				<beans:ref bean="threadTrigger" /> -->
-<!-- 			</beans:list> -->
-<!-- 		</beans:property> -->
-<!-- 	</beans:bean> -->
+		<beans:property name="triggers">
+			<beans:list>
+				<beans:ref bean="threadTrigger" />
+			</beans:list>
+		</beans:property>
+	</beans:bean>
 
-	<!-- <beans:bean id="userDisp" class="ba.ibu.edu.crawler.Scheduler"></beans:bean> -->
+	<!--<beans:bean id="userDisp" class="ba.ramke.crawler.Scheduler"></beans:bean> -->
 
 	<!-- Use this post processor to translate any MongoExceptions thrown in 
 		@Repository annotated classes -->
