@@ -20,6 +20,7 @@ import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Feed;
 import twitter4j.Paging;
+import twitter4j.QueryResult;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -79,7 +80,7 @@ public class CategorizeEngine {
 			  .setOAuthAccessToken(Twitter_API_access_token)
 			  .setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
 			TwitterFactory taf = new TwitterFactory(cb.build());
-			Twitter twitter = taf.getInstance();
+			Twitter twitter = taf.getInstance();		
 			
 			ArrayList<Status> statuses = new ArrayList<>();
 			int pageno = 1;
@@ -132,7 +133,7 @@ public class CategorizeEngine {
 							}
 
 							if (!criteriId.isEmpty()) {
-								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "twitter.com/"+dsp.getName()+"/status/"+(status.getId()), dsp.getName(), "post", "twitter.com/"+dsp.getName(), dsp.getName(), categoryId, criteriId));
+								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "twitter.com/"+dsp.getName()+"/status/"+(status.getId()), dsp.getName(), "status", "twitter.com/"+dsp.getName(), dsp.getName(), categoryId, criteriId));
 								criteriId.toString();
 								criteriId = new ArrayList<String>();
 								categoryId = new ArrayList<String>();
@@ -140,7 +141,7 @@ public class CategorizeEngine {
 							} else {
 								categoryId.add("uncategorized");
 								criteriId.add("uncategorized");
-								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "twitter.com/"+dsp.getName()+"/status/"+(status.getId()), dsp.getName(), "post", "twitter.com/"+dsp.getName(), dsp.getName(), categoryId, criteriId));
+								feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(), feedKeywords, status.getCreatedAt(), "twitter.com/"+dsp.getName()+"/status/"+(status.getId()), dsp.getName(), "status", "twitter.com/"+dsp.getName(), dsp.getName(), categoryId, criteriId));
 								criteriId = new ArrayList<String>();
 								categoryId = new ArrayList<String>();
 								feedKeywords = new ArrayList<String>();
@@ -148,18 +149,16 @@ public class CategorizeEngine {
 						}
 					}
 					
-					try {
-						ResponseList<Status> retweet = twitter.getRetweets(status.getId());
-						System.out.println("OVO JE RETWEET: " + retweet);
-					} catch (TwitterException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
+					///COMMENTS-REPLIES
+					
+					ArrayList<Status> replies = getReplies (twitter, "DraganMektic", 1208121628598648833L);
+					System.out.println("replies " + replies);
+	
+					///
+					
 					i++;
 					if (i==statuses.size()) {
 						System.out.println(i + " FEEDS crawled. Stop");
-//						setLastCrawledFeed(user.getUserId(), dsp.getPageId(), lastCrawlFeedId);
 						if (feeds.size() != 0) {
 							setLastCrawledFeed(user.getUserId(), dsp.getPageId(), lastCrawlFeedId);
 							saveFeeds(feeds);
@@ -172,6 +171,29 @@ public class CategorizeEngine {
 				}
 			}
 		}
+	
+	public ArrayList<Status> getReplies(Twitter twitter, String screenName, long tweetID) {
+	    ArrayList<Status> replies = new ArrayList<>();
+
+	    try {
+	        twitter4j.Query query = new twitter4j.Query("to:" + screenName + " since_id:" + tweetID);
+	        QueryResult results;
+
+	        do {
+	            results = twitter.search(query);
+	            System.out.println("Results: " + results.getTweets().size());
+	            List<Status> tweets = results.getTweets();
+
+	            for (Status tweet : tweets) 
+	                if (tweet.getInReplyToStatusId() == tweetID)
+	                    replies.add(tweet);
+	        } while ((query = results.nextQuery()) != null);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return replies;
+	}
 
 
 	public List<String> getFeedKeywords(String message) {
