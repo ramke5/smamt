@@ -181,8 +181,7 @@
 
 					var userNameASpanHref = document.createElement("a");
 					userNameASpanHref.setAttribute("target", "_blank");
-					userNameASpanHref.setAttribute("href",
-							"https://www.facebook.com/" + feeds[i].fb_userid);
+					userNameASpanHref.setAttribute("href", "https://www." + feeds[i].fb_userid);
 
 					var iconSpan = document.createElement("span");
 					iconSpan.className = "glyphicon glyphicon-user";

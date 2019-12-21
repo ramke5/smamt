@@ -100,7 +100,7 @@ public class DataSourceRepository {
 		Iterator<DataSource> dataSourceIterator = datasource.iterator();
 		while (dataSourceIterator.hasNext()) {
 			DataSource ds = dataSourceIterator.next();
-			System.out.println("Hamdija ga sejva " + ds.toString());
+			System.out.println("in: getAllFacebookPagesWithValidStatusByUserId " + ds.toString());
 			if (ds.getFacebookPages() == null)
 				break;
 			else {

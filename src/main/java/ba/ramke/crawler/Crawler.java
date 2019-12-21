@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
 import ba.ramke.model.DataSource;
+import twitter4j.TwitterException;
 
 @Repository
 public class Crawler implements Runnable{
@@ -31,6 +32,11 @@ public class Crawler implements Runnable{
 		DataSource ds = fbDataSource.getValidFacebookPagesByUserId(user);
 		Map<String, Map<String, String>> categories = fbDataSource.getCrawlCategoriesByUserId(user);
 		System.out.println(categories.size());
-		ce.categorize(ds, categories);
+		try {
+			ce.categorize(ds, categories);
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
