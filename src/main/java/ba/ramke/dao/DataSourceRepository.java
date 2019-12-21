@@ -11,12 +11,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.FacebookClient.AccessToken;
-import com.restfb.Version;
-import com.restfb.types.Page;
-
 import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import twitter4j.Twitter;
