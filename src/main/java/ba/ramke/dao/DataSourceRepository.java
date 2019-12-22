@@ -11,12 +11,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.FacebookClient.AccessToken;
-import com.restfb.Version;
-import com.restfb.types.Page;
-
 import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import twitter4j.Twitter;
@@ -29,8 +23,6 @@ public class DataSourceRepository {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	public static final String COLLECTION_NAME = "datasource";
-	public static final String APP_ID = "371307700457729";
-	public static final String APP_SECRET = "e2100b59c8d1eea3f802d25f83410098";
 	
 	private static final String Twitter_API_key = "aZ6BgT892x8Xg3qPB8lk6y16H";
 	private static final String Twitter_API_secret_key = "mMR2AoQww0rB8HdzcJmU97mDNABQvDVpJUjGGd0HPxEFdkh9aX";
