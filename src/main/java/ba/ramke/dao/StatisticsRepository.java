@@ -43,7 +43,7 @@ public class StatisticsRepository {
 		User user = mongoTemplate.findOne(query, User.class);
 		Category category;
 		Iterator<Category> categoryIterator;
-		List<Categorized> categorized = new ArrayList<>();
+		List<Categorized> categorized = new ArrayList<Categorized>();
 		for (Categorized c : toRet) {
 			categoryIterator = user.getCategories().iterator();
 			while (categoryIterator.hasNext()) {
@@ -127,6 +127,7 @@ public class StatisticsRepository {
 					Aggregation.group(Fields.fields("day","hour")).count().as("occurences"),
 					Aggregation.sort(Direction.ASC, "_id.hour").and(Direction.ASC, "_id.day")
 				);
+						
 		System.out.println("QUERY ## " + aggregate.toString());
 		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", HeatMapResponse.class);
 		List<HeatMapResponse> aggregationResponse = result.getMappedResults();

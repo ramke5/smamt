@@ -8,37 +8,17 @@
 	<name>smamt</name>
 	<packaging>war</packaging>
 	<description>Project for Master Thesis</description>
-
 	<properties>
 		<java.version>1.8</java.version>
-		<org.springframework-version>4.0.6.RELEASE</org.springframework-version>
-		<org.spring-data-mongodb-version>2.2.3.RELEASE</org.spring-data-mongodb-version>
-		<org.aspectj-version>1.6.10</org.aspectj-version>
-		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 
 	<dependencies>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-data-mongodb</artifactId> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-test</artifactId> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 		    <groupId>org.eclipse.jetty</groupId> -->
-<!-- 		    <artifactId>jetty-server</artifactId> -->
-<!-- 	    </dependency> -->
-	    
+
 <!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
+			<version>5.1.5.RELEASE</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
@@ -50,25 +30,25 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
+			<version>5.1.5.RELEASE</version>
 		</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-tx</artifactId>
-            		<version>${org.springframework-version}</version>
+            		<version>5.1.5.RELEASE</version>
         	</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-context-support</artifactId>
-            		<version>${org.springframework-version}</version>
+            		<version>5.1.5.RELEASE</version>
         	</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-core</artifactId>
-            		<version>${org.springframework-version}</version>
+            		<version>5.1.5.RELEASE</version>
         	</dependency>
         	
         	<!-- Master page application -->
@@ -79,17 +59,24 @@
 		</dependency>
 
 		<!-- Spring Data for MongoDB-->	
-		<dependency>
-		    <groupId>org.springframework.data</groupId>
-        	<artifactId>spring-data-mongodb</artifactId>
-        	<version>${org.spring-data-mongodb-version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.springframework.data</groupId> -->
+<!--         	<artifactId>spring-data-mongodb</artifactId> -->
+<!--         	<version>1.6.1.RELEASE</version> -->
+<!-- 		</dependency> -->
+
+  <!-- Spring data mongodb -->
+  <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-mongodb</artifactId>
+      <version>1.8.2.RELEASE</version>
+  </dependency>
 		
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
+			<version>1.6.10</version>
 		</dependency>	
 
 		<!-- Jackson  -->
@@ -110,18 +97,18 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
+			<version>1.6.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
+			<version>1.6.6</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
+			<version>1.6.6</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -149,14 +136,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
 				
-		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -175,7 +160,6 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -189,8 +173,7 @@
 			<version>1.18.10</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.twitter4j/twitter4j-core -->
+				
 		<dependency>
 		    <groupId>org.twitter4j</groupId>
 		    <artifactId>twitter4j-core</artifactId>
@@ -201,10 +184,6 @@
 
 	<build>
 		<plugins>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.springframework.boot</groupId> -->
-<!-- 				<artifactId>spring-boot-maven-plugin</artifactId> -->
-<!-- 			</plugin> -->
 			<plugin>
 	  			<groupId>org.eclipse.jetty</groupId>
 			  	<artifactId>jetty-maven-plugin</artifactId>

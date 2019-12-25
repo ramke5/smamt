@@ -21,7 +21,6 @@ import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Feed;
 import twitter4j.Paging;
 import twitter4j.QueryResult;
-import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -206,7 +205,7 @@ public class CategorizeEngine {
 	}
 
 	private ArrayList<Status> getStatusesFromTwitter(DataSourcePage dsp, Twitter twitter) {
-		ArrayList<Status> statuses = new ArrayList<>();
+		ArrayList<Status> statuses = new ArrayList<Status>();
 		int pageno = 1;
 		while (true) {
 			try {
@@ -228,7 +227,7 @@ public class CategorizeEngine {
 	}
 
 	public ArrayList<Status> getReplies(Twitter twitter, String screenName, long tweetID) {
-		ArrayList<Status> replies = new ArrayList<>();
+		ArrayList<Status> replies = new ArrayList<Status>();
 
 		try {
 			twitter4j.Query query = new twitter4j.Query("to:" + screenName + " since_id:" + tweetID);
