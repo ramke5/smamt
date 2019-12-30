@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ba.ramke</groupId>
@@ -14,7 +15,7 @@
 
 	<dependencies>
 
-<!-- Spring -->
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -24,9 +25,10 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
+				</exclusion>
 			</exclusions>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -34,90 +36,78 @@
 		</dependency>
 
 		<dependency>
-            		<groupId>org.springframework</groupId>
-            		<artifactId>spring-tx</artifactId>
-            		<version>4.3.25.RELEASE</version>
-        	</dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>4.3.25.RELEASE</version>
+		</dependency>
 
 		<dependency>
-            		<groupId>org.springframework</groupId>
-            		<artifactId>spring-context-support</artifactId>
-            		<version>4.3.25.RELEASE</version>
-        	</dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.3.25.RELEASE</version>
+		</dependency>
 
 		<dependency>
-            		<groupId>org.springframework</groupId>
-            		<artifactId>spring-core</artifactId>
-            		<version>4.3.25.RELEASE</version>
-        	</dependency>
-        	
-        	<!-- Master page application -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>4.3.25.RELEASE</version>
+		</dependency>
+
+		<!-- Master page application -->
 		<dependency>
 			<groupId>opensymphony</groupId>
 			<artifactId>sitemesh</artifactId>
 			<version>2.4.2</version>
 		</dependency>
 
-		<!-- Spring Data for MongoDB-->	
-<!-- 		<dependency> -->
-<!-- 		    <groupId>org.springframework.data</groupId> -->
-<!--         	<artifactId>spring-data-mongodb</artifactId> -->
-<!--         	<version>1.6.1.RELEASE</version> -->
-<!-- 		</dependency> -->
+		<!-- Spring data mongodb -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.10.23.RELEASE</version>
+		</dependency>
 
-  <!-- Spring data mongodb -->
-  <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-mongodb</artifactId>
-      <version>1.10.23.RELEASE</version>
-  </dependency>
-		
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>1.6.10</version>
-		</dependency>	
-
-		<!-- Jackson  -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.codehaus.jackson</groupId> -->
-<!-- 			<artifactId>jackson-mapper-asl</artifactId> -->
-<!-- 			<version>1.9.13</version> -->
-<!-- 		</dependency> -->
-
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>2.9.10.1</version>
 		</dependency>
-	
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.10.1</version>
+		</dependency>
+
 		<!-- Quartz Sheduler -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
 			<version>2.2.2</version>
 		</dependency>
-		
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.6.6</version>
 			<scope>runtime</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.6</version>
 			<scope>runtime</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -148,19 +138,21 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-				
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -172,29 +164,29 @@
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
-		</dependency> 
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.10</version>
 			<scope>provided</scope>
 		</dependency>
-				
+
 		<dependency>
-		    <groupId>org.twitter4j</groupId>
-		    <artifactId>twitter4j-core</artifactId>
-		    <version>4.0.7</version>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>4.0.7</version>
 		</dependency>
-	
+
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-	  			<groupId>org.eclipse.jetty</groupId>
-			  	<artifactId>jetty-maven-plugin</artifactId>
-			  	<version>9.4.19.v20190610</version>			  	
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.19.v20190610</version>
 			</plugin>
 		</plugins>
 	</build>
