@@ -41,7 +41,7 @@ public class FeedRepository {
 
 	public List<Feed> searchFeedsByKeyword(String userId, String keyword, int skipFeeds) {
 		Query query = new Query().addCriteria(Criteria.where("user_id").is(userId).and("feedKeywords").is(keyword)).skip(skipFeeds).limit(200);
-		query.with(new Sort(Sort.Direction.DESC, "dateOfCreation"));
+		//		query.with(new Sort(Sort.Direction.DESC, "dateOfCreation"));
 		query.fields().exclude("_id").exclude("user_id").exclude("feedKeywords").exclude("type").exclude("categoryId").exclude("criteriaId");
 		List<Feed> feeds = mongoTemplate.find(query, Feed.class, COLLECTION_NAME);
 		if (feeds.isEmpty())
