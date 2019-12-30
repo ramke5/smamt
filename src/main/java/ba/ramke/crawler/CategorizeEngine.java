@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -99,8 +101,17 @@ public class CategorizeEngine {
 						for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 							for (Entry<String, String> ient : ent.getValue().entrySet()) {
 								for (String f : tweetKeywords) {
-									if (f.equals(ient.getValue().toLowerCase())) {
-										System.out.println("Tweet " + ient.getValue().toLowerCase());
+									Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
+									Integer noOfCharsInWord = f.length();
+									boolean similarWords = false;
+									if(noOfCharsDifferent<=2) {
+										similarWords=true;
+									}
+									else if(noOfCharsInWord>6 && noOfCharsDifferent<=3) {
+										similarWords=true;
+									}
+									if (similarWords==true) {
+										System.out.println("Tweet '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
 										if (categoryId.contains(ent.getKey())) {
 											criteriId.add(ient.getKey().toString());
 										} else {
@@ -146,8 +157,17 @@ public class CategorizeEngine {
 								for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 									for (Entry<String, String> ient : ent.getValue().entrySet()) {
 										for (String f : tweetKeywords) {
-											if (f.equals(ient.getValue().toLowerCase())) {
-												System.out.println("Tweet " + ient.getValue().toLowerCase());
+											Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
+											Integer noOfCharsInWord = f.length();
+											boolean similarWords = false;
+											if(noOfCharsDifferent<=2) {
+												similarWords=true;
+											}
+											else if(noOfCharsInWord>6 && noOfCharsDifferent<=3) {
+												similarWords=true;
+											}
+											if (similarWords==true) {
+												System.out.println("Comment '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
 												if (categoryId.contains(ent.getKey())) {
 													criteriId.add(ient.getKey().toString());
 												} else {
