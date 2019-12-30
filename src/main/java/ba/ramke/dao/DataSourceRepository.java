@@ -28,6 +28,7 @@ public class DataSourceRepository {
 	private static final String Twitter_API_secret_key = "mMR2AoQww0rB8HdzcJmU97mDNABQvDVpJUjGGd0HPxEFdkh9aX";
 	private static final String Twitter_API_access_token = "1144923975241392129-mgPNdmimWsnBVgUrHn7wFArXORuZBp";
 	private static final String Twitter_API_access_token_secret = "6rdaqWaucP6jSSdOvQw3c0Jrp22DN6CuLOD70tsozDwSN";
+	private static final Long Initial_Last_Saved_ID = 123L;
 
 	
 	
@@ -40,7 +41,7 @@ public class DataSourceRepository {
 	}
 	
 	public void addTwitterAccount(String userId, String url, String pageName) {
-		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, 123L);
+		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, Initial_Last_Saved_ID);
 		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("twitterPages", newPage), COLLECTION_NAME);
 		System.out.println("Everything is ok. Collection is updated");
 	}
