@@ -39,6 +39,7 @@ public class CategorizeEngine {
 	private static final String Twitter_API_secret_key = "mMR2AoQww0rB8HdzcJmU97mDNABQvDVpJUjGGd0HPxEFdkh9aX";
 	private static final String Twitter_API_access_token = "1144923975241392129-mgPNdmimWsnBVgUrHn7wFArXORuZBp";
 	private static final String Twitter_API_access_token_secret = "6rdaqWaucP6jSSdOvQw3c0Jrp22DN6CuLOD70tsozDwSN";
+	private static final Long Initial_Last_Saved_ID = 123L;
 
 	public CategorizeEngine() {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -78,11 +79,11 @@ public class CategorizeEngine {
 					.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
 			TwitterFactory taf = new TwitterFactory(cb.build());
 			Twitter twitter = taf.getInstance();
-
 			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);
-			lastCrawlTweetId = statuses.get(0).getId();
 
-			for (Status status : statuses) {
+			for (int counter=statuses.size(); counter != 0; counter--) {
+				Status status = statuses.get(counter-1);
+				lastCrawlTweetId = status.getId();
 				System.out.println(i + " tweets crawled ############################");
 				if (dsp.getLastSavedTweetId().equals(status.getId())) {
 					System.out.println("We came to last crawled tweet. Stop");
@@ -112,8 +113,8 @@ public class CategorizeEngine {
 						}
 
 						if (!criteriId.isEmpty()) {
-							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
-									tweetKeywords, status.getCreatedAt(),
+							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
+									status.getText(), tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
 									"status", "twitter.com/" + dsp.getName(), dsp.getName(), categoryId, criteriId));
 							criteriId.toString();
@@ -123,8 +124,8 @@ public class CategorizeEngine {
 						} else {
 							categoryId.add("uncategorized");
 							criteriId.add("uncategorized");
-							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
-									tweetKeywords, status.getCreatedAt(),
+							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
+									status.getText(), tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
 									"status", "twitter.com/" + dsp.getName(), dsp.getName(), categoryId, criteriId));
 							criteriId = new ArrayList<String>();
@@ -199,7 +200,6 @@ public class CategorizeEngine {
 					i = 1;
 					continue mainLoop;
 				}
-
 			}
 		}
 	}
@@ -210,8 +210,16 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 200);
-				statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
+				Paging page = new Paging(pageno, 100);
+				if(dsp.getLastSavedTweetId()==Initial_Last_Saved_ID) {
+					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
+				}
+				else {
+					// get from
+					Paging page2 = new Paging(pageno, dsp.getLastSavedTweetId());
+					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page2));
+				}
+				
 				int size = statuses.size();
 				System.out.println("total got : " + statuses.size());
 				if (statuses.size() == size) {
