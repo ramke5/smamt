@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.1.5.RELEASE</version>
+			<version>4.3.25.RELEASE</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
@@ -30,25 +30,25 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>5.1.5.RELEASE</version>
+			<version>4.3.25.RELEASE</version>
 		</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-tx</artifactId>
-            		<version>5.1.5.RELEASE</version>
+            		<version>4.3.25.RELEASE</version>
         	</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-context-support</artifactId>
-            		<version>5.1.5.RELEASE</version>
+            		<version>4.3.25.RELEASE</version>
         	</dependency>
 
 		<dependency>
             		<groupId>org.springframework</groupId>
             		<artifactId>spring-core</artifactId>
-            		<version>5.1.5.RELEASE</version>
+            		<version>4.3.25.RELEASE</version>
         	</dependency>
         	
         	<!-- Master page application -->
@@ -69,7 +69,7 @@
   <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-mongodb</artifactId>
-      <version>1.8.2.RELEASE</version>
+      <version>1.10.23.RELEASE</version>
   </dependency>
 		
 		<!-- AspectJ -->
@@ -80,10 +80,17 @@
 		</dependency>	
 
 		<!-- Jackson  -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.codehaus.jackson</groupId> -->
+<!-- 			<artifactId>jackson-mapper-asl</artifactId> -->
+<!-- 			<version>1.9.13</version> -->
+<!-- 		</dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.9.10.1</version>
 		</dependency>
 	
 		<!-- Quartz Sheduler -->
