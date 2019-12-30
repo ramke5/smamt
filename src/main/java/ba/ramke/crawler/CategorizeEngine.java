@@ -159,10 +159,13 @@ public class CategorizeEngine {
 											Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
 											Integer noOfCharsInWord = f.length();
 											boolean similarWords = false;
-											if(noOfCharsDifferent<=2) {
+											if(noOfCharsInWord<=5 && noOfCharsDifferent<=1) {
 												similarWords=true;
 											}
-											else if(noOfCharsInWord>6 && noOfCharsDifferent<=3) {
+											else if(noOfCharsInWord<=7 && noOfCharsDifferent<=2) {
+												similarWords=true;
+											}
+											else if(noOfCharsInWord>7 && noOfCharsDifferent<=3) {
 												similarWords=true;
 											}
 											if (similarWords==true) {
