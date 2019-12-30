@@ -181,7 +181,7 @@
 
 					var userNameASpanHref = document.createElement("a");
 					userNameASpanHref.setAttribute("target", "_blank");
-					userNameASpanHref.setAttribute("href", "https://www." + tweets[i].fb_userid);
+					userNameASpanHref.setAttribute("href", "https://www." + tweets[i].twitter_userid);
 
 					var iconSpan = document.createElement("span");
 					iconSpan.className = "glyphicon glyphicon-user";
