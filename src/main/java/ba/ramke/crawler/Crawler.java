@@ -12,7 +12,7 @@ import twitter4j.TwitterException;
 public class Crawler implements Runnable{
 	
 	private String user;
-	private FacebookDataSource fbDataSource;
+	private TwitterDataSource twitterDataSource;
 	private CategorizeEngine ce;
 	
 	public Crawler() {
@@ -20,8 +20,8 @@ public class Crawler implements Runnable{
 
 	public Crawler(MongoTemplate mongoTemplate, String user) {
 		this.user = user;
-		fbDataSource = new FacebookDataSource();
-		fbDataSource.setMongoTemplate(mongoTemplate);
+		twitterDataSource = new TwitterDataSource();
+		twitterDataSource.setMongoTemplate(mongoTemplate);
 		ce = new CategorizeEngine();
 		ce.setMongoTemplate(mongoTemplate);
 	}
@@ -29,8 +29,8 @@ public class Crawler implements Runnable{
 	@Override
 	public void run() {
 		System.out.println("Thread of " + user + " has been started");
-		DataSource ds = fbDataSource.getValidFacebookPagesByUserId(user);
-		Map<String, Map<String, String>> categories = fbDataSource.getCrawlCategoriesByUserId(user);
+		DataSource ds = twitterDataSource.getValidTwitterPagesByUserId(user);
+		Map<String, Map<String, String>> categories = twitterDataSource.getCrawlCategoriesByUserId(user);
 		System.out.println(categories.size());
 		try {
 			ce.categorize(ds, categories);

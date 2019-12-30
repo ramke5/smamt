@@ -41,18 +41,18 @@ public class DataSourceRepository {
 	
 	public void addTwitterAccount(String userId, String url, String pageName) {
 		DataSourcePage newPage = new DataSourcePage(UUID.randomUUID().toString(), url, pageName, 1, 123L);
-		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("facebookPages", newPage), COLLECTION_NAME);
+		mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(userId)), new Update().push("twitterPages", newPage), COLLECTION_NAME);
 		System.out.println("Everything is ok. Collection is updated");
 	}
 	
 	public void deleteTwitterAccountById(String userId, String pageId) {
-		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
-		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.status", 0), DataSource.class, COLLECTION_NAME);
+		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages").elemMatch(Criteria.where("_id").is(pageId)));
+		mongoTemplate.updateFirst(query, new Update().set("twitterPages.$.status", 0), DataSource.class, COLLECTION_NAME);
 	}
 
-	public void restoreFacebookPageById(String userId, String pageId) {
-		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
-		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.status", 1), DataSource.class, COLLECTION_NAME);
+	public void restoreTwitterPageById(String userId, String pageId) {
+		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages").elemMatch(Criteria.where("_id").is(pageId)));
+		mongoTemplate.updateFirst(query, new Update().set("twitterPages.$.status", 1), DataSource.class, COLLECTION_NAME);
 	}
 	
 	public boolean isTwitterAccountValid(String userId, String url) {
@@ -85,18 +85,18 @@ public class DataSourceRepository {
 		return true;
 	}
 	
-	public List<DataSource> getAllFacebookPagesWithValidStatusByUserId(String userId) {
+	public List<DataSource> getAllTwitterPagesWithValidStatusByUserId(String userId) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(userId));
 		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
 		Iterator<DataSource> dataSourceIterator = datasource.iterator();
 		while (dataSourceIterator.hasNext()) {
 			DataSource ds = dataSourceIterator.next();
-			System.out.println("in: getAllFacebookPagesWithValidStatusByUserId " + ds.toString());
-			if (ds.getFacebookPages() == null)
+			System.out.println("in: getAllTwitterPagesWithValidStatusByUserId " + ds.toString());
+			if (ds.getTwitterPages() == null)
 				break;
 			else {
-				Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
+				Iterator<DataSourcePage> dspIterator = ds.getTwitterPages().iterator();
 				while (dspIterator.hasNext()) {
 					DataSourcePage dsp = dspIterator.next();
 					if (dsp.getStatus() == 0) {
@@ -108,14 +108,14 @@ public class DataSourceRepository {
 		return datasource;
 	}
 
-	public List<DataSource> getAllDeletedFacebookPagesByUserId(String userId) {
+	public List<DataSource> getAllDeletedTwitterPagesByUserId(String userId) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(userId));
 		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
 		Iterator<DataSource> dataSourceIterator = datasource.iterator();
 		while (dataSourceIterator.hasNext()) {
 			DataSource ds = dataSourceIterator.next();
-			Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
+			Iterator<DataSourcePage> dspIterator = ds.getTwitterPages().iterator();
 			while (dspIterator.hasNext()) {
 				DataSourcePage dsp = dspIterator.next();
 				System.out.println(dsp.name);

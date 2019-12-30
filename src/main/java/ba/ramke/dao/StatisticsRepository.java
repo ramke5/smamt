@@ -35,7 +35,7 @@ public class StatisticsRepository {
 				Aggregation.group("categoryId").count().as("y"), 
 				Aggregation.project("y").and("name").previousOperation());
 
-		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedfeeds", Categorized.class);
+		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
 		List<Categorized> toRet = result.getMappedResults();
 
 		Query query = new Query();
@@ -69,7 +69,7 @@ public class StatisticsRepository {
 						Aggregation.group(Fields.fields().and("day").and("month").and("year")).count().as("count"),
 						Aggregation.sort(Direction.DESC,"year").and(Direction.DESC,"month").and(Direction.DESC,"day")
 						);
-		AggregationResults<DateAggregation> result = mongoTemplate.aggregate(agg, "categorizedfeeds", DateAggregation.class);
+		AggregationResults<DateAggregation> result = mongoTemplate.aggregate(agg, "categorizedtweets", DateAggregation.class);
 		List<DateAggregation> aggregationResponse = result.getMappedResults();
 		List<Categorized> dateAggregation = new ArrayList<Categorized>();
 		for(DateAggregation date : aggregationResponse){
@@ -87,7 +87,7 @@ public class StatisticsRepository {
 				Aggregation.sort(Direction.ASC, "day")
 				);
 		System.out.println(aggregate.toString());
-		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", DayAggregation.class);
+		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", DayAggregation.class);
 		List<DayAggregation> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 	}
@@ -101,7 +101,7 @@ public class StatisticsRepository {
 				Aggregation.sort(Direction.ASC, "hour")
 				//,Aggregation.limit(50000)
 				);
-		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", DayAggregation.class);
+		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", DayAggregation.class);
 		List<DayAggregation> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 	}
@@ -115,7 +115,7 @@ public class StatisticsRepository {
 				//,Aggregation.limit(10)
 				);
 		
-		AggregationResults<StringIntMap> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", StringIntMap.class);
+		AggregationResults<StringIntMap> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", StringIntMap.class);
 		List<StringIntMap> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 	}
@@ -129,7 +129,7 @@ public class StatisticsRepository {
 				);
 						
 		System.out.println("QUERY ## " + aggregate.toString());
-		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", HeatMapResponse.class);
+		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", HeatMapResponse.class);
 		List<HeatMapResponse> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 		
@@ -148,7 +148,7 @@ public class StatisticsRepository {
 				//,Aggregation.limit(20)
 				);
 		System.out.println("QUERY ## " + aggregate.toString());
-		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", HeatMapResponse.class);
+		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", HeatMapResponse.class);
 		List<HeatMapResponse> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 		
@@ -164,7 +164,7 @@ public class StatisticsRepository {
 				//,Aggregation.limit(10)
 				);
 		
-		AggregationResults<StringIntMap> result = mongoTemplate.aggregate(aggregate, "categorizedfeeds", StringIntMap.class);
+		AggregationResults<StringIntMap> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", StringIntMap.class);
 		List<StringIntMap> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 	}

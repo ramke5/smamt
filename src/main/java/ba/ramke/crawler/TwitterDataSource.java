@@ -20,25 +20,25 @@ import ba.ramke.model.Synonym;
 import ba.ramke.model.User;
 
 @Repository
-public class FacebookDataSource {
+public class TwitterDataSource {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	private final String COLLECTION_NAME = "datasource";
 
-	public FacebookDataSource() {
+	public TwitterDataSource() {
 
 	}
 
-	public DataSource getValidFacebookPagesByUserId(String userId) {
+	public DataSource getValidTwitterPagesByUserId(String userId) {
 
 		Query query = new Query(Criteria.where("_id").is(userId));
 		DataSource datasource = mongoTemplate.findOne(query, DataSource.class, COLLECTION_NAME);
-		if (datasource.getFacebookPages() == null)
+		if (datasource.getTwitterPages() == null)
 			return null;
 		else {
-			Iterator<DataSourcePage> dspIterator = datasource.getFacebookPages().iterator();
+			Iterator<DataSourcePage> dspIterator = datasource.getTwitterPages().iterator();
 			while (dspIterator.hasNext()) {
 				DataSourcePage dsp = dspIterator.next();
 				if (dsp.getStatus() == 0) {
@@ -49,9 +49,9 @@ public class FacebookDataSource {
 		return datasource;
 	}
 
-	public void setLastCrawledFeed(String userId, String pageId, String feedId) {
-		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
-		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.lastSavedFeedId", feedId), DataSource.class, COLLECTION_NAME);
+	public void setLastCrawledTweet(String userId, String pageId, String tweetId) {
+		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages").elemMatch(Criteria.where("_id").is(pageId)));
+		mongoTemplate.updateFirst(query, new Update().set("twitterPages.$.lastSavedTweetId", tweetId), DataSource.class, COLLECTION_NAME);
 	}
 
 	public Map<String, Map<String, String>> getCrawlCategoriesByUserId(String userId) {
@@ -110,17 +110,17 @@ public class FacebookDataSource {
 		return mainMap;
 	}
 
-	public List<DataSource> getAllUsersWithValidFacebookPages() {
+	public List<DataSource> getAllUsersWithValidTwitterPages() {
 
 		Query query = new Query();
 		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
 		Iterator<DataSource> dataSourceIterator = datasource.iterator();
 		while (dataSourceIterator.hasNext()) {
 			DataSource ds = dataSourceIterator.next();
-			if (ds.getFacebookPages() == null)
+			if (ds.getTwitterPages() == null)
 				break;
 			else {
-				Iterator<DataSourcePage> dspIterator = ds.getFacebookPages().iterator();
+				Iterator<DataSourcePage> dspIterator = ds.getTwitterPages().iterator();
 				while (dspIterator.hasNext()) {
 					DataSourcePage dsp = dspIterator.next();
 					if (dsp.getStatus() == 0) {
