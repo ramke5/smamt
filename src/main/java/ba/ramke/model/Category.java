@@ -6,8 +6,6 @@ import org.springframework.data.annotation.Id;
 
 public class Category {
 	
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	public String categoryId;
 	public String categoryName;

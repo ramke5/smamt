@@ -23,13 +23,13 @@
 
 	<div class="panel panel-default" id="mainContainer" style="width: 1100px; margin: 0 auto; margin-top: 20px;">
 		<div class="panel-heading" id="mainHeading" style="font-weight: bold;">
-			<span class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span> feeds <span class="label label-info" id="feedOccurences" style="float: right"></span>
+			<span class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span> tweets <span class="label label-info" id="tweetOccurences" style="float: right"></span>
 		</div>
 		<div class="panel-body" id="panelBody">
 			<table class="table" id="mainTable"></table>
 		</div>
 		<div class="panel-footer" id="panelFooter" style="height: 48px;">
-			<p id="moreFeeds" style="text-align: center;"></p>
+			<p id="moreTweets" style="text-align: center;"></p>
 		</div>
 	</div>
 
@@ -55,9 +55,9 @@
 			$
 					.ajax({
 						type : "GET",
-						url : "${home}search-feedk?userId=${userId}&keyword=Fudbal&skip=0",
+						url : "${home}search-tweetk?userId=${userId}&keyword=Fudbal&skip=0",
 						success : function(data) {
-							showSearchedFeeds(data);
+							showSearchedTweets(data);
 						},
 						error : function(e) {
 							alert("ERROR");
@@ -87,11 +87,11 @@
 			} else if (category.value == "") {
 				$.ajax({
 					type : "GET",
-					url : "${home}search-feedk?userId=${userId}&keyword="
+					url : "${home}search-tweetk?userId=${userId}&keyword="
 							+ keyword.value + "&skip=0",
 					success : function(data) {
 						document.getElementById("mainTable").innerHTML = '';
-						showSearchedFeeds(data);
+						showSearchedTweets(data);
 					},
 					error : function(e) {
 						alert("ERROR");
@@ -105,11 +105,11 @@
 			} else if (keyword.value == "") {
 				$.ajax({
 					type : "GET",
-					url : "${home}search-feedc?userId=${userId}&categoryId="
+					url : "${home}search-tweetc?userId=${userId}&categoryId="
 							+ category.value + "&skip=0",
 					success : function(data) {
 						document.getElementById("mainTable").innerHTML = '';
-						showSearchedFeeds(data);
+						showSearchedTweets(data);
 					},
 					error : function(e) {
 						alert("ERROR");
@@ -123,12 +123,12 @@
 			} else {
 				$.ajax({
 					type : "GET",
-					url : "${home}search-feedck?userId=${userId}&categoryId="
+					url : "${home}search-tweetck?userId=${userId}&categoryId="
 							+ category.value + "&keyword=" + keyword.value
 							+ "&skip=0",
 					success : function(data) {
 						document.getElementById("mainTable").innerHTML = '';
-						showSearchedFeeds(data);
+						showSearchedTweets(data);
 					},
 					error : function(e) {
 						alert("ERROR");
@@ -148,23 +148,23 @@
 		occurencesSpanLabel.className = "label label-info";
 		occurencesSpanLabel.style.cssFloat = 'right';
 
-		function showSearchedFeeds(feeds) {
+		function showSearchedTweets(tweets) {
 
-			var dateOfFeedCreation = new Date();
+			var dateOfTweetCreation = new Date();
 
 			occurencesSpanLabel.innerHTML = "";
 
 			var countRows = document.getElementById("mainTable").rows.length;
-			tblRows = countRows + feeds.length;
+			tblRows = countRows + tweets.length;
 
 			var mainPanelHeading = document.getElementById("mainHeading");
 			occurencesSpanLabel.appendChild(document.createTextNode(tblRows
-					+ " feeds"));
+					+ " tweets"));
 			mainPanelHeading.appendChild(occurencesSpanLabel);
 
-			if (feeds.length > 0) {
+			if (tweets.length > 0) {
 
-				for (var i = 0; i <= feeds.length; i++) {
+				for (var i = 0; i <= tweets.length; i++) {
 
 					var panelBody = document.getElementById("mainTable");
 					var tr = document.createElement("tr");
@@ -181,7 +181,7 @@
 
 					var userNameASpanHref = document.createElement("a");
 					userNameASpanHref.setAttribute("target", "_blank");
-					userNameASpanHref.setAttribute("href", "https://www." + feeds[i].fb_userid);
+					userNameASpanHref.setAttribute("href", "https://www." + tweets[i].twitter_userid);
 
 					var iconSpan = document.createElement("span");
 					iconSpan.className = "glyphicon glyphicon-user";
@@ -196,7 +196,7 @@
 					usernameSpanLabel.style.padding = '5px';
 					usernameSpanLabel.style.marginRight = "20px";
 					usernameSpanLabel.appendChild(document
-							.createTextNode(feeds[i].userName));
+							.createTextNode(tweets[i].userName));
 
 					userNameASpanHref.appendChild(iconSpan);
 					userNameASpanHref.appendChild(usernameSpanLabel);
@@ -207,7 +207,7 @@
 					var urlASpanHref = document.createElement("a");
 					urlASpanHref.setAttribute("target", "_blank");
 					urlASpanHref.setAttribute("href", "https://www."
-							+ feeds[i].url);
+							+ tweets[i].url);
 
 					var urlSpan = document.createElement("span");
 					urlSpan.className = "glyphicon glyphicon-send";
@@ -221,9 +221,9 @@
 					sourcNameSpan.className = "label";
 					sourcNameSpan.style.color = '#800000';
 					sourcNameSpan.appendChild(document
-							.createTextNode(feeds[i].source));
+							.createTextNode(tweets[i].source));
 
-					dateOfFeedCreation = new Date(feeds[i].dateOfCreation);
+					dateOfTweetCreation = new Date(tweets[i].dateOfCreation);
 
 					var dateSpan = document.createElement("span");
 					dateSpan.className = "label";
@@ -231,7 +231,7 @@
 					dateSpan.style.cssFloat = 'right';
 					dateSpan.style.padding = '5px';
 					dateSpan.appendChild(document
-							.createTextNode(dateOfFeedCreation.toString()
+							.createTextNode(dateOfTweetCreation.toString()
 									.slice(0, -16)));
 
 					urlASpanHref.appendChild(urlSpan);
@@ -249,7 +249,7 @@
 
 					var paragraphForMessage = document.createElement("p");
 					paragraphForMessage.appendChild(document
-							.createTextNode(feeds[i].message));
+							.createTextNode(tweets[i].message));
 
 					bodyOfInnerPanel.appendChild(paragraphForMessage);
 
@@ -266,7 +266,7 @@
 				occurencesSpanLabel.innerHTML = "";
 				var mainPanelHeading = document.getElementById("mainHeading");
 				occurencesSpanLabel.appendChild(document
-						.createTextNode(feeds.length + " feeds"));
+						.createTextNode(tweets.length + " tweets"));
 				mainPanelHeading.appendChild(occurencesSpanLabel);
 
 				var panelBody = document.getElementById("mainTable");
@@ -276,7 +276,7 @@
 				var paragraphForMessage = document.createElement("p");
 				paragraphForMessage
 						.appendChild(document
-								.createTextNode("There is no feeds for given parameters."));
+								.createTextNode("There is no tweets for given parameters."));
 
 				td.appendChild(paragraphForMessage);
 				tr.appendChild(td);
@@ -284,19 +284,19 @@
 			}
 		}
 
-		var pMoreFeeds = document.getElementById("moreFeeds");
+		var pMoreTweets = document.getElementById("moreTweets");
 
-		var aMoreFeeds = document.createElement("button");
-		aMoreFeeds.className = "btn btn-default";
-		aMoreFeeds.onclick = loadMoreFeeds;
+		var aMoreTweets = document.createElement("button");
+		aMoreTweets.className = "btn btn-default";
+		aMoreTweets.onclick = loadMoreTweets;
 
-		var spanMoreFeedsIcon = document.createElement("span");
-		spanMoreFeedsIcon.className = "glyphicon glyphicon-cloud-download";
+		var spanMoreTweetsIcon = document.createElement("span");
+		spanMoreTweetsIcon.className = "glyphicon glyphicon-cloud-download";
 
-		aMoreFeeds.appendChild(spanMoreFeedsIcon);
-		pMoreFeeds.appendChild(aMoreFeeds);
+		aMoreTweets.appendChild(spanMoreTweetsIcon);
+		pMoreTweets.appendChild(aMoreTweets);
 
-		function loadMoreFeeds() {
+		function loadMoreTweets() {
 			var keyword = document.getElementById("keyword");
 			var category = document.getElementById("category");
 			var skip = document.getElementById("mainTable").rows.length;
@@ -309,10 +309,10 @@
 				} else if (category.value == "") {
 					$.ajax({
 						type : "GET",
-						url : "${home}search-feedk?userId=${userId}&keyword="
+						url : "${home}search-tweetk?userId=${userId}&keyword="
 								+ keyword.value + "&skip=" + skip,
 						success : function(data) {
-							showSearchedFeeds(data);
+							showSearchedTweets(data);
 						},
 						error : function(e) {
 							alert("ERROR");
@@ -327,10 +327,10 @@
 					$
 							.ajax({
 								type : "GET",
-								url : "${home}search-feedc?userId=${userId}&categoryId="
+								url : "${home}search-tweetc?userId=${userId}&categoryId="
 										+ category.value + "&skip=" + skip,
 								success : function(data) {
-									showSearchedFeeds(data);
+									showSearchedTweets(data);
 								},
 								error : function(e) {
 									alert("ERROR");
@@ -345,12 +345,12 @@
 					$
 							.ajax({
 								type : "GET",
-								url : "${home}search-feedck?userId=${userId}&categoryId="
+								url : "${home}search-tweetck?userId=${userId}&categoryId="
 										+ category.value
 										+ "&keyword="
 										+ keyword.value + "&skip=" + skip,
 								success : function(data) {
-									showSearchedFeeds(data);
+									showSearchedTweets(data);
 								},
 								error : function(e) {
 									alert("ERROR");

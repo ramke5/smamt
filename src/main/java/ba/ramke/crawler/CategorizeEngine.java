@@ -18,7 +18,7 @@ import com.mongodb.BasicDBList;
 
 import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
-import ba.ramke.model.Feed;
+import ba.ramke.model.Tweet;
 import twitter4j.Paging;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -33,7 +33,7 @@ public class CategorizeEngine {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	private final String COLLECTION_NAME = "datasource";
-	private final String COLLECTION_NAME_ = "categorizedfeeds";
+	private final String COLLECTION_NAME_ = "categorizedtweets";
 
 	private static final String Twitter_API_key = "aZ6BgT892x8Xg3qPB8lk6y16H";
 	private static final String Twitter_API_secret_key = "mMR2AoQww0rB8HdzcJmU97mDNABQvDVpJUjGGd0HPxEFdkh9aX";
@@ -61,13 +61,13 @@ public class CategorizeEngine {
 
 	public void categorize(DataSource user, Map<String, Map<String, String>> crawlCriteria) throws TwitterException {
 		System.out.println("In method");
-		Long lastCrawlFeedId = 0L;
-		List<String> feedKeywords = new ArrayList<String>();
-		List<Feed> feeds = new ArrayList<Feed>();
+		Long lastCrawlTweetId = 0L;
+		List<String> tweetKeywords = new ArrayList<String>();
+		List<Tweet> tweets = new ArrayList<Tweet>();
 		List<String> criteriId = new ArrayList<String>();
 		List<String> categoryId = new ArrayList<String>();
 		int i = 0;
-		Iterator<DataSourcePage> dspIterator = user.getFacebookPages().iterator();
+		Iterator<DataSourcePage> dspIterator = user.getTwitterPages().iterator();
 		mainLoop: while (dspIterator.hasNext()) {
 			DataSourcePage dsp = dspIterator.next();
 			System.out.println(dsp.getName());
@@ -80,26 +80,26 @@ public class CategorizeEngine {
 			Twitter twitter = taf.getInstance();
 
 			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);
-			lastCrawlFeedId = statuses.get(0).getId();
+			lastCrawlTweetId = statuses.get(0).getId();
 
 			for (Status status : statuses) {
-				System.out.println(i + " feeds crawled ############################");
-				if (dsp.getLastSavedFeedId().equals(status.getId())) {
-					System.out.println("We came to last crawled feed. Stop");
-					if (feeds.size() != 0) {
-						setLastCrawledFeed(user.getUserId(), dsp.getPageId(), lastCrawlFeedId);
-						saveFeeds(feeds);
+				System.out.println(i + " tweets crawled ############################");
+				if (dsp.getLastSavedTweetId().equals(status.getId())) {
+					System.out.println("We came to last crawled tweet. Stop");
+					if (tweets.size() != 0) {
+						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
+						saveTweets(tweets);
 					}
 					i = 1;
 					continue mainLoop;
 				} else if (status.getText() != null) {
-					feedKeywords = getFeedKeywords(status.getText());
-					if (!feedKeywords.isEmpty()) {
+					tweetKeywords = getTweetKeywords(status.getText());
+					if (!tweetKeywords.isEmpty()) {
 						for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 							for (Entry<String, String> ient : ent.getValue().entrySet()) {
-								for (String f : feedKeywords) {
+								for (String f : tweetKeywords) {
 									if (f.equals(ient.getValue().toLowerCase())) {
-										System.out.println("Feed " + ient.getValue().toLowerCase());
+										System.out.println("Tweet " + ient.getValue().toLowerCase());
 										if (categoryId.contains(ent.getKey())) {
 											criteriId.add(ient.getKey().toString());
 										} else {
@@ -112,24 +112,24 @@ public class CategorizeEngine {
 						}
 
 						if (!criteriId.isEmpty()) {
-							feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
-									feedKeywords, status.getCreatedAt(),
+							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
+									tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
 									"status", "twitter.com/" + dsp.getName(), dsp.getName(), categoryId, criteriId));
 							criteriId.toString();
 							criteriId = new ArrayList<String>();
 							categoryId = new ArrayList<String>();
-							feedKeywords = new ArrayList<String>();
+							tweetKeywords = new ArrayList<String>();
 						} else {
 							categoryId.add("uncategorized");
 							criteriId.add("uncategorized");
-							feeds.add(new Feed(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
-									feedKeywords, status.getCreatedAt(),
+							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(), status.getText(),
+									tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
 									"status", "twitter.com/" + dsp.getName(), dsp.getName(), categoryId, criteriId));
 							criteriId = new ArrayList<String>();
 							categoryId = new ArrayList<String>();
-							feedKeywords = new ArrayList<String>();
+							tweetKeywords = new ArrayList<String>();
 						}
 					}
 
@@ -140,13 +140,13 @@ public class CategorizeEngine {
 
 					for (Status reply : replies) {
 						if (reply.getText() != null) {
-							feedKeywords = getFeedKeywords(reply.getText());
-							if (!feedKeywords.isEmpty()) {
+							tweetKeywords = getTweetKeywords(reply.getText());
+							if (!tweetKeywords.isEmpty()) {
 								for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 									for (Entry<String, String> ient : ent.getValue().entrySet()) {
-										for (String f : feedKeywords) {
+										for (String f : tweetKeywords) {
 											if (f.equals(ient.getValue().toLowerCase())) {
-												System.out.println("Feed " + ient.getValue().toLowerCase());
+												System.out.println("Tweet " + ient.getValue().toLowerCase());
 												if (categoryId.contains(ent.getKey())) {
 													criteriId.add(ient.getKey().toString());
 												} else {
@@ -159,26 +159,26 @@ public class CategorizeEngine {
 								}
 
 								if (!criteriId.isEmpty()) {
-									feeds.add(new Feed(new UID().toString(), user.getUserId(), reply.getId(),
-											reply.getText(), feedKeywords, reply.getCreatedAt(),
+									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
+											reply.getText(), tweetKeywords, reply.getCreatedAt(),
 											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
 											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
 											categoryId, criteriId));
 									criteriId.toString();
 									criteriId = new ArrayList<String>();
 									categoryId = new ArrayList<String>();
-									feedKeywords = new ArrayList<String>();
+									tweetKeywords = new ArrayList<String>();
 								} else {
 									categoryId.add("uncategorized");
 									criteriId.add("uncategorized");
-									feeds.add(new Feed(new UID().toString(), user.getUserId(), reply.getId(),
-											reply.getText(), feedKeywords, reply.getCreatedAt(),
+									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
+											reply.getText(), tweetKeywords, reply.getCreatedAt(),
 											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
 											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
 											categoryId, criteriId));
 									criteriId = new ArrayList<String>();
 									categoryId = new ArrayList<String>();
-									feedKeywords = new ArrayList<String>();
+									tweetKeywords = new ArrayList<String>();
 								}
 
 							}
@@ -190,12 +190,12 @@ public class CategorizeEngine {
 
 				i++;
 				if (i == statuses.size()) {
-					System.out.println(i + " FEEDS crawled. Stop");
-					if (feeds.size() != 0) {
-						setLastCrawledFeed(user.getUserId(), dsp.getPageId(), lastCrawlFeedId);
-						saveFeeds(feeds);
+					System.out.println(i + " TWEETS crawled. Stop");
+					if (tweets.size() != 0) {
+						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
+						saveTweets(tweets);
 					}
-					feeds = new ArrayList<Feed>();
+					tweets = new ArrayList<Tweet>();
 					i = 1;
 					continue mainLoop;
 				}
@@ -249,44 +249,44 @@ public class CategorizeEngine {
 		return replies;
 	}
 
-	public List<String> getFeedKeywords(String message) {
+	public List<String> getTweetKeywords(String message) {
 		String trimedMessage = message.replaceAll("\\p{P}", " ").toLowerCase().trim().replaceAll("(\\s)+", "$1")
 				.replaceAll("[\n\r]", "");
-		String[] feeds = trimedMessage.split(" ");
-		List<String> feedKeywords = new ArrayList<String>();
-		for (String s : feeds) {
-			if (s.length() > 3 && !feedKeywords.contains(s)) {
-				feedKeywords.add(s);
+		String[] tweets = trimedMessage.split(" ");
+		List<String> tweetKeywords = new ArrayList<String>();
+		for (String s : tweets) {
+			if (s.length() > 3 && !tweetKeywords.contains(s)) {
+				tweetKeywords.add(s);
 			}
 		}
-		return feedKeywords;
+		return tweetKeywords;
 	}
 
-	public void saveFeeds(List<Feed> feeds) {
+	public void saveTweets(List<Tweet> tweets) {
 		System.out.println("CALLED FOR INSERT");
 		BasicDBList d = new BasicDBList();
-		d.addAll(feeds);
+		d.addAll(tweets);
 		mongoTemplate.insert(d, COLLECTION_NAME_);
 	}
 
-//	public void setLastCrawledFeed(String userId, String pageId, String feedId) {
-//		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
-//		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.lastSavedFeedId", feedId), DataSource.class, COLLECTION_NAME);
+//	public void setLastCrawledTweet(String userId, String pageId, String tweetId) {
+//		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages").elemMatch(Criteria.where("_id").is(pageId)));
+//		mongoTemplate.updateFirst(query, new Update().set("twitterPages.$.lastSavedTweetId", tweetId), DataSource.class, COLLECTION_NAME);
 //		System.out.println("OK");
 //	}
 
-	public void setLastCrawledFeed(String userId, String pageId, Long feedId) {
+	public void setLastCrawledTweet(String userId, String pageId, Long tweetId) {
 		Query query = new Query(
-				Criteria.where("_id").is(userId).and("facebookPages").elemMatch(Criteria.where("_id").is(pageId)));
-		mongoTemplate.updateFirst(query, new Update().set("facebookPages.$.lastSavedFeedId", feedId), DataSource.class,
+				Criteria.where("_id").is(userId).and("twitterPages").elemMatch(Criteria.where("_id").is(pageId)));
+		mongoTemplate.updateFirst(query, new Update().set("twitterPages.$.lastSavedTweetId", tweetId), DataSource.class,
 				COLLECTION_NAME);
 		System.out.println("OK");
 	}
 
-	public DataSource getLastCrawlFeedId(String userId, String pageId) {
-		Query query = new Query(Criteria.where("_id").is(userId).and("facebookPages")
-				.elemMatch(Criteria.where("lastSavedFeedId").is(pageId)));
-		// query.fields().include("facebookPages.facebooklastSavedFeedId");
+	public DataSource getLastCrawlTweetId(String userId, String pageId) {
+		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages")
+				.elemMatch(Criteria.where("lastSavedTweetId").is(pageId)));
+		// query.fields().include("twitterPages.twitterlastSavedTweetId");
 		DataSource pg = mongoTemplate.findOne(query, DataSource.class, COLLECTION_NAME);
 		System.out.println("OK");
 		return pg;

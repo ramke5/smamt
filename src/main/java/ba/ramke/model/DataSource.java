@@ -10,7 +10,7 @@ public class DataSource {
 
 	@Id
 	public String userId;
-	public List<DataSourcePage> facebookPages;
+	public List<DataSourcePage> twitterPages;
 
 	public DataSource() {
 
@@ -21,10 +21,10 @@ public class DataSource {
 		this.userId = userId;
 	}
 
-	public DataSource(String userId, List<DataSourcePage> facebookPages) {
+	public DataSource(String userId, List<DataSourcePage> twitterPages) {
 		super();
 		this.userId = userId;
-		this.facebookPages = facebookPages;
+		this.twitterPages = twitterPages;
 	}
 
 	public String getUserId() {
@@ -35,12 +35,12 @@ public class DataSource {
 		this.userId = userId;
 	}
 	
-	public List<DataSourcePage> getFacebookPages() {
-		return facebookPages;
+	public List<DataSourcePage> getTwitterPages() {
+		return twitterPages;
 	}
 
-	public void setFacebookPages(List<DataSourcePage> facebookPages) {
-		this.facebookPages = facebookPages;
+	public void setTwitterPages(List<DataSourcePage> twitterPages) {
+		this.twitterPages = twitterPages;
 	}
 
 	@Override

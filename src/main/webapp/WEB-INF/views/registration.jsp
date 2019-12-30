@@ -31,7 +31,7 @@
 			<input type="password" name="password" id="password" placeholder="Password" required />
 			
 			<label id="icon" for="rpassword"><i class="icon-shield"></i></label> 
-			<input type="password" name="rpassword" id="rpassword" placeholder="Repete password" required />
+			<input type="password" name="rpassword" id="rpassword" placeholder="Repeat password" required />
 			
 			<button type="submit">Register</button>
 		</form>

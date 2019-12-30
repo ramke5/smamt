@@ -64,22 +64,22 @@ public class DataSourceController {
 		dataSourceDao.deleteTwitterAccountById(userId, pageId);
 	}
 
-	@RequestMapping(value = "/smamt/restorefbpage", method = RequestMethod.POST)
+	@RequestMapping(value = "/smamt/restoretwitterpage", method = RequestMethod.POST)
 	@ResponseBody
-	public void restoreFacebookPage(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageId") String pageId) {
-		dataSourceDao.restoreFacebookPageById(userId, pageId);
+	public void restoreTwitterPage(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageId") String pageId) {
+		dataSourceDao.restoreTwitterPageById(userId, pageId);
 	}
 	
-	@RequestMapping(value = "/smamt/facebookpages", method = RequestMethod.GET)
+	@RequestMapping(value = "/smamt/twitterpages", method = RequestMethod.GET)
 	@ResponseBody
-	public List<DataSource> getActiveFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
-		return dataSourceDao.getAllFacebookPagesWithValidStatusByUserId(userId);
+	public List<DataSource> getActiveTwitterPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
+		return dataSourceDao.getAllTwitterPagesWithValidStatusByUserId(userId);
 	}
 
-	@RequestMapping(value = "/smamt/deletedfacebookpages", method = RequestMethod.GET)
+	@RequestMapping(value = "/smamt/deletedtwitterpages", method = RequestMethod.GET)
 	@ResponseBody
-	public List<DataSource> getDeletedFacebookPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
-		return dataSourceDao.getAllDeletedFacebookPagesByUserId(userId);
+	public List<DataSource> getDeletedTwitterPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
+		return dataSourceDao.getAllDeletedTwitterPagesByUserId(userId);
 	}
 
 }

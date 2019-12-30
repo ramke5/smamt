@@ -10,7 +10,7 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default">
-			<div class="panel-heading">Feed occurrences per week day by hour</div>
+			<div class="panel-heading">Tweet occurrences per week day by hour</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div id="heatMapContainer"></div>
@@ -22,7 +22,7 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default">
-			<div class="panel-heading">Daily and hourly feeds</div>
+			<div class="panel-heading">Daily and hourly tweets</div>
 			<div class="panel-body">
 				<div class="col-xs-4">
 					<div id="dayContainer"></div>
@@ -36,7 +36,7 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default">
-			<div class="panel-heading">Overall feed occurrences</div>
+			<div class="panel-heading">Overall tweet occurrences</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div id="overalContainer"></div>
@@ -47,7 +47,7 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default">
-			<div class="panel-heading">Feed occurrences per category by date</div>
+			<div class="panel-heading">Tweet occurrences per category by date</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div class="form-inline" style="float: left;">
@@ -232,7 +232,7 @@
 								yAxis : {
 									min : 0,
 									title : {
-										text : 'Number of feeds',
+										text : 'Number of tweets',
 										align : 'middle'
 									},
 									labels : {
@@ -253,7 +253,7 @@
 									enabled : false
 								},
 								series : [ {
-									name : 'Feeds',
+									name : 'Tweets',
 									color : '#1C526B',
 									data : data
 								} ]
@@ -283,7 +283,7 @@
 							},
 							yAxis : {
 								title : {
-									text : 'Number of feeds'
+									text : 'Number of tweets'
 								}
 							},
 							plotOptions : {
@@ -295,7 +295,7 @@
 								}
 							},
 							series : [ {
-								name : 'Feeds',
+								name : 'Tweets',
 								color : '#003399',
 								data : data
 							} ]

@@ -5,35 +5,35 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
-public class Feed {
+public class Tweet {
 
 	@Id
 	public String id;
 	public String user_id;
-	public Long feedId;
+	public Long tweetId;
 	public String message;
-	public List<String> feedKeywords;
+	public List<String> tweetKeywords;
 	public Date dateOfCreation;
 	public String url;
 	public String source;
 	public String type;
-	public String fb_userid;
+	public String twitter_userid;
 	public String userName;
 	public List<String> categoryId;
 	public List<String> criteriaId;
 
-	public Feed(String id, String user_id, Long feedId, String message, List<String> feedKeywords, Date dateOfCreation, String url, String source, String type, String fb_userid, String userName, List<String> categoryId, List<String> criteriaId) {
+	public Tweet(String id, String user_id, Long tweetId, String message, List<String> tweetKeywords, Date dateOfCreation, String url, String source, String type, String twitter_userid, String userName, List<String> categoryId, List<String> criteriaId) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
-		this.feedId = feedId;
+		this.tweetId = tweetId;
 		this.message = message;
-		this.feedKeywords = feedKeywords;
+		this.tweetKeywords = tweetKeywords;
 		this.dateOfCreation = dateOfCreation;
 		this.url = url;
 		this.source = source;
 		this.type = type;
-		this.fb_userid = fb_userid;
+		this.twitter_userid = twitter_userid;
 		this.userName = userName;
 		this.categoryId = categoryId;
 		this.criteriaId = criteriaId;
@@ -55,12 +55,12 @@ public class Feed {
 		this.user_id = user_id;
 	}
 
-	public Long getFeedId() {
-		return feedId;
+	public Long getTweetId() {
+		return tweetId;
 	}
 
-	public void setFeedId(Long feedId) {
-		this.feedId = feedId;
+	public void setTweetId(Long tweetId) {
+		this.tweetId = tweetId;
 	}
 
 	public String getMessage() {
@@ -71,12 +71,12 @@ public class Feed {
 		this.message = message;
 	}
 
-	public List<String> getFeedKeywords() {
-		return feedKeywords;
+	public List<String> getTweetKeywords() {
+		return tweetKeywords;
 	}
 
-	public void setFeedKeywords(List<String> feedKeywords) {
-		this.feedKeywords = feedKeywords;
+	public void setTweetKeywords(List<String> tweetKeywords) {
+		this.tweetKeywords = tweetKeywords;
 	}
 
 	public Date getDateOfCreation() {
@@ -112,11 +112,11 @@ public class Feed {
 	}
 
 	public String getUserId() {
-		return fb_userid;
+		return twitter_userid;
 	}
 
-	public void setUserId(String fb_userid) {
-		this.fb_userid = fb_userid;
+	public void setUserId(String twitter_userid) {
+		this.twitter_userid = twitter_userid;
 	}
 
 	public String getUserName() {

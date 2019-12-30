@@ -17,9 +17,9 @@
 		Add Page
 		</button>
 	<div class="btn-group">
-<!--   		<button class="btn btn-primary btn-sm">Facebook</button> -->
-    	<button onclick="populateTableWithActiveFacebookPages()" type="button" class="btn btn-success btn-sm">Active Pages</button>
-    	<button onclick="populateTableWithDeletedFacebookPages()" type="button" class="btn btn-danger btn-sm">Deleted Pages</button>
+<!--   		<button class="btn btn-primary btn-sm">Twitter</button> -->
+    	<button onclick="populateTableWithActiveTwitterPages()" type="button" class="btn btn-success btn-sm">Active Pages</button>
+    	<button onclick="populateTableWithDeletedTwitterPages()" type="button" class="btn btn-danger btn-sm">Deleted Pages</button>
  	</div>
 		<table class="table table-bordered table-hover" id="dataSourceTable">
 			<thead>
@@ -45,7 +45,7 @@
 						<div class="category-block">
 							<div class="form-group">
 								<label for="page">Title</label> <textarea rows="4" cols="70" placeholder="Enter URL of home page
-								https://www.facebook.com/interestingengineering/" class="form-control" id="page" required="required"></textarea>
+								https://www.twitter.com/ramke5/" class="form-control" id="page" required="required"></textarea>
 							</div>
 						</div>
 					</div>
@@ -112,7 +112,7 @@
 <script type="text/javascript">
 
 	$( document ).ready(function() {
-		populateTableWithActiveFacebookPages();
+		populateTableWithActiveTwitterPages();
 	});
 
 	jQuery(document).ready(function($) {
@@ -122,17 +122,17 @@
 		});
 	});
 	
-	function populateTableWithActiveFacebookPages(){
+	function populateTableWithActiveTwitterPages(){
 		$.ajax({
 			type : "GET",
-			url : "${home}facebookpages?userId=${userId}",
+			url : "${home}twitterpages?userId=${userId}",
 			timeout : 100000,
 			success : function(data) {
 				var trHTML = '';
 					for (var j = 0; j < data.length; j++) {
-						for(var i = 0; i < data[j].facebookPages.length; i++){
-							trHTML += '<tr><td>' + data[j].facebookPages[i].name 
-							+ '</td><td><center><a data-toggle="modal" data-target="#deletePageModal" href="" onclick="deletePage(\''+data[j].facebookPages[i].pageId +'\')" id ="deletePageTable" class="glyphicon glyphicon-trash"></a></center>'
+						for(var i = 0; i < data[j].twitterPages.length; i++){
+							trHTML += '<tr><td>' + data[j].twitterPages[i].name 
+							+ '</td><td><center><a data-toggle="modal" data-target="#deletePageModal" href="" onclick="deletePage(\''+data[j].twitterPages[i].pageId +'\')" id ="deletePageTable" class="glyphicon glyphicon-trash"></a></center>'
 							+ '</td></tr>';
 						}
 				}
@@ -148,18 +148,18 @@
 		});
 	}
 	
-	function populateTableWithDeletedFacebookPages(){
+	function populateTableWithDeletedTwitterPages(){
 		
 		$.ajax({
 			type : "GET",
-			url : "${home}deletedfacebookpages?userId=${userId}",
+			url : "${home}deletedtwitterpages?userId=${userId}",
 			timeout : 100000,
 			success : function(data) {
 				var trHTML = '';
 					for (var j = 0; j < data.length; j++) {
-						for(var i = 0; i < data[j].facebookPages.length; i++){
-							trHTML += '<tr><td>' + data[j].facebookPages[i].name 
-							+ '</td><td><center><a href="#" title="Restore" data-toggle="modal" data-target="#restorePageModal" onclick="restorePage(\''+data[j].facebookPages[i].pageId+'\')" class="glyphicon glyphicon-ok"></a></center>'
+						for(var i = 0; i < data[j].twitterPages.length; i++){
+							trHTML += '<tr><td>' + data[j].twitterPages[i].name 
+							+ '</td><td><center><a href="#" title="Restore" data-toggle="modal" data-target="#restorePageModal" onclick="restorePage(\''+data[j].twitterPages[i].pageId+'\')" class="glyphicon glyphicon-ok"></a></center>'
 							+ '</td></tr>';
 						}
 				}
@@ -185,12 +185,12 @@
 				console.log("SUCCESS: ", data);
 				$('#dataSourcesModal').modal('hide');
 				$("#dataSourcesModal").trigger('reset');
-				populateTableWithActiveFacebookPages();
+				populateTableWithActiveTwitterPages();
 				alert("You have succesefully added new page.");
 			},
 			error : function(e) {
 				console.log("ERROR: ", e.responseText);
-				alert("URL that you have entered does not represent a real page. Please go to home page of portal you want to follow and enter URL in form\nwww.facebook.com/pageyouwanttoadd");
+				alert("URL that you have entered does not represent a real page. Please go to home page of portal you want to follow and enter URL in form\nwww.twitter.com/accountyouwanttoadd");
 			},
 			done : function(e) {
 				alert("DONE");
@@ -208,7 +208,7 @@
 				timeout : 100000,
 				success : function(data) {
 				$('#deletePageModal').modal('hide');
-				populateTableWithActiveFacebookPages();
+				populateTableWithActiveTwitterPages();
 				},
 				error : function(e) {
 					console.log("ERROR: ", e);
@@ -226,11 +226,11 @@
 			if (this.id == 'btnRestorePage') {
 			$.ajax({
 				type : "POST",
-				url : "${home}restorefbpage?userId=${userId}&pageId=" + id,
+				url : "${home}restoretwitterpage?userId=${userId}&pageId=" + id,
 				timeout : 100000,
 				success : function(data) {
 				$('#restorePageModal').modal('hide');
-				populateTableWithDeletedFacebookPages();
+				populateTableWithDeletedTwitterPages();
 				},
 				error : function(e) {
 					console.log("ERROR: ", e);

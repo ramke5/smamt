@@ -1,8 +1,5 @@
 package ba.ramke.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ba.ramke.dao.SynonymRepository;
 import ba.ramke.helper.Serialize;
-import ba.ramke.model.Keyword;
 import ba.ramke.model.Synonym;
 
 @Controller

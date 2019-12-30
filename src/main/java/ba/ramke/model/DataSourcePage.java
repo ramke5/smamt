@@ -8,15 +8,15 @@ public class DataSourcePage {
 	public String url;
 	public String name;
 	public int status;
-	public Long lastSavedFeedId;
+	public Long lastSavedTweetId;
 
-	public DataSourcePage(String pageId, String url, String name, int status, Long lastSavedFeedId) {
+	public DataSourcePage(String pageId, String url, String name, int status, Long lastSavedTweetId) {
 		super();
 		this.pageId = pageId;
 		this.url = url;
 		this.name = name;
 		this.status = status;
-		this.lastSavedFeedId = lastSavedFeedId;
+		this.lastSavedTweetId = lastSavedTweetId;
 	}
 
 	public String getPageId() {
@@ -51,12 +51,12 @@ public class DataSourcePage {
 		this.status = status;
 	}
 
-	public Long getLastSavedFeedId() {
-		return lastSavedFeedId;
+	public Long getLastSavedTweetId() {
+		return lastSavedTweetId;
 	}
 
-	public void setLastSavedFeedId(Long lastSavedFeedId) {
-		this.lastSavedFeedId = lastSavedFeedId;
+	public void setLastSavedTweetId(Long lastSavedTweetId) {
+		this.lastSavedTweetId = lastSavedTweetId;
 	}
 
 	@Override

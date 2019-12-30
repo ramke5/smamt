@@ -44,7 +44,7 @@
         			</ul>
         		</li>
 				<li><a href="${home}datasources"><span class="glyphicon glyphicon-cloud"></span> My Pages</a></li>
-				<li><a href="${home}feeds"><span class="glyphicon glyphicon-comment"></span> Feeds</a></li>
+				<li><a href="${home}tweets"><span class="glyphicon glyphicon-comment"></span> Tweets</a></li>
 			</ul>
       		<ul class="nav navbar-nav navbar-right">
       			<li><a href="http://localhost:8080/smamt/logout"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
