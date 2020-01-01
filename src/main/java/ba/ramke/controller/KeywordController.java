@@ -1,5 +1,7 @@
 package ba.ramke.controller;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -54,8 +56,11 @@ public class KeywordController {
 	@ResponseBody
 	public void addKeywordsToCategory(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("categoryId") String categoryId, @ModelAttribute("keywords") String nameOfKeywords) {
 		if(nameOfKeywords.length() != 0) {
-			Keyword keyword = new Keyword(UUID.randomUUID().toString(), nameOfKeywords, 1);
-			keywordDao.addKeywordToCategory(userId, categoryId, keyword);
+			List<String> rawKeywords = Arrays.asList(nameOfKeywords.split(","));
+			for (String keyw:rawKeywords) {
+				Keyword keyword = new Keyword(UUID.randomUUID().toString(), keyw, 1);
+				keywordDao.addKeywordToCategory(userId, categoryId, keyword);
+			}
 		}
 		else {
 			System.out.println("Empty");

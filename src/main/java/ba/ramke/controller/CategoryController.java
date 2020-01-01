@@ -1,6 +1,7 @@
 package ba.ramke.controller;
 
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -91,8 +92,11 @@ public class CategoryController {
 	@ResponseBody
 	public void addCategory(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("categoryName") String categoryName) throws UnknownHostException {
 		if (categoryName.length() != 0) {
-			Category cat = new Category(UUID.randomUUID().toString(), categoryName, 1);
-			categoryDao.addCategoryToUser(userId, cat);
+			List<String> rawCategories = Arrays.asList(categoryName.split(","));
+			for (String category:rawCategories) {
+				Category cat = new Category(UUID.randomUUID().toString(), category, 1);
+				categoryDao.addCategoryToUser(userId, cat);
+			}
 		}
 		else {
 			System.out.println("Empty");
