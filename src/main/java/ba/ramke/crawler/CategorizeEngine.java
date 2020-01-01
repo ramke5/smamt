@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -99,8 +100,46 @@ public class CategorizeEngine {
 						for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 							for (Entry<String, String> ient : ent.getValue().entrySet()) {
 								for (String f : tweetKeywords) {
+									boolean similarWords = false;
+									// 1st check if words are equal									
 									if (f.equals(ient.getValue().toLowerCase())) {
-										System.out.println("Tweet " + ient.getValue().toLowerCase());
+										similarWords=true;
+										System.out.println("Tweet: '" + f + "' is same as '" + ient.getValue().toLowerCase()+"'.");
+									}
+									// 2nd check if first word is substring of next one
+									else if (f.toLowerCase().contains(ient.getValue().toLowerCase())) {
+										similarWords=true;
+										System.out.println("Tweet: '" + ient.getValue().toLowerCase() + "' is a substring of '" + f +"'.");
+									}
+									// Fist 3 letters same + Simon White of Catalysoft algorithm
+									else if (f.toLowerCase().substring(0, 3).equals(ient.getValue().toLowerCase().substring(0, 3))) {
+										double similarity = compareStrings(f.toLowerCase(), ient.getValue().toLowerCase());
+										if (similarity>=0.7) {
+											similarWords=true;
+											System.out.println("Tweet: '" + f + "' is similar to '" + ient.getValue().toLowerCase()  +"'.");
+										}
+									}
+									else {
+										similarWords=false;
+										System.out.println("Tweet: '" + f + "' is NOT similar to '" + ient.getValue().toLowerCase()  +"'.");
+									}
+									
+									
+//									// Another option
+//									Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
+//									Integer noOfCharsInWord = f.length();
+//									if(noOfCharsInWord<=5 && noOfCharsDifferent<=1) {
+//										similarWords=true;
+//									}
+//									else if(noOfCharsInWord<=7 && noOfCharsDifferent<=2) {
+//										similarWords=true;
+//									}
+//									else if(noOfCharsInWord>7 && noOfCharsDifferent<=3) {
+//										similarWords=true;
+//									}
+									
+									if (similarWords==true) {
+//										System.out.println("Tweet '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
 										if (categoryId.contains(ent.getKey())) {
 											criteriId.add(ient.getKey().toString());
 										} else {
@@ -146,8 +185,45 @@ public class CategorizeEngine {
 								for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
 									for (Entry<String, String> ient : ent.getValue().entrySet()) {
 										for (String f : tweetKeywords) {
+											boolean similarWords = false;
+											// 1st check if words are equal
 											if (f.equals(ient.getValue().toLowerCase())) {
-												System.out.println("Tweet " + ient.getValue().toLowerCase());
+												similarWords=true;
+												System.out.println("Comment: '" + f + "' is same as '" + ient.getValue().toLowerCase()+"'.");
+											}
+											// 2nd check if first word is substring of next one
+											else if (f.toLowerCase().contains(ient.getValue().toLowerCase())) {
+												similarWords=true;
+												System.out.println("Comment: '" + ient.getValue().toLowerCase() + "' is a substring of '" + f +"'.");
+											}
+											// Fist 3 letters same + Simon White of Catalysoft algorithm
+											else if (f.toLowerCase().substring(0, 2) == ient.getValue().toLowerCase().substring(0, 2)) {
+												double similarity = compareStrings(f.toLowerCase(), ient.getValue().toLowerCase());
+												if (similarity>=70) {
+													similarWords=true;
+													System.out.println("Comment: '" + f + "' is similar to '" + ient.getValue().toLowerCase()  +"'.");
+												}
+											}
+											else {
+												similarWords=false;
+												System.out.println("Comment: '" + f + "' is NOT similar to '" + ient.getValue().toLowerCase()  +"'.");
+											}
+												
+											
+//											// Another option
+//											Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
+//											Integer noOfCharsInWord = f.length();
+//											if(noOfCharsInWord<=5 && noOfCharsDifferent<=1) {
+//												similarWords=true;
+//											}
+//											else if(noOfCharsInWord<=7 && noOfCharsDifferent<=2) {
+//												similarWords=true;
+//											}
+//											else if(noOfCharsInWord>7 && noOfCharsDifferent<=3) {
+//												similarWords=true;
+//											}
+											if (similarWords==true) {
+//												System.out.println("Comment '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
 												if (categoryId.contains(ent.getKey())) {
 													criteriId.add(ient.getKey().toString());
 												} else {
@@ -210,7 +286,7 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 100);
+				Paging page = new Paging(pageno, 200);
 				if(dsp.getLastSavedTweetId()==Initial_Last_Saved_ID) {
 					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
 				}
@@ -299,5 +375,50 @@ public class CategorizeEngine {
 		System.out.println("OK");
 		return pg;
 	}
+		
+	/** @return an array of adjacent letter pairs contained in the input string */
+	   private static String[] letterPairs(String str) {
+	       int numPairs = str.length()-1;
+	       String[] pairs = new String[numPairs];
+	       for (int i=0; i<numPairs; i++) {
+	           pairs[i] = str.substring(i,i+2);
+	       }
+	       return pairs;
+	   }
 
+	   /** @return an ArrayList of 2-character Strings. */
+	   private static ArrayList wordLetterPairs(String str) {
+	       ArrayList allPairs = new ArrayList();
+	       // Tokenize the string and put the tokens/words into an array
+	       String[] words = str.split("\\s");
+	       // For each word
+	       for (int w=0; w < words.length; w++) {
+	           // Find the pairs of characters
+	           String[] pairsInWord = letterPairs(words[w]);
+	           for (int p=0; p < pairsInWord.length; p++) {
+	               allPairs.add(pairsInWord[p]);
+	           }
+	       }
+	       return allPairs;
+	   }
+	 
+	   /** @return lexical similarity value in the range [0,1] */
+	   public static double compareStrings(String str1, String str2) {
+	       ArrayList pairs1 = wordLetterPairs(str1.toUpperCase());
+	       ArrayList pairs2 = wordLetterPairs(str2.toUpperCase());
+	       int intersection = 0;
+	       int union = pairs1.size() + pairs2.size();
+	       for (int i=0; i<pairs1.size(); i++) {
+	           Object pair1=pairs1.get(i);
+	           for(int j=0; j<pairs2.size(); j++) {
+	               Object pair2=pairs2.get(j);
+	               if (pair1.equals(pair2)) {
+	                   intersection++;
+	                   pairs2.remove(j);
+	                   break;
+	               }
+	           }
+	       }
+	       return (2.0*intersection)/union;
+	   }
 }
