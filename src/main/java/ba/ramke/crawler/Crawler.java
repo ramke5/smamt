@@ -1,5 +1,6 @@
 package ba.ramke.crawler;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -34,7 +35,7 @@ public class Crawler implements Runnable{
 		System.out.println(categories.size());
 		try {
 			ce.categorize(ds, categories);
-		} catch (TwitterException e) {
+		} catch (TwitterException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

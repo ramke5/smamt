@@ -1,5 +1,10 @@
 package ba.ramke.crawler;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,6 +19,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mongodb.BasicDBList;
 
 import ba.ramke.model.DataSource;
@@ -60,7 +67,7 @@ public class CategorizeEngine {
 		}
 	}
 
-	public void categorize(DataSource user, Map<String, Map<String, String>> crawlCriteria) throws TwitterException {
+	public void categorize(DataSource user, Map<String, Map<String, String>> crawlCriteria) throws TwitterException, IOException {
 		System.out.println("In method");
 		Long lastCrawlTweetId = 0L;
 		List<String> tweetKeywords = new ArrayList<String>();
@@ -153,12 +160,16 @@ public class CategorizeEngine {
 								}
 							}
 						}
+						
+						String location = twitter.showUser(status.getUser().getId()).getLocation();
+						String name = twitter.showUser(status.getUser().getId()).getName();
+						String gender = checkGender(name);
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
 									status.getText(), tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
-									"status", "twitter.com/" + dsp.getName(), dsp.getName(), "location", categoryId,
+									"status", "twitter.com/" + dsp.getName(), dsp.getName(), location, name, gender, categoryId,
 									criteriId));
 							criteriId.toString();
 							criteriId = new ArrayList<String>();
@@ -170,7 +181,7 @@ public class CategorizeEngine {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
 									status.getText(), tweetKeywords, status.getCreatedAt(),
 									"twitter.com/" + dsp.getName() + "/status/" + (status.getId()), dsp.getName(),
-									"status", "twitter.com/" + dsp.getName(), dsp.getName(), "location", categoryId,
+									"status", "twitter.com/" + dsp.getName(), dsp.getName(), location, name, gender, categoryId,
 									criteriId));
 							criteriId = new ArrayList<String>();
 							categoryId = new ArrayList<String>();
@@ -243,13 +254,17 @@ public class CategorizeEngine {
 										}
 									}
 								}
+								
+								String location = twitter.showUser(reply.getUser().getId()).getLocation();
+								String name = twitter.showUser(reply.getUser().getId()).getName();
+								String gender = checkGender(name);
 
 								if (!criteriId.isEmpty()) {
 									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
 											reply.getText(), tweetKeywords, reply.getCreatedAt(),
 											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
 											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
-											"location", categoryId, criteriId));
+											location, name, gender, categoryId, criteriId));
 									criteriId.toString();
 									criteriId = new ArrayList<String>();
 									categoryId = new ArrayList<String>();
@@ -261,7 +276,7 @@ public class CategorizeEngine {
 											reply.getText(), tweetKeywords, reply.getCreatedAt(),
 											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
 											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
-											"location", categoryId, criteriId));
+											location, name, gender, categoryId, criteriId));
 									criteriId = new ArrayList<String>();
 									categoryId = new ArrayList<String>();
 									tweetKeywords = new ArrayList<String>();
@@ -295,7 +310,7 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 200);
+				Paging page = new Paging(pageno, 20);
 				if (dsp.getLastSavedTweetId() == Initial_Last_Saved_ID) {
 					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
 				} else {
@@ -327,7 +342,6 @@ public class CategorizeEngine {
 
 			do {
 				results = twitter.search(query);
-				System.out.println("Results: " + results.getTweets().size());
 				List<Status> tweets = results.getTweets();
 
 				for (Status tweet : tweets)
@@ -428,5 +442,26 @@ public class CategorizeEngine {
 			}
 		}
 		return (2.0 * intersection) / union;
+	}
+	
+	public String checkGender(String nameToCheck) throws IOException { 
+
+	    String myKey = "MZFXaPVcYHbtZMbsXC";
+	    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + nameToCheck);
+	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+	    if (conn.getResponseCode() != 200) {
+	      throw new RuntimeException("Error: " + conn.getResponseCode());
+	    }
+
+	    InputStreamReader input = new InputStreamReader(conn.getInputStream());
+	    BufferedReader reader = new BufferedReader(input);
+
+	    Gson gson = new Gson();
+	    JsonObject json = gson.fromJson(reader, JsonObject.class);
+	    String gender = json.get("gender").getAsString();
+	    System.out.println("Gender: " + gender); // Gender: male
+	    conn.disconnect();
+	    return gender;
 	}
 }
