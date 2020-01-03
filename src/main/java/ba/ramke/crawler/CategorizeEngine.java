@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBList;
 
+import ba.ramke.dao.TweetRepository;
 import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Tweet;
@@ -39,6 +40,8 @@ public class CategorizeEngine {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	TweetRepository tweetDao;
 	private final String COLLECTION_NAME = "datasource";
 	private final String COLLECTION_NAME_ = "categorizedtweets";
 
@@ -131,8 +134,8 @@ public class CategorizeEngine {
 										}
 									} else {
 										similarWords = false;
-										System.out.println("Tweet: '" + f + "' is NOT similar to '"
-												+ ient.getValue().toLowerCase() + "'.");
+//										System.out.println("Tweet: '" + f + "' is NOT similar to '"
+//												+ ient.getValue().toLowerCase() + "'.");
 									}
 
 //									// Another option
@@ -163,7 +166,7 @@ public class CategorizeEngine {
 						
 						String location = twitter.showUser(status.getUser().getId()).getLocation();
 						String name = twitter.showUser(status.getUser().getId()).getName();
-						String gender = checkGender(name);
+						String gender = checkGender(user.userId, name);
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
@@ -226,8 +229,8 @@ public class CategorizeEngine {
 												}
 											} else {
 												similarWords = false;
-												System.out.println("Comment: '" + f + "' is NOT similar to '"
-														+ ient.getValue().toLowerCase() + "'.");
+//												System.out.println("Comment: '" + f + "' is NOT similar to '"
+//														+ ient.getValue().toLowerCase() + "'.");
 											}
 
 //											// Another option
@@ -257,7 +260,7 @@ public class CategorizeEngine {
 								
 								String location = twitter.showUser(reply.getUser().getId()).getLocation();
 								String name = twitter.showUser(reply.getUser().getId()).getName();
-								String gender = checkGender(name);
+								String gender = checkGender(user.getUserId(), name);
 
 								if (!criteriId.isEmpty()) {
 									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
@@ -444,24 +447,34 @@ public class CategorizeEngine {
 		return (2.0 * intersection) / union;
 	}
 	
-	public String checkGender(String nameToCheck) throws IOException { 
-
-	    String myKey = "MZFXaPVcYHbtZMbsXC";
-	    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + nameToCheck);
-	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-	    if (conn.getResponseCode() != 200) {
-	      throw new RuntimeException("Error: " + conn.getResponseCode());
-	    }
-
-	    InputStreamReader input = new InputStreamReader(conn.getInputStream());
-	    BufferedReader reader = new BufferedReader(input);
-
-	    Gson gson = new Gson();
-	    JsonObject json = gson.fromJson(reader, JsonObject.class);
-	    String gender = json.get("gender").getAsString();
-	    System.out.println("Gender: " + gender); // Gender: male
-	    conn.disconnect();
+	public String checkGender(String userId, String nameToCheck) throws IOException { 
+		
+		//need to check if name exists in DB
+		String gender = "";
+		Query query = new Query().addCriteria(Criteria.where("user_id").is(userId).and("name").is(nameToCheck)).limit(1);
+		List<Tweet> tweets = mongoTemplate.find(query, Tweet.class, COLLECTION_NAME_);
+		//if it doesn't exist proceed, if does, return value from DB
+		if (!tweets.isEmpty()) {
+			gender = tweets.get(0).getUserGender();	
+		}
+		else { 
+		    String myKey = "MZFXaPVcYHbtZMbsXC";
+		    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + nameToCheck);
+		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	
+		    if (conn.getResponseCode() != 200) {
+		      throw new RuntimeException("Error: " + conn.getResponseCode());
+		    }
+	
+		    InputStreamReader input = new InputStreamReader(conn.getInputStream());
+		    BufferedReader reader = new BufferedReader(input);
+	
+		    Gson gson = new Gson();
+		    JsonObject json = gson.fromJson(reader, JsonObject.class);
+		    gender = json.get("gender").getAsString();
+		    System.out.println("Gender: " + gender); // Gender: male
+		    conn.disconnect();
+		}
 	    return gender;
 	}
 }
