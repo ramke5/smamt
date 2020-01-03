@@ -19,6 +19,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import com.github.irobson.jgenderize.GenderizeIoAPI;
+import com.github.irobson.jgenderize.client.Genderize;
+import com.github.irobson.jgenderize.model.NameGender;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBList;
@@ -195,7 +198,7 @@ public class CategorizeEngine {
 					/// COMMENTS-REPLIES
 
 					ArrayList<Status> replies = getReplies(twitter, dsp.getName(), status.getId());
-					System.out.println("For this status/tweet we have: " + replies.size());
+					System.out.println("For this status/tweet we have: " + replies.size() + " comments.");
 
 					for (Status reply : replies) {
 						if (reply.getText() != null) {
@@ -451,29 +454,35 @@ public class CategorizeEngine {
 		
 		//need to check if name exists in DB
 		String gender = "";
-		Query query = new Query().addCriteria(Criteria.where("user_id").is(userId).and("name").is(nameToCheck)).limit(1);
+		String beforeFirstSpace = nameToCheck.split("\\ ")[0];
+		Query query = new Query().addCriteria(Criteria.where("user_id").is(userId).and("name").is(beforeFirstSpace)).limit(1);
 		List<Tweet> tweets = mongoTemplate.find(query, Tweet.class, COLLECTION_NAME_);
 		//if it doesn't exist proceed, if does, return value from DB
 		if (!tweets.isEmpty()) {
 			gender = tweets.get(0).getUserGender();	
 		}
-		else { 
-		    String myKey = "MZFXaPVcYHbtZMbsXC";
-		    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + nameToCheck);
-		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	
-		    if (conn.getResponseCode() != 200) {
-		      throw new RuntimeException("Error: " + conn.getResponseCode());
-		    }
-	
-		    InputStreamReader input = new InputStreamReader(conn.getInputStream());
-		    BufferedReader reader = new BufferedReader(input);
-	
-		    Gson gson = new Gson();
-		    JsonObject json = gson.fromJson(reader, JsonObject.class);
-		    gender = json.get("gender").getAsString();
-		    System.out.println("Gender: " + gender); // Gender: male
-		    conn.disconnect();
+		else {
+			
+			Genderize api = GenderizeIoAPI.create();
+			gender = api.getGender(beforeFirstSpace).getGender();
+			
+			if (gender==null) {
+				
+			    String myKey = "MZFXaPVcYHbtZMbsXC";
+			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
+			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+			    if (conn.getResponseCode() != 200) {
+			      throw new RuntimeException("Error: " + conn.getResponseCode());
+			    }
+			    InputStreamReader input = new InputStreamReader(conn.getInputStream());
+			    BufferedReader reader = new BufferedReader(input);
+		
+			    Gson gson = new Gson();
+			    JsonObject json = gson.fromJson(reader, JsonObject.class);
+			    gender = json.get("gender").getAsString();
+			    conn.disconnect();
+			}
 		}
 	    return gender;
 	}
