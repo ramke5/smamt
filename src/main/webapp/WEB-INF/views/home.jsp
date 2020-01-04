@@ -222,7 +222,7 @@
 								},
 								xAxis : {
 									categories : [ 'Monday', 'Tuesday',
-											'Wendesday', 'Thursday', 'Fridey',
+											'Wednesday', 'Thursday', 'Friday',
 											'Saturday', 'Sunday' ],
 									title : {
 										text : 'Week day',

@@ -169,7 +169,8 @@ public class CategorizeEngine {
 						
 						String location = twitter.showUser(status.getUser().getId()).getLocation();
 						String name = twitter.showUser(status.getUser().getId()).getName();
-						String gender = checkGender(user.userId, name);
+//						String gender = checkGender(user.userId, name);
+						String gender = "test";
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
@@ -263,8 +264,9 @@ public class CategorizeEngine {
 								
 								String location = twitter.showUser(reply.getUser().getId()).getLocation();
 								String name = twitter.showUser(reply.getUser().getId()).getName();
-								String gender = checkGender(user.getUserId(), name);
-
+//								String gender = checkGender(user.getUserId(), name);
+								String gender = "test";
+								
 								if (!criteriId.isEmpty()) {
 									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
 											reply.getText(), tweetKeywords, reply.getCreatedAt(),
@@ -316,7 +318,7 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 20);
+				Paging page = new Paging(pageno, 50);
 				if (dsp.getLastSavedTweetId() == Initial_Last_Saved_ID) {
 					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
 				} else {
