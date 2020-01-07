@@ -19,10 +19,13 @@ public class Tweet {
 	public String type;
 	public String twitter_userid;
 	public String userName;
+	public String userLocation;
+	public String name;
+	public String userGender;
 	public List<String> categoryId;
 	public List<String> criteriaId;
 
-	public Tweet(String id, String user_id, Long tweetId, String message, List<String> tweetKeywords, Date dateOfCreation, String url, String source, String type, String twitter_userid, String userName, List<String> categoryId, List<String> criteriaId) {
+	public Tweet(String id, String user_id, Long tweetId, String message, List<String> tweetKeywords, Date dateOfCreation, String url, String source, String type, String twitter_userid, String userName, String userLocation, String name, String userGender, List<String> categoryId, List<String> criteriaId) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
@@ -35,6 +38,9 @@ public class Tweet {
 		this.type = type;
 		this.twitter_userid = twitter_userid;
 		this.userName = userName;
+		this.userLocation = userLocation;
+		this.name = name;
+		this.userGender = userGender;
 		this.categoryId = categoryId;
 		this.criteriaId = criteriaId;
 	}
@@ -125,6 +131,30 @@ public class Tweet {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	
+	public String getUserLocation() {
+		return userLocation;
+	}
+
+	public void setUserLocation(String userLocation) {
+		this.userLocation = userLocation;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getUserGender() {
+		return userGender;
+	}
+
+	public void setUserGender(String userGender) {
+		this.userGender = userGender;
 	}
 
 	public List<String> getCategoryId() {

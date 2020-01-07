@@ -87,7 +87,7 @@ public class StatisticsRepository {
 				Aggregation.sort(Direction.ASC, "day")
 				);
 		System.out.println(aggregate.toString());
-		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", DayAggregation.class);
+		AggregationResults<DayAggregation> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", DayAggregation.class);			
 		List<DayAggregation> aggregationResponse = result.getMappedResults();
 		return aggregationResponse;
 	}
