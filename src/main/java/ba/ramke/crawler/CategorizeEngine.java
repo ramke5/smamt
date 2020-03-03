@@ -318,7 +318,7 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 50);
+				Paging page = new Paging(pageno, 500);
 				if (dsp.getLastSavedTweetId() == Initial_Last_Saved_ID) {
 					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
 				} else {
@@ -359,6 +359,7 @@ public class CategorizeEngine {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			sleep(900000);
 		}
 		return replies;
 	}
