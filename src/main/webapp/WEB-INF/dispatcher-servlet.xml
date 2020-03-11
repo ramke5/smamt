@@ -52,7 +52,7 @@
 		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
 		<beans:property name="jobDetail" ref="threadScheduler" />
 		<beans:property name="startDelay" value="5000" />
-		<beans:property name="repeatInterval" value="14400000" />
+		<beans:property name="repeatInterval" value="10800000" />
 	</beans:bean>
 
 	<!--Thread Pool Bean -->
