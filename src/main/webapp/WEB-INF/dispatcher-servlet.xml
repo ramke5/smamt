@@ -2,7 +2,10 @@
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
+		http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+		http://www.springframework.org/schema/mvc 
 		http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -27,19 +30,11 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<!-- Define the MongoTemplate which handles connectivity with MongoDB -->
-	<beans:bean id="mongoTemplate"
-		class="org.springframework.data.mongodb.core.MongoTemplate">
-		<beans:constructor-arg name="mongo" ref="mongo" />
-		<beans:constructor-arg name="databaseName"
-			value="smamt" />
-	</beans:bean>
+	
 
-	<!-- Factory bean that creates the MongoDB instance -->
-	<beans:bean id="mongo"
-		class="org.springframework.data.mongodb.core.MongoFactoryBean">
-		<beans:property name="host" value="localhost" />
-	</beans:bean>
+
+
+		
 	
 	<beans:bean id="startScheduler" class="ba.ramke.crawler.Scheduler">
 		<beans:property name="mongoTemplate" ref="mongoTemplate" />
@@ -57,7 +52,7 @@
 		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
 		<beans:property name="jobDetail" ref="threadScheduler" />
 		<beans:property name="startDelay" value="5000" />
-		<beans:property name="repeatInterval" value="80000000" />
+		<beans:property name="repeatInterval" value="10800000" />
 	</beans:bean>
 
 	<!--Thread Pool Bean -->
@@ -83,6 +78,7 @@
 			</beans:list>
 		</beans:property>
 	</beans:bean>
+	
 
 	<!--<beans:bean id="userDisp" class="ba.ramke.crawler.Scheduler"></beans:bean> -->
 
@@ -92,5 +88,12 @@
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
 	<context:component-scan base-package="ba.ramke" />
+	<context:component-scan base-package="ba.ramke.configuration" />
+	
+	<!-- needed to pick up the annotated java-config -->
+	<context:annotation-config />
+	
+	<beans:bean name="Config" class="ba.ramke.configuration.Config" />
+	
 
 </beans:beans>

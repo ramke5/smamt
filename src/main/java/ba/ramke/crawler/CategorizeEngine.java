@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.server.UID;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,7 +98,7 @@ public class CategorizeEngine {
 			for (int counter = statuses.size(); counter != 0; counter--) {
 				Status status = statuses.get(counter - 1);
 				lastCrawlTweetId = status.getId();
-				System.out.println(i + " tweets crawled ############################");
+				System.out.println(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:SSS") + " " + i + " tweets crawled ############################");
 				if (dsp.getLastSavedTweetId().equals(status.getId())) {
 					System.out.println("We came to last crawled tweet. Stop");
 					if (tweets.size() != 0) {
@@ -196,110 +197,110 @@ public class CategorizeEngine {
 						}
 					}
 
-					/// COMMENTS-REPLIES
-
-					ArrayList<Status> replies = getReplies(twitter, dsp.getName(), status.getId());
-					System.out.println("For this status/tweet we have: " + replies.size() + " comments.");
-
-					for (Status reply : replies) {
-						if (reply.getText() != null) {
-							tweetKeywords = getTweetKeywords(reply.getText());
-							if (!tweetKeywords.isEmpty()) {
-								for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
-									for (Entry<String, String> ient : ent.getValue().entrySet()) {
-										for (String f : tweetKeywords) {
-											boolean similarWords = false;
-											// 1st check if words are equal
-											if (f.equals(ient.getValue().toLowerCase())) {
-												similarWords = true;
-												System.out.println("Comment: '" + f + "' is same as '"
-														+ ient.getValue().toLowerCase() + "'.");
-											}
-											// 2nd check if first word is substring of next one
-											else if (f.toLowerCase().contains(ient.getValue().toLowerCase())) {
-												similarWords = true;
-												System.out.println("Comment: '" + ient.getValue().toLowerCase()
-														+ "' is a substring of '" + f + "'.");
-											}
-											// Fist 3 letters same + Simon White of Catalysoft algorithm
-											else if (f.toLowerCase().substring(0, 2) == ient.getValue().toLowerCase()
-													.substring(0, 2)) {
-												double similarity = compareStrings(f.toLowerCase(),
-														ient.getValue().toLowerCase());
-												if (similarity >= 70) {
-													similarWords = true;
-													System.out.println("Comment: '" + f + "' is similar to '"
-															+ ient.getValue().toLowerCase() + "'.");
-												}
-											} else {
-												similarWords = false;
-//												System.out.println("Comment: '" + f + "' is NOT similar to '"
+//					/// COMMENTS-REPLIES
+//
+//					ArrayList<Status> replies = getReplies(twitter, dsp.getName(), status.getId());
+//					System.out.println("For this status/tweet we have: " + replies.size() + " comments.");
+//
+//					for (Status reply : replies) {
+//						if (reply.getText() != null) {
+//							tweetKeywords = getTweetKeywords(reply.getText());
+//							if (!tweetKeywords.isEmpty()) {
+//								for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
+//									for (Entry<String, String> ient : ent.getValue().entrySet()) {
+//										for (String f : tweetKeywords) {
+//											boolean similarWords = false;
+//											// 1st check if words are equal
+//											if (f.equals(ient.getValue().toLowerCase())) {
+//												similarWords = true;
+//												System.out.println("Comment: '" + f + "' is same as '"
 //														+ ient.getValue().toLowerCase() + "'.");
-											}
-
-//											// Another option
-//											Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
-//											Integer noOfCharsInWord = f.length();
-//											if(noOfCharsInWord<=5 && noOfCharsDifferent<=1) {
-//												similarWords=true;
 //											}
-//											else if(noOfCharsInWord<=7 && noOfCharsDifferent<=2) {
-//												similarWords=true;
+//											// 2nd check if first word is substring of next one
+//											else if (f.toLowerCase().contains(ient.getValue().toLowerCase())) {
+//												similarWords = true;
+//												System.out.println("Comment: '" + ient.getValue().toLowerCase()
+//														+ "' is a substring of '" + f + "'.");
 //											}
-//											else if(noOfCharsInWord>7 && noOfCharsDifferent<=3) {
-//												similarWords=true;
+//											// Fist 3 letters same + Simon White of Catalysoft algorithm
+//											else if (f.toLowerCase().substring(0, 2) == ient.getValue().toLowerCase()
+//													.substring(0, 2)) {
+//												double similarity = compareStrings(f.toLowerCase(),
+//														ient.getValue().toLowerCase());
+//												if (similarity >= 70) {
+//													similarWords = true;
+//													System.out.println("Comment: '" + f + "' is similar to '"
+//															+ ient.getValue().toLowerCase() + "'.");
+//												}
+//											} else {
+//												similarWords = false;
+////												System.out.println("Comment: '" + f + "' is NOT similar to '"
+////														+ ient.getValue().toLowerCase() + "'.");
 //											}
-											if (similarWords == true) {
-//												System.out.println("Comment '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
-												if (categoryId.contains(ent.getKey())) {
-													criteriId.add(ient.getKey().toString());
-												} else {
-													categoryId.add(ent.getKey().toString());
-													criteriId.add(ient.getKey().toString());
-												}
-											}
-										}
-									}
-								}
-								
-								String location = twitter.showUser(reply.getUser().getId()).getLocation();
-								String name = twitter.showUser(reply.getUser().getId()).getName();
-//								String gender = checkGender(user.getUserId(), name);
-								String gender = "test";
-								
-								if (!criteriId.isEmpty()) {
-									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
-											reply.getText(), tweetKeywords, reply.getCreatedAt(),
-											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
-											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
-											location, name, gender, categoryId, criteriId));
-									criteriId.toString();
-									criteriId = new ArrayList<String>();
-									categoryId = new ArrayList<String>();
-									tweetKeywords = new ArrayList<String>();
-								} else {
-									categoryId.add("uncategorized");
-									criteriId.add("uncategorized");
-									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
-											reply.getText(), tweetKeywords, reply.getCreatedAt(),
-											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
-											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
-											location, name, gender, categoryId, criteriId));
-									criteriId = new ArrayList<String>();
-									categoryId = new ArrayList<String>();
-									tweetKeywords = new ArrayList<String>();
-								}
-
-							}
-						}
-					}
+//
+////											// Another option
+////											Integer noOfCharsDifferent = LevenshteinDistance.getDefaultInstance().apply(f, ient.getValue().toLowerCase());
+////											Integer noOfCharsInWord = f.length();
+////											if(noOfCharsInWord<=5 && noOfCharsDifferent<=1) {
+////												similarWords=true;
+////											}
+////											else if(noOfCharsInWord<=7 && noOfCharsDifferent<=2) {
+////												similarWords=true;
+////											}
+////											else if(noOfCharsInWord>7 && noOfCharsDifferent<=3) {
+////												similarWords=true;
+////											}
+//											if (similarWords == true) {
+////												System.out.println("Comment '" + f + "' is similar/same to '" + ient.getValue().toLowerCase()+"'.");
+//												if (categoryId.contains(ent.getKey())) {
+//													criteriId.add(ient.getKey().toString());
+//												} else {
+//													categoryId.add(ent.getKey().toString());
+//													criteriId.add(ient.getKey().toString());
+//												}
+//											}
+//										}
+//									}
+//								}
+//								
+//								String location = twitter.showUser(reply.getUser().getId()).getLocation();
+//								String name = twitter.showUser(reply.getUser().getId()).getName();
+////								String gender = checkGender(user.getUserId(), name);
+//								String gender = "test";
+//								
+//								if (!criteriId.isEmpty()) {
+//									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
+//											reply.getText(), tweetKeywords, reply.getCreatedAt(),
+//											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
+//											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
+//											location, name, gender, categoryId, criteriId));
+//									criteriId.toString();
+//									criteriId = new ArrayList<String>();
+//									categoryId = new ArrayList<String>();
+//									tweetKeywords = new ArrayList<String>();
+//								} else {
+//									categoryId.add("uncategorized");
+//									criteriId.add("uncategorized");
+//									tweets.add(new Tweet(new UID().toString(), user.getUserId(), reply.getId(),
+//											reply.getText(), tweetKeywords, reply.getCreatedAt(),
+//											"twitter.com/" + dsp.getName() + "/status/" + (status.getId()),
+//											dsp.getName(), "comment", "twitter.com/" + dsp.getName(), dsp.getName(),
+//											location, name, gender, categoryId, criteriId));
+//									criteriId = new ArrayList<String>();
+//									categoryId = new ArrayList<String>();
+//									tweetKeywords = new ArrayList<String>();
+//								}
+//
+//							}
+//						}
+//					}
 
 					///
 				}
 
 				i++;
 				if (i == statuses.size()) {
-					System.out.println(i + " TWEETS crawled. Stop");
+					System.out.println(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:SSS") + " " + i + " TWEETS crawled. Stop");
 					if (tweets.size() != 0) {
 						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
 						saveTweets(tweets);
@@ -318,7 +319,7 @@ public class CategorizeEngine {
 		while (true) {
 			try {
 				System.out.println("getting tweets");
-				Paging page = new Paging(pageno, 50);
+				Paging page = new Paging(pageno, 300);
 				if (dsp.getLastSavedTweetId() == Initial_Last_Saved_ID) {
 					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page));
 				} else {
@@ -359,6 +360,7 @@ public class CategorizeEngine {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			sleep(900000);
 		}
 		return replies;
 	}
