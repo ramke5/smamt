@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.server.UID;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +98,7 @@ public class CategorizeEngine {
 			for (int counter = statuses.size(); counter != 0; counter--) {
 				Status status = statuses.get(counter - 1);
 				lastCrawlTweetId = status.getId();
-				System.out.println(new Date().toString() + " " + i + " tweets crawled ############################");
+				System.out.println(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:SSS") + " " + i + " tweets crawled ############################");
 				if (dsp.getLastSavedTweetId().equals(status.getId())) {
 					System.out.println("We came to last crawled tweet. Stop");
 					if (tweets.size() != 0) {
@@ -300,7 +300,7 @@ public class CategorizeEngine {
 
 				i++;
 				if (i == statuses.size()) {
-					System.out.println(new Date().toString() + " " + i + " TWEETS crawled. Stop");
+					System.out.println(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:SSS") + " " + i + " TWEETS crawled. Stop");
 					if (tweets.size() != 0) {
 						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
 						saveTweets(tweets);
