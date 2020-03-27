@@ -221,9 +221,9 @@
 									text : ''
 								},
 								xAxis : {
-									categories : [ 'Monday', 'Tuesday',
+									categories : [ 'Sunday', 'Monday', 'Tuesday',
 											'Wednesday', 'Thursday', 'Friday',
-											'Saturday', 'Sunday' ],
+											'Saturday' ],
 									title : {
 										text : 'Week day',
 										align : 'middle'
@@ -254,7 +254,7 @@
 								},
 								series : [ {
 									name : 'Tweets',
-									color : '#1C526B',
+									color : '#37AEE6',
 									data : data
 								} ]
 							});
