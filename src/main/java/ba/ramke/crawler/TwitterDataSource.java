@@ -17,6 +17,7 @@ import ba.ramke.model.DataSource;
 import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Keyword;
 import ba.ramke.model.Synonym;
+import ba.ramke.model.Tweet;
 import ba.ramke.model.User;
 
 @Repository
@@ -25,7 +26,9 @@ public class TwitterDataSource {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
-	private final String COLLECTION_NAME = "datasource";
+	private final String COLLECTION_NAME = "datasource";	
+	private final String COLLECTION_NAME_CATEGORIZED_TWEETS = "categorizedtweets";
+
 
 	public TwitterDataSource() {
 
@@ -130,6 +133,13 @@ public class TwitterDataSource {
 			}
 		}
 		return datasource;
+	}
+	
+	public List<Tweet> getAllTwitterPosts() {
+
+		Query query = new Query();
+		List<Tweet> tweet = mongoTemplate.find(query, Tweet.class, COLLECTION_NAME_CATEGORIZED_TWEETS);
+		return tweet;
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate2) {
