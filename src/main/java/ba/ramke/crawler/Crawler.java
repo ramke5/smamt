@@ -38,9 +38,9 @@ public class Crawler implements Runnable{
 		System.out.println("Total nuber of tweets: " + allPosts.size());
 		System.out.println(categories.size());
 		try {
-//			ce.categorize(ds, categories);
+			ce.categorize(ds, categories);
 			//when we want to recategorize
-			ce.recategorize(ds, categories, allPosts);
+//			ce.recategorize(ds, categories, allPosts);
 		} catch (TwitterException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
