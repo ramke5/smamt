@@ -96,6 +96,7 @@ public class CategorizeEngine {
 			TwitterFactory taf = new TwitterFactory(cb.build());
 			Twitter twitter = taf.getInstance();
 			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);
+			
 
 			for (int counter = statuses.size(); counter != 0; counter--) {
 				Status status = statuses.get(counter - 1);
@@ -400,6 +401,22 @@ public class CategorizeEngine {
 				COLLECTION_NAME);
 		System.out.println("OK");
 	}
+		
+	public void updateCategoryForStatus(String userId, Long pageId, List<String> categoryId) {
+		Query query = new Query(
+				Criteria.where("user_id").is(userId).and("tweetId").is(pageId));
+		mongoTemplate.updateFirst(query, new Update().set("categoryId", categoryId), Tweet.class,
+				COLLECTION_NAME_);
+		System.out.println("OK");
+	}
+	
+	public void updateCriteriaForStatus(String userId, Long pageId, List<String> criteriaId) {
+		Query query = new Query(
+				Criteria.where("user_id").is(userId).and("tweetId").is(pageId));
+		mongoTemplate.updateFirst(query, new Update().set("criteriaId", criteriaId), Tweet.class,
+				COLLECTION_NAME_);
+		System.out.println("OK");
+	}
 
 	public DataSource getLastCrawlTweetId(String userId, String pageId) {
 		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages")
@@ -491,5 +508,80 @@ public class CategorizeEngine {
 			}
 		}
 	    return gender;
+	}
+	
+	public void recategorize(DataSource user, Map<String, Map<String, String>> crawlCriteria, List<Tweet> listOfTweets)
+			throws TwitterException, IOException {
+		System.out.println("In method");
+		List<String> tweetKeywords = new ArrayList<String>();
+		List<String> criteriId = new ArrayList<String>();
+		List<String> categoryId = new ArrayList<String>();
+
+		for (int counter = 0; counter < listOfTweets.size(); counter++) {
+			if (listOfTweets.get(counter).getTweetKeywords() != null) {
+				tweetKeywords = listOfTweets.get(counter).getTweetKeywords();
+				if (!tweetKeywords.isEmpty()) {
+					for (Entry<String, Map<String, String>> ent : crawlCriteria.entrySet()) {
+						for (Entry<String, String> ient : ent.getValue().entrySet()) {
+							for (String f : tweetKeywords) {
+								boolean similarWords = false;
+								// 1st check if words are equal
+								if (f.equals(ient.getValue().toLowerCase())) {
+									similarWords = true;
+									System.out.println(
+											"Tweet: '" + f + "' is same as '" + ient.getValue().toLowerCase() + "'.");
+								}
+								// 2nd check if first word is substring of next one
+								else if ((f.toLowerCase().substring(0, 3)
+										.equals(ient.getValue().toLowerCase().substring(0, 3))) && (f.toLowerCase().contains(ient.getValue().toLowerCase()))) {
+									similarWords = true;
+									System.out.println("Tweet: '" + ient.getValue().toLowerCase()
+											+ "' is a substring of '" + f + "'.");
+								}
+								// Fist 3 letters same + Simon White of Catalysoft algorithm
+								else if (f.toLowerCase().substring(0, 3)
+										.equals(ient.getValue().toLowerCase().substring(0, 3))) {
+									double similarity = compareStrings(f.toLowerCase(), ient.getValue().toLowerCase());
+									if (similarity >= 0.7) {
+										similarWords = true;
+										System.out.println("Tweet: '" + f + "' is similar to '"
+												+ ient.getValue().toLowerCase() + "'.");
+									}
+								} else {
+									similarWords = false;
+								}
+
+								if (similarWords == true) {
+									if (categoryId.contains(ent.getKey())) {
+										criteriId.add(ient.getKey().toString());
+									} else {
+										categoryId.add(ent.getKey().toString());
+										criteriId.add(ient.getKey().toString());
+									}
+								}
+							}
+						}
+					}
+
+					if (!criteriId.isEmpty()) {
+						updateCategoryForStatus(user.getUserId(), listOfTweets.get(counter).getTweetId(), categoryId);
+						updateCriteriaForStatus(user.getUserId(), listOfTweets.get(counter).getTweetId(), criteriId);
+						criteriId = new ArrayList<String>();
+						categoryId = new ArrayList<String>();
+						tweetKeywords = new ArrayList<String>();
+					} else {
+						categoryId.add("uncategorized");
+						criteriId.add("uncategorized");
+						updateCategoryForStatus(user.getUserId(), listOfTweets.get(counter).getTweetId(), categoryId);
+						updateCriteriaForStatus(user.getUserId(), listOfTweets.get(counter).getTweetId(), criteriId);
+						criteriId = new ArrayList<String>();
+						categoryId = new ArrayList<String>();
+						tweetKeywords = new ArrayList<String>();
+					}
+					System.out.println("Tweet: '" + counter + " out of " + listOfTweets.size() + " is recategorized.");
+				}
+
+			}
+		}
 	}
 }

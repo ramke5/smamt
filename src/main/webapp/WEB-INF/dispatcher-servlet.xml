@@ -31,10 +31,7 @@
 	</beans:bean>
 
 	
-
-
-
-		
+	
 	
 	<beans:bean id="startScheduler" class="ba.ramke.crawler.Scheduler">
 		<beans:property name="mongoTemplate" ref="mongoTemplate" />
