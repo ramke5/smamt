@@ -530,7 +530,8 @@ public class CategorizeEngine {
 											"Tweet: '" + f + "' is same as '" + ient.getValue().toLowerCase() + "'.");
 								}
 								// 2nd check if first word is substring of next one
-								else if (f.toLowerCase().contains(ient.getValue().toLowerCase())) {
+								else if ((f.toLowerCase().substring(0, 3)
+										.equals(ient.getValue().toLowerCase().substring(0, 3))) && (f.toLowerCase().contains(ient.getValue().toLowerCase()))) {
 									similarWords = true;
 									System.out.println("Tweet: '" + ient.getValue().toLowerCase()
 											+ "' is a substring of '" + f + "'.");
