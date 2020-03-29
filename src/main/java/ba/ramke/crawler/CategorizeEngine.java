@@ -340,6 +340,7 @@ public class CategorizeEngine {
 				sleep(1000);
 			} catch (TwitterException e) {
 				System.out.println(e.getErrorMessage());
+				sleep(910000);
 			}
 		}
 		return statuses;
