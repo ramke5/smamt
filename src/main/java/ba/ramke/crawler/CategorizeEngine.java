@@ -363,7 +363,7 @@ public class CategorizeEngine {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			sleep(900000);
+			sleep(910000);
 		}
 		return replies;
 	}
