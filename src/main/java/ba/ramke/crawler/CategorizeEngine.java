@@ -35,6 +35,7 @@ import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Tweet;
 import twitter4j.Paging;
 import twitter4j.QueryResult;
+import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -61,7 +62,7 @@ public class CategorizeEngine {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
 				.setOAuthAccessToken(Twitter_API_access_token)
-				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
+				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret).setHttpConnectionTimeout(100000);
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate2) {
@@ -83,21 +84,18 @@ public class CategorizeEngine {
 		List<Tweet> tweets = new ArrayList<Tweet>();
 		List<String> criteriId = new ArrayList<String>();
 		List<String> categoryId = new ArrayList<String>();
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
+				.setOAuthAccessToken(Twitter_API_access_token)
+				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
+		TwitterFactory taf = new TwitterFactory(cb.build());
+		Twitter twitter = taf.getInstance();
 		int i = 0;
 		Iterator<DataSourcePage> dspIterator = user.getTwitterPages().iterator();
 		mainLoop: while (dspIterator.hasNext()) {
 			DataSourcePage dsp = dspIterator.next();
 			System.out.println(dsp.getName());
-
-			ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
-					.setOAuthAccessToken(Twitter_API_access_token)
-					.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
-			TwitterFactory taf = new TwitterFactory(cb.build());
-			Twitter twitter = taf.getInstance();
-			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);
-			
-
+			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);			
 			for (int counter = statuses.size(); counter != 0; counter--) {
 				Status status = statuses.get(counter - 1);
 				lastCrawlTweetId = status.getId();
@@ -108,7 +106,7 @@ public class CategorizeEngine {
 						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
 						saveTweets(tweets);
 					}
-					i = 1;
+					i = 0;
 					continue mainLoop;
 				} else if (status.getText() != null) {
 					tweetKeywords = getTweetKeywords(status.getText());
@@ -309,7 +307,7 @@ public class CategorizeEngine {
 						saveTweets(tweets);
 					}
 					tweets = new ArrayList<Tweet>();
-					i = 1;
+					i = 0;
 					continue mainLoop;
 				}
 			}
@@ -328,7 +326,10 @@ public class CategorizeEngine {
 				} else {
 					// get from
 					Paging page2 = new Paging(pageno, dsp.getLastSavedTweetId());
-					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page2));
+					ResponseList<Status> aaaa = twitter.getUserTimeline(dsp.getName(), page2);
+					if(aaaa!=null) {
+						statuses.addAll(aaaa);
+					}
 				}
 
 				int size = statuses.size();
