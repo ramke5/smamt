@@ -35,6 +35,7 @@ import ba.ramke.model.DataSourcePage;
 import ba.ramke.model.Tweet;
 import twitter4j.Paging;
 import twitter4j.QueryResult;
+import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -61,7 +62,7 @@ public class CategorizeEngine {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
 				.setOAuthAccessToken(Twitter_API_access_token)
-				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
+				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret).setHttpConnectionTimeout(100000);
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate2) {
@@ -83,21 +84,18 @@ public class CategorizeEngine {
 		List<Tweet> tweets = new ArrayList<Tweet>();
 		List<String> criteriId = new ArrayList<String>();
 		List<String> categoryId = new ArrayList<String>();
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
+				.setOAuthAccessToken(Twitter_API_access_token)
+				.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
+		TwitterFactory taf = new TwitterFactory(cb.build());
+		Twitter twitter = taf.getInstance();
 		int i = 0;
 		Iterator<DataSourcePage> dspIterator = user.getTwitterPages().iterator();
 		mainLoop: while (dspIterator.hasNext()) {
 			DataSourcePage dsp = dspIterator.next();
 			System.out.println(dsp.getName());
-
-			ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true).setOAuthConsumerKey(Twitter_API_key).setOAuthConsumerSecret(Twitter_API_secret_key)
-					.setOAuthAccessToken(Twitter_API_access_token)
-					.setOAuthAccessTokenSecret(Twitter_API_access_token_secret);
-			TwitterFactory taf = new TwitterFactory(cb.build());
-			Twitter twitter = taf.getInstance();
-			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);
-			
-
+			ArrayList<Status> statuses = getStatusesFromTwitter(dsp, twitter);			
 			for (int counter = statuses.size(); counter != 0; counter--) {
 				Status status = statuses.get(counter - 1);
 				lastCrawlTweetId = status.getId();
@@ -108,7 +106,7 @@ public class CategorizeEngine {
 						setLastCrawledTweet(user.getUserId(), dsp.getPageId(), lastCrawlTweetId);
 						saveTweets(tweets);
 					}
-					i = 1;
+					i = 0;
 					continue mainLoop;
 				} else if (status.getText() != null) {
 					tweetKeywords = getTweetKeywords(status.getText());
@@ -173,8 +171,7 @@ public class CategorizeEngine {
 						
 						String location = twitter.showUser(status.getUser().getId()).getLocation();
 						String name = twitter.showUser(status.getUser().getId()).getName();
-//						String gender = checkGender(user.userId, name);
-						String gender = "test";
+						String gender = checkGender(user.userId, name);
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
@@ -309,7 +306,7 @@ public class CategorizeEngine {
 						saveTweets(tweets);
 					}
 					tweets = new ArrayList<Tweet>();
-					i = 1;
+					i = 0;
 					continue mainLoop;
 				}
 			}
@@ -328,7 +325,10 @@ public class CategorizeEngine {
 				} else {
 					// get from
 					Paging page2 = new Paging(pageno, dsp.getLastSavedTweetId());
-					statuses.addAll(twitter.getUserTimeline(dsp.getName(), page2));
+					ResponseList<Status> aaaa = twitter.getUserTimeline(dsp.getName(), page2);
+					if(aaaa!=null) {
+						statuses.addAll(aaaa);
+					}
 				}
 
 				int size = statuses.size();
@@ -417,7 +417,7 @@ public class CategorizeEngine {
 		mongoTemplate.updateFirst(query, new Update().set("criteriaId", criteriaId), Tweet.class,
 				COLLECTION_NAME_);
 		System.out.println("OK");
-	}
+	}	
 
 	public DataSource getLastCrawlTweetId(String userId, String pageId) {
 		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages")
@@ -491,21 +491,21 @@ public class CategorizeEngine {
 			gender = api.getGender(beforeFirstSpace).getGender();
 			
 			if (gender==null) {
-				
-			    String myKey = "MZFXaPVcYHbtZMbsXC";
-			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
-			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-			    if (conn.getResponseCode() != 200) {
-			      throw new RuntimeException("Error: " + conn.getResponseCode());
-			    }
-			    InputStreamReader input = new InputStreamReader(conn.getInputStream());
-			    BufferedReader reader = new BufferedReader(input);
-		
-			    Gson gson = new Gson();
-			    JsonObject json = gson.fromJson(reader, JsonObject.class);
-			    gender = json.get("gender").getAsString();
-			    conn.disconnect();
+				gender = "noGender";	
+//			    String myKey = "MZFXaPVcYHbtZMbsXC";
+//			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
+//			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		
+//			    if (conn.getResponseCode() != 200) {
+//			      throw new RuntimeException("Error: " + conn.getResponseCode());
+//			    }
+//			    InputStreamReader input = new InputStreamReader(conn.getInputStream());
+//			    BufferedReader reader = new BufferedReader(input);
+//		
+//			    Gson gson = new Gson();
+//			    JsonObject json = gson.fromJson(reader, JsonObject.class);
+//			    gender = json.get("gender").getAsString();
+//			    conn.disconnect();
 			}
 		}
 	    return gender;
