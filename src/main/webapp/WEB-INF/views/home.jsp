@@ -38,13 +38,31 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Overall tweet occurrences</div>
 			<div class="panel-body">
-				<div class="col-xs-12">
+				<div class="col-xs-6">Overall tweet occurrences
 					<div id="overalContainer"></div>
+				</div>
+				<div class="col-xs-6">Tweets by gender
+					<div id="genderContainer"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-
+	
+		<div class="row" style="margin-right: 15px; margin-left: 15px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">Overall tweet occurrences</div>
+			<div class="panel-body">
+				<div class="col-xs-6">Tweets by account
+					<div id="accountContainer"></div>
+				</div>
+				
+				<div class="col-xs-6">Tweets by location
+					<div id="locationContainer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default">
 			<div class="panel-heading">Tweet occurrences per category by date</div>
@@ -83,7 +101,6 @@
 				type : "GET",
 				url : "${home}heat-map",
 				success : function(data) {
-					$("#loadingModal").modal('hide');
 					drawChart(data);
 					getDailyChart();
 				},
@@ -137,6 +154,58 @@
 				url : "${home}my-categories-stats?userId=${userId}",
 				success : function(data) {
 					drawOveralCategoryPieChart(data);
+					getGenderChart();
+				},
+				error : function(e) {
+					alert("ERROR");
+				},
+				done : function(e) {
+					alert("DONE");
+				}
+			});
+		}
+
+		function getGenderChart() {
+			$.ajax({
+				type : "GET",
+				url : "${home}gender-stats?userId=${userId}",
+				success : function(data) {
+					drawGenderPieChart(data);
+					getAccountChart();
+				},
+				error : function(e) {
+					alert("ERROR");
+				},
+				done : function(e) {
+					alert("DONE");
+				}
+			});
+		}
+
+		function getAccountChart() {
+			$.ajax({
+				type : "GET",
+				url : "${home}account-stats?userId=${userId}",
+				success : function(data) {
+					drawAccountPieChart(data);
+					getLocationChart();
+				},
+				error : function(e) {
+					alert("ERROR");
+				},
+				done : function(e) {
+					alert("DONE");
+				}
+			});
+		}
+
+		function getLocationChart() {
+			$.ajax({
+				type : "GET",
+				url : "${home}location-stats?userId=${userId}",
+				success : function(data) {
+					$("#loadingModal").modal('hide');
+					drawLocationPieChart(data);
 				},
 				error : function(e) {
 					alert("ERROR");
@@ -305,6 +374,120 @@
 
 		function drawOveralCategoryPieChart(data) {
 			$('#overalContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawGenderPieChart(data) {
+			$('#genderContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawAccountPieChart(data) {
+			$('#accountContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawLocationPieChart(data) {
+			$('#locationContainer')
 					.highcharts(
 							{
 								chart : {

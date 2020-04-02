@@ -171,8 +171,7 @@ public class CategorizeEngine {
 						
 						String location = twitter.showUser(status.getUser().getId()).getLocation();
 						String name = twitter.showUser(status.getUser().getId()).getName();
-//						String gender = checkGender(user.userId, name);
-						String gender = "test";
+						String gender = checkGender(user.userId, name);
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
@@ -418,7 +417,7 @@ public class CategorizeEngine {
 		mongoTemplate.updateFirst(query, new Update().set("criteriaId", criteriaId), Tweet.class,
 				COLLECTION_NAME_);
 		System.out.println("OK");
-	}
+	}	
 
 	public DataSource getLastCrawlTweetId(String userId, String pageId) {
 		Query query = new Query(Criteria.where("_id").is(userId).and("twitterPages")
@@ -492,21 +491,21 @@ public class CategorizeEngine {
 			gender = api.getGender(beforeFirstSpace).getGender();
 			
 			if (gender==null) {
-				
-			    String myKey = "MZFXaPVcYHbtZMbsXC";
-			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
-			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-			    if (conn.getResponseCode() != 200) {
-			      throw new RuntimeException("Error: " + conn.getResponseCode());
-			    }
-			    InputStreamReader input = new InputStreamReader(conn.getInputStream());
-			    BufferedReader reader = new BufferedReader(input);
-		
-			    Gson gson = new Gson();
-			    JsonObject json = gson.fromJson(reader, JsonObject.class);
-			    gender = json.get("gender").getAsString();
-			    conn.disconnect();
+				gender = "noGender";	
+//			    String myKey = "MZFXaPVcYHbtZMbsXC";
+//			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
+//			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		
+//			    if (conn.getResponseCode() != 200) {
+//			      throw new RuntimeException("Error: " + conn.getResponseCode());
+//			    }
+//			    InputStreamReader input = new InputStreamReader(conn.getInputStream());
+//			    BufferedReader reader = new BufferedReader(input);
+//		
+//			    Gson gson = new Gson();
+//			    JsonObject json = gson.fromJson(reader, JsonObject.class);
+//			    gender = json.get("gender").getAsString();
+//			    conn.disconnect();
 			}
 		}
 	    return gender;

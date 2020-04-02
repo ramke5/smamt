@@ -118,4 +118,19 @@ public class StatisticsController {
 		}
 		return heatMap;
 	}
+	
+	@RequestMapping(value = "/smamt/gender-stats", method = RequestMethod.GET)
+	public @ResponseBody List<Categorized> statisticsGenderByUserId(ModelMap model, @ModelAttribute("userId") String userId) {
+		return statisticsDao.statisticsGenderByUserId(userId);
+	}
+	
+	@RequestMapping(value = "/smamt/account-stats", method = RequestMethod.GET)
+	public @ResponseBody List<Categorized> statisticsAccountByUserId(ModelMap model, @ModelAttribute("userId") String userId) {
+		return statisticsDao.statisticsAccountByUserId(userId);
+	}
+	
+	@RequestMapping(value = "/smamt/location-stats", method = RequestMethod.GET)
+	public @ResponseBody List<Categorized> statisticsLocationByUserId(ModelMap model, @ModelAttribute("userId") String userId) {
+		return statisticsDao.statisticsLocationByUserId(userId);
+	}
 }

@@ -33,7 +33,8 @@ public class StatisticsRepository {
 				Aggregation.match(Criteria.where("user_id").is(userId)), 
 				Aggregation.unwind("categoryId"), 
 				Aggregation.group("categoryId").count().as("y"), 
-				Aggregation.project("y").and("name").previousOperation());
+				Aggregation.project("y").and("name").previousOperation(),
+				Aggregation.sort(Direction.DESC, "y"));
 
 		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
 		List<Categorized> toRet = result.getMappedResults();
@@ -150,8 +151,7 @@ public class StatisticsRepository {
 		System.out.println("QUERY ## " + aggregate.toString());
 		AggregationResults<HeatMapResponse> result = mongoTemplate.aggregate(aggregate, "categorizedtweets", HeatMapResponse.class);
 		List<HeatMapResponse> aggregationResponse = result.getMappedResults();
-		return aggregationResponse;
-		
+		return aggregationResponse;		
 	}
 	
 	//All categories impl. goes here
@@ -169,5 +169,50 @@ public class StatisticsRepository {
 		return aggregationResponse;
 	}
 	
+	public List<Categorized> statisticsGenderByUserId(String userId) {
+		Aggregation agg = Aggregation.newAggregation(
+				Aggregation.match(new Criteria().orOperator(Criteria.where("userGender").is("male"), Criteria.where("userGender").is("female"))),
+				Aggregation.group("userGender").count().as("y"),
+				Aggregation.project("y").and("name").previousOperation(),
+				Aggregation.sort(Direction.DESC, "y"));
+
+		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
+		List<Categorized> toRet = result.getMappedResults();
+
+		return toRet;
+	}
+	
+
+	public List<Categorized> statisticsAccountByUserId(String userId) {
+		Aggregation agg = Aggregation.newAggregation(
+				Aggregation.group("name").count().as("y"),
+				Aggregation.project("y").and("name").previousOperation(),
+				Aggregation.sort(Direction.DESC, "y"),
+				Aggregation.limit(20));
+
+		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
+		List<Categorized> toRet = result.getMappedResults();
+		for(int i=0; i<toRet.size(); i++) {
+			System.out.println(toRet.get(i).getName());
+		}
+
+		return toRet;
+	}
+	
+	public List<Categorized> statisticsLocationByUserId(String userId) {
+		Aggregation agg = Aggregation.newAggregation(
+				Aggregation.group("userLocation").count().as("y"),
+				Aggregation.project("y").and("name").previousOperation(),
+				Aggregation.sort(Direction.DESC, "y"),
+				Aggregation.limit(20));
+
+		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
+		List<Categorized> toRet = result.getMappedResults();
+//		for(int i=0; i<toRet.size(); i++) {
+//			System.out.println(toRet.get(i).getName());
+//		}
+
+		return toRet;
+	}	
 }
 
