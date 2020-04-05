@@ -94,18 +94,18 @@
 
 	<div class="modal fade" id="loadingModal" role="dialog" style="display: none; width: auto;">
 		<div class="modal-dialog modal-sm">
-			<!-- Modal content-->
+			<!-- Modal content -->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h5 class="modal-title">Loading, please wait</h5>
+					<h5 class="modal-title" style="font-weight: bold">Loading, please wait</h5>
 				</div>
 				<div class="modal-body">
-					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loading7_blue.gif">
+					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 
 	<script type="text/javascript">
 		$(function() {

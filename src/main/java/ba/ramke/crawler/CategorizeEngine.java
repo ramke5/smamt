@@ -486,12 +486,9 @@ public class CategorizeEngine {
 			gender = tweets.get(0).getUserGender();	
 		}
 		else {
-			
-			Genderize api = GenderizeIoAPI.create();
-			gender = api.getGender(beforeFirstSpace).getGender();
-			
-			if (gender==null) {
-				gender = "noGender";	
+
+			gender = "noGender";
+//			if (gender==null) {
 //			    String myKey = "MZFXaPVcYHbtZMbsXC";
 //			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
 //			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -506,7 +503,7 @@ public class CategorizeEngine {
 //			    JsonObject json = gson.fromJson(reader, JsonObject.class);
 //			    gender = json.get("gender").getAsString();
 //			    conn.disconnect();
-			}
+//			}
 		}
 	    return gender;
 	}
