@@ -81,6 +81,6 @@ public class LoginController {
 			c.setValue("");
 			response.addCookie(c);
 		}
-		response.sendRedirect("/");
+		response.sendRedirect("/smamt/");
 	}
 }
