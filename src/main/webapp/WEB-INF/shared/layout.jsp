@@ -62,7 +62,7 @@
 		    <div class="dropdown">
 			    <button data-toggle="dropdown">
 				  	<img src="/resources/img/edit.png" width="24" height="24"/>
-		        	<span style="color: var(--white)">Manage Categories</span>
+		        	<span style="color: var(--white)">Edit Categories</span>
 			    	<span class="caret" style="color: var(--white)"></span>
 			    </button>
 			    <ul class="dropdown-menu">

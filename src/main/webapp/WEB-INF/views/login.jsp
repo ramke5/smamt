@@ -14,25 +14,108 @@
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
 <link href="<c:url value="/resources/css/admin.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/fonts/montserrat.css" />" rel="stylesheet" type='text/css'>
+<link href="<c:url value="/resources/css/loginCSS.css" />" rel="stylesheet">
+
+<script>
+$(document).ready(function() {
+    $("#do_login").click(function() { 
+       closeLoginInfo();
+       $(this).parent().find('span').css("display","none");
+       $(this).parent().find('span').removeClass("i-save");
+       $(this).parent().find('span').removeClass("i-warning");
+       $(this).parent().find('span').removeClass("i-close");
+       
+        var proceed = true;
+        $("#login_form input").each(function(){
+            
+            if(!$.trim($(this).val())){
+                $(this).parent().find('span').addClass("i-warning");
+            	$(this).parent().find('span').css("display","block");  
+                proceed = false;
+            }
+        });
+       
+        if(proceed) //everything looks good! proceed...
+        {
+            $(this).parent().find('span').addClass("i-save");
+            $(this).parent().find('span').css("display","block");
+        }
+    });
+    
+    //reset previously results and hide all message on .keyup()
+    $("#login_form input").keyup(function() { 
+        $(this).parent().find('span').css("display","none");
+    });
+ 
+  openLoginInfo();
+  setTimeout(closeLoginInfo, 1000);
+});
+
+function openLoginInfo() {
+    $(document).ready(function(){ 
+    	$('.b-form').css("opacity","0.01");
+      $('.box-form').css("left","-37%");
+      $('.box-info').css("right","-37%");
+    });
+}
+
+function closeLoginInfo() {
+    $(document).ready(function(){ 
+    	$('.b-form').css("opacity","1");
+    	$('.box-form').css("left","0px");
+      $('.box-info').css("right","-5px"); 
+    });
+}
+
+$(window).on('resize', function(){
+      closeLoginInfo();
+});
+</script>
 </head>
 <body>
 	<form action="login" method="post">
-		<div class="login-block">
-			<h1>Login</h1>
-			<div class="error">${error}</div>
-			<input type="text" placeholder="username" id="name" name="name" /> 
-			<input type="password" placeholder="password" id="password" name="password" />
+<!-- 		<div class="login-block"> -->
+<!-- 			<h1>Login</h1> -->
+<%-- 			<div class="error">${error}</div> --%>
+<!-- 			<input type="text" placeholder="username" id="name" name="name" />  -->
+<!-- 			<input type="password" placeholder="password" id="password" name="password" /> -->
 
-			<button value="submit" type="submit">Login</button>
-			<div style="padding-top: 8px; padding-bottom: 8px;">
-				<a href="${home}registration" style="color: black; float: right;"><span class=" glyphicon glyphicon-user"></span> Register</a>
-			</div>
-		</div>
-	</form>
-	<script>
-		$(document).ready(function() {
-			$('.error:empty').hide();
-		});
-	</script>
+<!-- 			<button value="submit" type="submit">Login</button> -->
+<!-- 			<div style="padding-top: 8px; padding-bottom: 8px;"> -->
+<%-- 				<a href="${home}registration" style="color: black; float: right;"><span class=" glyphicon glyphicon-user"></span> Register</a> --%>
+<!-- 			</div> -->
+<!-- 		</div> -->
+<div class='box'>
+  <div class='box-form'>
+    <div class='box-login-tab'></div>
+    <div class='box-login-title'>
+      <div class='i i-login'></div><h2>LOGIN</h2>
+    </div>
+    <div class='box-login'>
+      <div class='fieldset-body' id='login_form'>
+        <button onclick="window.location.href = '${home}login';" class='b b-form i i-more'></button>
+        	<p class='field'>
+          <label for='user'>E-MAIL</label>
+          <input type='text' id="name" name="name" />
+          <span id='valida' class='i i-warning'></span>
+        </p>
+      	  <p class='field'>
+          <label for='pass'>PASSWORD</label>
+          <input type='password'  id="password" name="password" />
+          <span id='valida' class='i i-close'></span>
+        </p>
+
+        	<input type='submit' id='do_login' value='LOGIN'/>
+      </div>
+    </div>
+  </div>
+  <div class='box-info'>
+	<div class='line-wh'></div>
+    <button onclick="" class='b-cta' title='Sign up!'> CREATE ACCOUNT</button>
+  	</div>
+</div>
+
+  
+</form>
 </body>
 </html>
