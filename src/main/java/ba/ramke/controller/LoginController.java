@@ -73,7 +73,7 @@ public class LoginController {
 		}
 	}
 	
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@RequestMapping(value = "/smamt/logout", method = RequestMethod.GET)
 	public void logout(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Cookie[] cookies = request.getCookies();
 		for (Cookie c : cookies) {
@@ -81,6 +81,6 @@ public class LoginController {
 			c.setValue("");
 			response.addCookie(c);
 		}
-		response.sendRedirect("/");
+		response.sendRedirect("/smamt/");
 	}
 }

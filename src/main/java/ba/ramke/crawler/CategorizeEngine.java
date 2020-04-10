@@ -169,9 +169,9 @@ public class CategorizeEngine {
 							}
 						}
 						
-						String location = twitter.showUser(status.getUser().getId()).getLocation();
 						String name = twitter.showUser(status.getUser().getId()).getName();
 						String gender = checkGender(user.userId, name);
+						String location = checkLocation(twitter, status, user.userId, name);
 
 						if (!criteriId.isEmpty()) {
 							tweets.add(new Tweet(new UID().toString(), user.getUserId(), status.getId(),
@@ -486,12 +486,9 @@ public class CategorizeEngine {
 			gender = tweets.get(0).getUserGender();	
 		}
 		else {
-			
-			Genderize api = GenderizeIoAPI.create();
-			gender = api.getGender(beforeFirstSpace).getGender();
-			
-			if (gender==null) {
-				gender = "noGender";	
+
+			gender = "noGender";
+//			if (gender==null) {
 //			    String myKey = "MZFXaPVcYHbtZMbsXC";
 //			    URL url = new URL("https://gender-api.com/get?key=" + myKey + "&name=" + beforeFirstSpace);
 //			    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -506,9 +503,32 @@ public class CategorizeEngine {
 //			    JsonObject json = gson.fromJson(reader, JsonObject.class);
 //			    gender = json.get("gender").getAsString();
 //			    conn.disconnect();
-			}
+//			}
 		}
 	    return gender;
+	}
+	
+public String checkLocation(Twitter twitter, Status status, String userId, String nameToCheck) throws IOException { 
+		//need to check if location of user exists in DB
+		String location = "";
+		String beforeFirstSpace = nameToCheck.split("\\ ")[0];
+		Query query = new Query().addCriteria(Criteria.where("user_id").is(userId).and("name").is(beforeFirstSpace)).limit(1);
+		List<Tweet> tweets = mongoTemplate.find(query, Tweet.class, COLLECTION_NAME_);
+		//if it doesn't exist proceed, if does, return value from DB
+		if (!tweets.isEmpty()) {
+			location = tweets.get(0).getUserLocation();	
+		}
+		else {
+
+			try {
+				location = twitter.showUser(status.getUser().getId()).getLocation();
+			} catch (TwitterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	    return location;
 	}
 	
 	public void recategorize(DataSource user, Map<String, Map<String, String>> crawlCriteria, List<Tweet> listOfTweets)

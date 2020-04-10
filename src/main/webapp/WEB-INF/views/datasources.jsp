@@ -3,10 +3,12 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 </head>
 <body>
 								<!-- Main Table -->
@@ -25,6 +27,7 @@
 			<thead>
 				<tr>
 					<th style="margin: 0 auto;">Page Name</th>
+					<th style="margin: 0 auto;">URL</th>
 				</tr>
 			</thead>
 		</table>
@@ -131,7 +134,7 @@
 				var trHTML = '';
 					for (var j = 0; j < data.length; j++) {
 						for(var i = 0; i < data[j].twitterPages.length; i++){
-							trHTML += '<tr><td>' + data[j].twitterPages[i].name 
+							trHTML += '<tr><td>' + data[j].twitterPages[i].name + '</td><td>' + '<a href="' + data[j].twitterPages[i].url  + '">' + data[j].twitterPages[i].url  + '</a>'
 							+ '</td><td><center><a data-toggle="modal" data-target="#deletePageModal" href="" onclick="deletePage(\''+data[j].twitterPages[i].pageId +'\')" id ="deletePageTable" class="glyphicon glyphicon-trash"></a></center>'
 							+ '</td></tr>';
 						}
@@ -158,7 +161,7 @@
 				var trHTML = '';
 					for (var j = 0; j < data.length; j++) {
 						for(var i = 0; i < data[j].twitterPages.length; i++){
-							trHTML += '<tr><td>' + data[j].twitterPages[i].name 
+							trHTML += '<tr><td>' + data[j].twitterPages[i].name + '</td><td>' + '<a href="' + data[j].twitterPages[i].url  + '">' + data[j].twitterPages[i].url  + '</a>'
 							+ '</td><td><center><a href="#" title="Restore" data-toggle="modal" data-target="#restorePageModal" onclick="restorePage(\''+data[j].twitterPages[i].pageId+'\')" class="glyphicon glyphicon-ok"></a></center>'
 							+ '</td></tr>';
 						}

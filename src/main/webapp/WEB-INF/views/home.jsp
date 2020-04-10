@@ -9,8 +9,8 @@
 	<br>
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default">
-			<div class="panel-heading">Tweet occurrences per week day by hour</div>
+		<div class="panel panel-default" style="border-color:  #78c2ed;">
+			<div class="panel-heading" style="font-weight: bold; background-color: #d2ebf9;">Tweets per week day by hour</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div id="heatMapContainer"></div>
@@ -21,8 +21,8 @@
 	<div id="becko"></div>
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default">
-			<div class="panel-heading">Daily and hourly tweets</div>
+		<div class="panel panel-default" style="border-color:  #78c2ed;">
+			<div class="panel-heading" style="font-weight: bold; background-color: #d2ebf9;">Daily and hourly tweets</div>
 			<div class="panel-body">
 				<div class="col-xs-4">
 					<div id="dayContainer"></div>
@@ -35,37 +35,50 @@
 	</div>
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default">
-			<div class="panel-heading">Overall tweet occurrences</div>
-			<div class="panel-body">
-				<div class="col-xs-6">Overall tweet occurrences
-					<div id="overalContainer"></div>
-				</div>
-				<div class="col-xs-6">Tweets by gender
-					<div id="genderContainer"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-		<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default">
-			<div class="panel-heading">Overall tweet occurrences</div>
-			<div class="panel-body">
-				<div class="col-xs-6">Tweets by account
-					<div id="accountContainer"></div>
-				</div>
-				
-				<div class="col-xs-6">Tweets by location
-					<div id="locationContainer"></div>
-				</div>
+		<div class="">
+			<div class="" style="display:inline;">
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float: left; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center; font-weight: bold; background-color: #d2ebf9;">Tweets by category</div>
+						</div>
+						<div id="overalContainer"></div>
+					</div>
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float:right; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center; font-weight: bold; background-color: #d2ebf9;">Tweets by gender</div>
+						</div>
+						<div id="genderContainer"></div>
+					</div>		
 			</div>
 		</div>
 	</div>
 	
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default">
-			<div class="panel-heading">Tweet occurrences per category by date</div>
+		<div class="">
+			<div class="">
+
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float: left; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center; font-weight: bold; background-color: #d2ebf9;">Tweets by account</div>
+						</div>
+						<div id="accountContainer"></div>
+					</div>
+
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float:right; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center; font-weight: bold; background-color: #d2ebf9;">Tweets by location</div>
+						</div>
+						<div id="locationContainer"></div>
+					</div>
+	
+			</div>
+		</div>
+	</div>
+
+	
+	<div class="row" style="margin-right: 15px; margin-left: 15px;">
+		<div class="panel panel-default" style="border-color:  #78c2ed;">
+			<div class="panel-heading" style="font-weight: bold; background-color: #d2ebf9;">Tweets per category by date</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div class="form-inline" style="float: left;">
@@ -81,18 +94,18 @@
 
 	<div class="modal fade" id="loadingModal" role="dialog" style="display: none; width: auto;">
 		<div class="modal-dialog modal-sm">
-			<!-- Modal content-->
+			<!-- Modal content -->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h5 class="modal-title">Loading, please wait</h5>
+					<h5 class="modal-title" style="font-weight: bold">Loading, please wait</h5>
 				</div>
 				<div class="modal-body">
-					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loading7_blue.gif">
+					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 
 	<script type="text/javascript">
 		$(function() {
@@ -309,7 +322,7 @@
 									}
 								},
 								tooltip : {
-									valueSuffix : 'occurences'
+									valueSuffix : 'tweets'
 								},
 								plotOptions : {
 									bar : {
@@ -386,7 +399,7 @@
 									text : ''
 								},
 								tooltip : {
-									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
 								},
 								plotOptions : {
 									pie : {
@@ -424,7 +437,7 @@
 									text : ''
 								},
 								tooltip : {
-									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
 								},
 								plotOptions : {
 									pie : {
@@ -462,7 +475,7 @@
 									text : ''
 								},
 								tooltip : {
-									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
 								},
 								plotOptions : {
 									pie : {
@@ -500,7 +513,7 @@
 									text : ''
 								},
 								tooltip : {
-									pointFormat : '<b>{point.name}</b>: {point.y} occurrences'
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
 								},
 								plotOptions : {
 									pie : {
@@ -588,7 +601,7 @@
 										zoomType : 'x'
 									},
 									title : {
-										text : 'Statistics by date'
+										text : 'Statistics by date'												
 									},
 									subtitle : {
 										text : 'Click and drag in the plot area to zoom in'
@@ -598,7 +611,7 @@
 									},
 									yAxis : {
 										title : {
-											text : 'Occurences per day'
+											text : 'Tweets per day'
 										}
 
 									},
@@ -616,7 +629,7 @@
 									},
 
 									tooltip : {
-										pointFormat : '{point.name}: <b>{point.y} occurences</b>'
+										pointFormat : '{point.name}: <b>{point.y} tweets</b>'
 									},
 
 									series : [ {
