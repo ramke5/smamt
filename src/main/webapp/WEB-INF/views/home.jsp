@@ -114,8 +114,8 @@
 				type : "GET",
 				url : "${home}heat-map",
 				success : function(data) {
-					drawChart(data);
-					getDailyChart();
+// 					drawChart(data);
+// 					getDailyChart();
 				},
 				error : function(e) {
 					alert("ERROR");
