@@ -1,11 +1,11 @@
 /* RESET RULES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 :root {
-  --green: #27ae60;
-  --lightblue: #3498db;
-  --gray: #95a5a6;
-  --red: #e74c3c;
-  --orange: #f1c40f;
+  --color1: #77A0A9;
+  --color2: #6F7D8C;
+  --color3: #6C596E;
+  --color4: #4B2E39;
+  --color5: #32021F;
   --white: white;
   --black: black;
   --blue: #36485f;
@@ -80,23 +80,23 @@ header button {
 }
 
 header li:nth-child(1) button {
-  background: var(--green);
+  background: var(--color1);
 }
 
 header li:nth-child(2) button {
-  background: var(--lightblue);
+  background: var(--color2);
 }
 
 header li:nth-child(3) button {
-  background: var(--gray);
+  background: var(--color3);
 }
 
 header li:nth-child(4) button {
-  background: var(--red);
+  background: var(--color4);
 }
 
 header li:nth-child(5) button {
-  background: var(--orange);
+  background: var(--color5);
 }
 
 header button:hover {
@@ -142,5 +142,5 @@ header button:hover span {
 }
 
 .page-footer span {
-  color: var(--red);
+  color: var(--color4);
 }

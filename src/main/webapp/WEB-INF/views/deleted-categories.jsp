@@ -63,6 +63,7 @@
 		            });
 		            $("#categoryTable > tbody").html("");
 		            $('#categoryTable').append(trHTML);
+		            $('#categoryTable').DataTable();
 		        },
 		        error: function(e) {
 		            console.log("ERROR: ", e);

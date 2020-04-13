@@ -28,6 +28,7 @@
 				<tr>
 					<th style="margin: 0 auto;">Page Name</th>
 					<th style="margin: 0 auto;">URL</th>
+					<th style="margin: 0 auto;">Delete</th>
 				</tr>
 			</thead>
 		</table>
@@ -141,6 +142,7 @@
 				}
 				$("#dataSourceTable > tbody").html("");
 				$('#dataSourceTable').append(trHTML);
+				$('#dataSourceTable').DataTable();
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
@@ -168,6 +170,7 @@
 				}
 				$("#dataSourceTable > tbody").html("");
 				$('#dataSourceTable').append(trHTML);
+				$('#dataSourceTable').DataTable();
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);
