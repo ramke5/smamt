@@ -93,11 +93,11 @@ public class Crawler implements Runnable{
 //		singleList.add("15-05-2019");			
 //		singleList.add("30-05-2019");			
 //		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-05-2019");			
-		singleList.add("15-06-2019");			
-		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-05-2019");			
+//		singleList.add("15-06-2019");			
+//		listDatuma.add(singleList);	
 		
 		singleList = new ArrayList<String>();
 		singleList.add("15-06-2019");			
@@ -200,25 +200,25 @@ public class Crawler implements Runnable{
 		listDatuma.add(singleList);			
 		
 		
-//		for (int i=0; i<listDatuma.size(); i++) {
-//			String dateOdGT= listDatuma.get(i).get(0);
-//			String datedoLT = listDatuma.get(i).get(1);
-//			List<Tweet> allPosts = twitterDataSource.getAllTwitterPosts(dateOdGT, datedoLT);
-//			System.out.println("Total nuber of tweets: " + allPosts.size() + " for period " + dateOdGT + " to " + datedoLT);
-//			System.out.println(categories.size());
-//			
-//			try {
-//				ce.categorize(ds, categories);
-//				ce.recategorize(ds, categories, allPosts);
-//	////			ce.parse(user);
-//	////			ce.lastTweetId(user);
-//	////			ce.spasiJedanTweet(user);
-//	////			ce.updateLastSavedTweet(user);
-//	//			
-//			} catch (TwitterException | IOException e) {
-//	//			 TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+		for (int i=0; i<listDatuma.size(); i++) {
+			String dateOdGT= listDatuma.get(i).get(0);
+			String datedoLT = listDatuma.get(i).get(1);
+			List<Tweet> allPosts = twitterDataSource.getAllTwitterPosts(dateOdGT, datedoLT);
+			System.out.println("Total nuber of tweets: " + allPosts.size() + " for period " + dateOdGT + " to " + datedoLT);
+			System.out.println(categories.size());
+			
+			try {
+				ce.categorize(ds, categories);
+				ce.recategorize(ds, categories, allPosts);
+	////			ce.parse(user);
+	////			ce.lastTweetId(user);
+	////			ce.spasiJedanTweet(user);
+	////			ce.updateLastSavedTweet(user);
+	//			
+			} catch (TwitterException | IOException e) {
+	//			 TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
