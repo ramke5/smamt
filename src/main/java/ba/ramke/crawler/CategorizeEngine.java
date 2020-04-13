@@ -547,6 +547,7 @@ public String checkLocation(Twitter twitter, Status status, String userId, Strin
 		List<String> categoryId = new ArrayList<String>();
 
 		for (int counter = 0; counter < listOfTweets.size(); counter++) {
+			System.out.println("Tweet " + counter + " of " + listOfTweets.size());
 			if (listOfTweets.get(counter).getTweetKeywords() != null) {
 				tweetKeywords = listOfTweets.get(counter).getTweetKeywords();
 				if (!tweetKeywords.isEmpty()) {

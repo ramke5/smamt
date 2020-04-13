@@ -1,5 +1,12 @@
 package ba.ramke.crawler;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,10 +141,33 @@ public class TwitterDataSource {
 		}
 		return datasource;
 	}
-	
-	public List<Tweet> getAllTwitterPosts() {
+		
+	public List<Tweet> getAllTwitterPosts(String dateOdGT, String datedoLT) {
+
+		//LT less than
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String dateInString = datedoLT;
+        Date date = null;
+        try {
+            date = formatter.parse(dateInString);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		
+		//GT greater than
+        SimpleDateFormat formatter2 = new SimpleDateFormat("dd-MM-yyyy");
+        String dateInString2 = dateOdGT;
+        Date date2 = null;
+        try {
+            date2 = formatter2.parse(dateInString2);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 		Query query = new Query();
+		query.addCriteria(Criteria.where("dateOfCreation").lt(date).gt(date2));
 		List<Tweet> tweet = mongoTemplate.find(query, Tweet.class, COLLECTION_NAME_CATEGORIZED_TWEETS);
 		return tweet;
 	}

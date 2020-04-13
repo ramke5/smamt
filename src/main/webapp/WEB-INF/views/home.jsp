@@ -10,7 +10,7 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default" style="border-color:  #78c2ed;">
-			<div class="panel-heading" style="font-weight: bold; background-color: #d2ebf9;">Tweets per week day by hour</div>
+			<div class="panel-heading" style="font-weight: bold; background-color: #d2ebf9;">Tweets per weekday by hour</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
 					<div id="heatMapContainer"></div>
@@ -114,8 +114,8 @@
 				type : "GET",
 				url : "${home}heat-map",
 				success : function(data) {
-// 					drawChart(data);
-// 					getDailyChart();
+					drawChart(data);
+					getDailyChart();
 				},
 				error : function(e) {
 					alert("ERROR");
@@ -307,7 +307,7 @@
 											'Wednesday', 'Thursday', 'Friday',
 											'Saturday' ],
 									title : {
-										text : 'Week day',
+										text : 'Weekday',
 										align : 'middle'
 									}
 								},
