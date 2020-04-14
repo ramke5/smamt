@@ -48,7 +48,7 @@
 		function populateTable() {
 		    $.ajax({
 		        type: "GET",
-		        url: "${home}deletedcategories?userId=" + $("#userID").text(),
+		        url: "${home}deletedcategories?userId=${userId}",
 		        timeout: 100000,
 		        success: function(data) {
 		            var trHTML = '';

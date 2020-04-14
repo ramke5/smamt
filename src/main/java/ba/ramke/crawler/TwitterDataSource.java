@@ -93,7 +93,7 @@ public class TwitterDataSource {
 							} else {
 								map.put(keyword.getKeywordId(), keyword.getKeywordName());
 								if (keyword.getSynonyms() == null) {
-									System.out.println(keyword.getKeywordName() + " has no sysnonyms");
+//									System.out.println(keyword.getKeywordName() + " has no sysnonyms");
 								} else {
 									Iterator<Synonym> synonymIterator = keyword.getSynonyms().iterator();
 									while (synonymIterator.hasNext()) {

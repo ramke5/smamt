@@ -121,7 +121,7 @@
 	function populateTable() {
 	    $.ajax({
 	        type: "GET",
-	        url: "${home}activecategories?userId=" + $("#userID").text(),
+	        url: "${home}activecategories?userId=${userId}",
 	        timeout: 100000,
 	        success: function(data) {
 	            var trHTML = '';
