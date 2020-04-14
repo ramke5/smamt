@@ -119,15 +119,15 @@ public class Crawler implements Runnable{
 //		singleList.add("15-08-2019");			
 //		listDatuma.add(singleList);	
 //		
-		singleList = new ArrayList<String>();
-		singleList.add("15-08-2019");			
-		singleList.add("30-08-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-08-2019");			
-		singleList.add("15-09-2019");			
-		listDatuma.add(singleList);	
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-08-2019");			
+//		singleList.add("30-08-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-08-2019");			
+//		singleList.add("15-09-2019");			
+//		listDatuma.add(singleList);	
 		
 		singleList = new ArrayList<String>();
 		singleList.add("15-09-2019");			
@@ -207,18 +207,18 @@ public class Crawler implements Runnable{
 			System.out.println("Total nuber of tweets: " + allPosts.size() + " for period " + dateOdGT + " to " + datedoLT);
 			System.out.println(categories.size());
 			
-//			try {
-//				ce.categorize(ds, categories);
-//				ce.recategorize(ds, categories, allPosts);
-//	////			ce.parse(user);
-//	////			ce.lastTweetId(user);
-//	////			ce.spasiJedanTweet(user);
-//	////			ce.updateLastSavedTweet(user);
-//	//			
-//			} catch (TwitterException | IOException e) {
-//	//			 TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			try {
+				ce.categorize(ds, categories);
+				ce.recategorize(ds, categories, allPosts);
+	////			ce.parse(user);
+	////			ce.lastTweetId(user);
+	////			ce.spasiJedanTweet(user);
+	////			ce.updateLastSavedTweet(user);
+	//			
+			} catch (TwitterException | IOException e) {
+	//			 TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

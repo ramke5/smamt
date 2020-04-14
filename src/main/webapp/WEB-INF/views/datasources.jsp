@@ -7,12 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-
-
 </head>
 <body>
 								<!-- Main Table -->
@@ -20,19 +15,17 @@
 <div class="tocenter">
 	<button style="float: right;" id="btnPage" class="btn btn-info btn-sm" data-toggle="modal" data-target="#dataSourcesModal">
 		<span class="glyphicon glyphicon-plus-sign"></span> 
-		Add Page
+		Add Account
 		</button>
 	<div class="btn-group">
-<!--   		<button class="btn btn-primary btn-sm">Twitter</button> -->
-    	<button onclick="populateTableWithActiveTwitterPages()" type="button" class="btn btn-success btn-sm">Active Pages</button>
-    	<button onclick="populateTableWithDeletedTwitterPages()" type="button" class="btn btn-danger btn-sm">Deleted Pages</button>
+
  	</div>
 		<table class="table table-bordered table-hover" id="dataSourceTable">
 			<thead>
 				<tr>
-					<th style="margin: 0 auto;">Page Name</th>
-					<th style="margin: 0 auto;">URL</th>
-					<th style="margin: 0 auto;">Delete</th>
+					<th style="margin: 0 auto;">Account Name</th>
+					<th style="margin: 0 auto;">Account URL</th>
+					<th style="margin: 0 auto;">Make inactive</th>
 				</tr>
 			</thead>
 		</table>
@@ -47,12 +40,12 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Add New Page</h4>
+						<h4 class="modal-title">Add New Account</h4>
 					</div>
 					<div class="modal-body">
 						<div class="category-block">
 							<div class="form-group">
-								<label for="page">Title</label> <textarea rows="4" cols="70" placeholder="Enter URL of home page
+								<label for="page">Title</label> <textarea rows="4" cols="70" placeholder="Enter URL of account
 								https://www.twitter.com/ramke5/" class="form-control" id="page" required="required"></textarea>
 							</div>
 						</div>
@@ -77,10 +70,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Delete</h4>
+						<h4 class="modal-title">Make inactive</h4>
 					</div>
 					<div class="modal-body">
-						Are you sure you want to delete this page?
+						Are you sure you want to make this account inactive?
 					</div>
 					
 					<div class="modal-footer">
@@ -92,35 +85,11 @@
 				</div>
 			</div>
 		</div>
-		
-						<!-- Restore Page Modal -->
-	
-	<div class="modal fade" id="restorePageModal" role="dialog">
-		<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Delete</h4>
-					</div>
-					<div class="modal-body">
-						Are you sure you want to restore this page?
-					</div>
-					
-					<div class="modal-footer">
-						<div class="btn-group">
-							<button type="submit" class="btn btn-default" id="btnRestorePage">Yes</button>
-							<button type="button" class="btn btn-danger"data-dismiss="modal">No</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
 <script type="text/javascript">
 
 	$( document ).ready(function() {
-		populateTableWithActiveTwitterPages();
+		populateTableWithActiveTwitterAccounts();
 	});
 
 	jQuery(document).ready(function($) {
@@ -130,7 +99,7 @@
 		});
 	});
 	
-	function populateTableWithActiveTwitterPages(){
+	function populateTableWithActiveTwitterAccounts(){
 		$.ajax({
 			type : "GET",
 			url : "${home}twitterpages?userId=${userId}",
@@ -157,34 +126,6 @@
 		});
 	}
 	
-	function populateTableWithDeletedTwitterPages(){
-		
-		$.ajax({
-			type : "GET",
-			url : "${home}deletedtwitterpages?userId=${userId}",
-			timeout : 100000,
-			success : function(data) {
-				var trHTML = '';
-					for (var j = 0; j < data.length; j++) {
-						for(var i = 0; i < data[j].twitterPages.length; i++){
-							trHTML += '<tr><td>' + data[j].twitterPages[i].name + '</td><td>' + '<a href="' + data[j].twitterPages[i].url  + '">' + data[j].twitterPages[i].url  + '</a>'
-							+ '</td><td><center><a href="#" title="Restore" data-toggle="modal" data-target="#restorePageModal" onclick="restorePage(\''+data[j].twitterPages[i].pageId+'\')" class="glyphicon glyphicon-ok"></a></center>'
-							+ '</td></tr>';
-						}
-				}
-				$("#dataSourceTable > tbody").html("");
-				$('#dataSourceTable').append(trHTML);
-				$('#dataSourceTable').DataTable();
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-			},
-			done : function(e) {
-				console.log("DONE");
-			}
-		});
-	}
-	
 	function addPage(){
 		var pageUrl = $("#page").val();
 		$.ajax({
@@ -195,7 +136,7 @@
 				console.log("SUCCESS: ", data);
 				$('#dataSourcesModal').modal('hide');
 				$("#dataSourcesModal").trigger('reset');
-				populateTableWithActiveTwitterPages();
+				populateTableWithActiveTwitterAccounts();
 				alert("You have succesefully added new page.");
 			},
 			error : function(e) {
@@ -218,7 +159,7 @@
 				timeout : 100000,
 				success : function(data) {
 				$('#deletePageModal').modal('hide');
-				populateTableWithActiveTwitterPages();
+				populateTableWithActiveTwitterAccounts();
 				},
 				error : function(e) {
 					console.log("ERROR: ", e);
@@ -230,28 +171,7 @@
 			}
 		});
 	}
-	
-	function restorePage(id){
-		$("#btnRestorePage").click(function(){
-			if (this.id == 'btnRestorePage') {
-			$.ajax({
-				type : "POST",
-				url : "${home}restoretwitterpage?userId=${userId}&pageId=" + id,
-				timeout : 100000,
-				success : function(data) {
-				$('#restorePageModal').modal('hide');
-				populateTableWithDeletedTwitterPages();
-				},
-				error : function(e) {
-					console.log("ERROR: ", e);
-				},
-				done : function(e) {
-					alert("DONE");
-				}
-				});
-			}
-		});
-	}
+
 </script>
 
 </body>
