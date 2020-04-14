@@ -10,10 +10,10 @@
 <title>Login</title>
 
 <script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-<link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+<%-- <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet"> --%>
 <script src="<c:url value="/resources/js/jquery.min.js" />"></script>
-<link href="<c:url value="/resources/css/admin.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/fonts/montserrat.css" />" rel="stylesheet" type='text/css'>
+<%-- <link href="<c:url value="/resources/css/admin.css" />" rel="stylesheet"> --%>
+<%-- <link href="<c:url value="/resources/fonts/montserrat.css" />" rel="stylesheet" type='text/css'> --%>
 <link href="<c:url value="/resources/css/loginCSS.css" />" rel="stylesheet">
 
 <script>

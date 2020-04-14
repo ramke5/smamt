@@ -17,7 +17,7 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="http://code.highcharts.com/modules/heatmap.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
-<link href="<c:url value="/resources/css/bootstrap-datetimepicker.min.css" />" rel="stylesheet" type="text/css" />
+<%-- <link href="<c:url value="/resources/css/bootstrap-datetimepicker.min.css" />" rel="stylesheet" type="text/css" /> --%>
 <link href="<c:url value="/resources/css/navigation-bar.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/resources/css/manage-categories.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/resources/fonts/montserrat.css" />" rel="stylesheet" type="text/css" />
@@ -26,7 +26,12 @@
 <link href="<c:url value="/resources/css/bla.css" />" rel="stylesheet" />
 
 <script src="<c:url value="/resources/js/bootstrap-datetimepicker.js" />"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /> -->
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />		
+
+
+
 <script>
 	const buttons = document.querySelectorAll("header button");
 	
@@ -58,6 +63,19 @@
 			  	<img src="/resources/img/home.png" width="24" height="24"/>
 		        <span style="color: var(--white)">Home</span>
 		      </button>
+		    </li>
+		    <li>
+		    <div class="dropdown">
+			    <button data-toggle="dropdown">
+				  	<img src="/resources/img/edit.png" width="24" height="24"/>
+		        	<span style="color: var(--white)">Charts</span>
+			    	<span class="caret" style="color: var(--white)"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="${home}home">Heat map & Bar - line charts</a></li>
+			      <li><a href="${home}pie-charts">Pie charts</a></li>
+			    </ul>
+		  </div>
 		    </li>
 		    <li>
 		    <div class="dropdown">

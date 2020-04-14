@@ -54,6 +54,31 @@ public class CategoryController {
 		}
 	}
 	
+	@RequestMapping(value = "/smamt/pie-charts", method = RequestMethod.GET)
+	public ModelAndView pieCharts(ModelMap model, HttpServletRequest request) {
+		Cookie[] cookie = request.getCookies();
+		boolean exists = false;
+		String userId = "";
+		String username = "";
+		for (Cookie c : cookie) {
+			if (c.getName().equals("session")) {
+				exists = true;
+				userId = c.getValue();
+			} else if (c.getName().equals("uname")) {
+				exists = true;
+				username = c.getValue();
+			}
+		}
+		if (exists == false) {
+			return new ModelAndView("redirect:/");
+		} else {
+			ModelAndView modelAndView = new ModelAndView("pie-charts");
+			modelAndView.addObject("userId", userId);
+			modelAndView.addObject("username", username);
+			return modelAndView;
+		}
+	}
+	
 	@RequestMapping(value = "/smamt/active-categories", method = RequestMethod.GET)
 	public ModelAndView getActiveCategoriesView(ModelMap model, HttpServletRequest request) {
 
