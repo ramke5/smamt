@@ -1,6 +1,9 @@
 package ba.ramke.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,11 +61,26 @@ public class StatisticsRepository {
 		return categorized;
 	}
 	
-	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
+//	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
+	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId, Date dateFrom, Date dateUntil){
+		
+	        // add one day to dateUntil
+	        Calendar c = Calendar.getInstance();
+	        c.setTime(dateUntil);
+	        c.add(Calendar.DATE, 1); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+	        dateUntil = c.getTime();
+	        
+	        // add two hours to dateFrom
+	        Calendar c2 = Calendar.getInstance();
+	        c2.setTime(dateFrom);
+	        c2.add(Calendar.HOUR, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+	        dateFrom = c2.getTime();
+		
 		Aggregation agg = Aggregation.newAggregation
 						(Aggregation.match(Criteria.where("user_id").is(userId)),
 						Aggregation.unwind("categoryId"),
 						Aggregation.match(Criteria.where("categoryId").is(categoryId)),
+						Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil)),
 						//Aggregation.limit(50000),
 						Aggregation.project("dateOfCreation").andExpression("year(dateOfCreation)").as("year")
 															.andExpression("month(dateOfCreation)").as("month")
@@ -201,6 +219,8 @@ public class StatisticsRepository {
 	
 	public List<Categorized> statisticsLocationByUserId(String userId) {
 		Aggregation agg = Aggregation.newAggregation(
+//				Aggregation.match(Criteria.where("userLocation").ne("x")),	
+				Aggregation.match(new Criteria().andOperator(Criteria.where("userLocation").ne("x"), Criteria.where("userLocation").ne("Uhljebistan"), Criteria.where("userLocation").ne("Folsom Prison"), Criteria.where("userLocation").ne(""))),				
 				Aggregation.group("userLocation").count().as("y"),
 				Aggregation.project("y").and("name").previousOperation(),
 				Aggregation.sort(Direction.DESC, "y"),

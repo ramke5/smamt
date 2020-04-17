@@ -10,59 +10,49 @@
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default" style="border-color:  #78c2ed;">
-			<div class="panel-heading" style="font-weight: bold;">Tweets per weekday by hour</div>
-			<div class="panel-body">
-				<div class="col-xs-12">
-					<div id="heatMapContainer"></div>
-				</div>
+			<div class="panel-heading" style="font-weight: bold; font-size: 16px; text-align: center">Pie charts</div>
 			</div>
 		</div>
 	</div>
 	<div id="becko"></div>
 
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default" style="border-color:  #78c2ed;">
-			<div class="panel-heading" style="font-weight: bold;">Daily and hourly tweets</div>
-			<div class="panel-body">
-				<div class="col-xs-4">
-					<div id="dayContainer"></div>
-				</div>
-				<div class="col-xs-8">
-					<div id="hourContainer"></div>
-				</div>
+		<div class="">
+			<div class="" style="display:inline;">
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float: left; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="font-weight: bold; font-size: 14px; text-align: center">Tweets by category</div>
+						</div>
+						<div id="overalContainer"></div>
+					</div>
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float:right; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="font-weight: bold; font-size: 14px; text-align: center">Tweets by gender</div>
+						</div>
+						<div id="genderContainer"></div>
+					</div>		
 			</div>
 		</div>
 	</div>
 	
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
-		<div class="panel panel-default" style="border-color:  #78c2ed;">
-			<div class="panel-heading" style="font-weight: bold;">Tweets per category by date</div>
-			<div class="panel-body">
-				<div class="col-xs-12">
-					<div class="col-xs-2">
-						<table>
-							<tr>
-								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
-									<select id="category" class="form-control">
-									</select>				
-								</div>
-							</tr>
-							<tr>
-								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
-									<input type="text" id="daterange" name="daterange" />
-								</div>
-							</tr>
-							<tr>
-								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
-									<button class="btn btn-default inline-block" style="float: center" onclick="validate()">Submit</button>
-								</div>
-							</tr>
-						</table>
+		<div class="">
+			<div class="">
+
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float: left; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="font-weight: bold; font-size: 14px; text-align: center">Tweets by account</div>
+						</div>
+						<div id="accountContainer"></div>
 					</div>
-					<div class="col-xs-10">
-						<div id="byCategoryChart"></div>
+
+					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float:right; border-color:  #78c2ed;">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="font-weight: bold; font-size: 14px; text-align: center">Tweets by location</div>
+						</div>
+						<div id="locationContainer"></div>
 					</div>
-				</div>
+	
 			</div>
 		</div>
 	</div>
@@ -87,11 +77,10 @@
 			$("#loadingModal").modal('show');
 			$.ajax({
 				type : "GET",
-				url : "${home}heat-map",
+				url : "${home}my-categories-stats?userId=${userId}",
 				success : function(data) {
-					drawChart(data);
-					getDailyChart();
-					getHourlyChart();
+					drawOveralCategoryPieChart(data);
+					getGenderChart();
 				},
 				error : function(e) {
 					alert("ERROR");
@@ -103,60 +92,13 @@
 
 		});
 
-		function setInputDate(_id){
-		    var _dat = document.querySelector(_id);
-
-		    var dt = new Date();
-		    var weekBefore = dt.setDate(dt.getDate() - 60);
-		    var dateFrom = new Date(weekBefore);
-		    
-		    var hoy = dateFrom,
-		        d = hoy.getDate(),
-		        m = hoy.getMonth()+1, 
-		        y = hoy.getFullYear(),
-		        data;
-
-		    if(d < 10){
-		        d = "0"+d;
-		    };
-		    if(m < 10){
-		        m = "0"+m;
-		    };
-
-		    var hoy2 = new Date(),
-	        d2 = hoy2.getDate(),
-	        m2 = hoy2.getMonth()+1, 
-	        y2 = hoy2.getFullYear(),
-	        data2;
-
-		    if(d2 < 10){
-		        d2 = "0"+d2;
-		    };
-		    if(m2 < 10){
-		        m2 = "0"+m2;
-		    };
-
-		    data = m + "/" + d + "/" + y + " - " + m2 + "/" + d2 + "/" + y2;
-		    console.log(data);
-		    _dat.value = data;
-		};
-				
-
-		$(function() {
-			  $('input[name="daterange"]').daterangepicker({
-			    opens: 'left'
-			  }, function(start, end, label) {
-			    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-			  });
-			});
-
-		function getDailyChart() {
+		function getGenderChart() {
 			$.ajax({
 				type : "GET",
-				url : "${home}week-day",
+				url : "${home}gender-stats?userId=${userId}",
 				success : function(data) {
-					drawDailyChart(data);
-// 					getHourlyChart();
+					drawGenderPieChart(data);
+					getAccountChart();
 				},
 				error : function(e) {
 					alert("ERROR");
@@ -167,12 +109,29 @@
 			});
 		}
 
-		function getHourlyChart() {
+		function getAccountChart() {
 			$.ajax({
 				type : "GET",
-				url : "${home}day-hour",
+				url : "${home}account-stats?userId=${userId}",
 				success : function(data) {
-					drawHourChart(data);
+					drawAccountPieChart(data);
+					getLocationChart();
+				},
+				error : function(e) {
+					alert("ERROR");
+				},
+				done : function(e) {
+					alert("DONE");
+				}
+			});
+		}
+
+		function getLocationChart() {
+			$.ajax({
+				type : "GET",
+				url : "${home}location-stats?userId=${userId}",
+				success : function(data) {
+					drawLocationPieChart(data);
 					$("#loadingModal").modal('hide');
 				},
 				error : function(e) {
@@ -340,12 +299,163 @@
 			});
 		}
 
+		function drawOveralCategoryPieChart(data) {
+			$('#overalContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawGenderPieChart(data) {
+			$('#genderContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawAccountPieChart(data) {
+			$('#accountContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
+		function drawLocationPieChart(data) {
+			$('#locationContainer')
+					.highcharts(
+							{
+								chart : {
+									plotBackgroundColor : null,
+									plotBorderWidth : null,
+									plotShadow : false,
+									type : 'pie'
+								},
+								title : {
+									text : ''
+								},
+								tooltip : {
+									pointFormat : '<b>{point.name}</b>: {point.y} tweets'
+								},
+								plotOptions : {
+									pie : {
+										allowPointSelect : true,
+										cursor : 'pointer',
+										dataLabels : {
+											enabled : true,
+											format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+											style : {
+												color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+														|| 'black'
+											}
+										}
+									}
+								},
+								series : [ {
+									name : 'Categories',
+									colorByPoint : true,
+									data : data
+								} ]
+							});
+		}
+
 		$(function() {
 			$.ajax({
 				type : "GET",
 				url : "${home}get-categories?userId=${userId}",
 				success : function(data) {
-					setInputDate("#daterange");
 					console.log(JSON.stringify(data));
 					populateDropdown(data);
 				},
@@ -371,12 +481,7 @@
 
 		function validate() {
 			var category = document.getElementById("category");
-			var selectedDate = document.getElementById("daterange");
-			var selectedDateSplited = selectedDate.value.split("-");
-			var startDate = selectedDateSplited[0];
-			var endDate = selectedDateSplited[1];
-			
-			
+
 			if (category.value == "") {
 				category.style.borderColor = 'red';
 			} else {
@@ -384,10 +489,9 @@
 				$.ajax({
 					type : "GET",
 					url : "${home}date-stats?userId=${userId}&categoryId="
-							+ category.value + "&startDate=" + startDate + "&endDate=" + endDate ,
+							+ category.value,
 					success : function(data) {
 						console.log(JSON.stringify(data));
-						drawByCategoryChart(data);
 					},
 					error : function(e) {
 						alert("ERROR");
@@ -399,56 +503,6 @@
 			}
 		}
 
-		function drawByCategoryChart(data) {
-			$(function() {
-				// Create the chart
-				$('#byCategoryChart')
-						.highcharts(
-								{
-									chart : {
-										type : 'column',
-										zoomType : 'x'
-									},
-									title : {
-										text : ''												
-									},
-									subtitle : {
-										text : ''
-									},
-									xAxis : {
-										type : 'category'
-									},
-									yAxis : {
-										title : {
-											text : 'Tweets per day'
-										}
-
-									},
-									legend : {
-										enabled : false
-									},
-									plotOptions : {
-										series : {
-											borderWidth : 0,
-											dataLabels : {
-												enabled : true,
-												format : '<b>{point.y}</b>'
-											}
-										}
-									},
-
-									tooltip : {
-										pointFormat : '{point.name}: <b>{point.y} tweets</b>'
-									},
-
-									series : [ {
-										name : 'Category',
-										colorByPoint : true,
-										data : data
-									} ],
-								});
-			});
-		}
 	</script>
 </body>
 

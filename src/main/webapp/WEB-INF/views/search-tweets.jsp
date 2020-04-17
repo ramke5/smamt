@@ -5,13 +5,14 @@
 </head>
 <body>
 
-	<div class="panel panel-default" style="width: 500px; margin: 0 auto;">
+	<div class="panel panel-default" style="width: 570px; margin: 0 auto; border-color: #78c2ed;">
 		<div class="panel-heading" style="font-family: Consolas, monaco, monospace; font-weight: bold;">
-			Search <span class="glyphicon glyphicon-globe"></span>
+			Search <span class="glyphicon glyphicon-search"></span>
 		</div>
 		<div class="panel-body">
-			<div style="width: 470px; margin: 0 auto; padding-top: 15px; padding-bottom: 50px;">
-				<input class="form-control" id="keyword" type="text" placeholder="Enter keyword to search" style="width: auto; float: left; margin-right: 5px;" /> <select id="category" class="form-control" style="width: auto; float: left;">
+			<div style="width: 500px; margin: 0 auto; padding-top: 15px; padding-bottom: 50px;">
+				<input class="form-control" id="keyword" type="text" placeholder="Words to search" style="width: auto; float: left; margin-right: 5px;" /> 
+				<select id="category" class="form-control" style="width: auto; float: left; margin-right: 5px;">
 					<option></option>
 				</select>
 				<button class="btn btn-default btn-lg" onclick="validate()" style="width: 70px; float: right;">
@@ -21,7 +22,7 @@
 		</div>
 	</div>
 
-	<div class="panel panel-default" id="mainContainer" style="width: 1100px; margin: 0 auto; margin-top: 20px;">
+	<div class="panel panel-default" id="mainContainer" style="width: 1200px; margin: 0 auto; margin-top: 20px; border-color: #78c2ed;">
 		<div class="panel-heading" id="mainHeading" style="font-weight: bold;">
 			<span class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span> tweets <span class="label label-info" id="tweetOccurences" style="float: right"></span>
 		</div>
@@ -206,11 +207,10 @@
 
 					var urlASpanHref = document.createElement("a");
 					urlASpanHref.setAttribute("target", "_blank");
-					urlASpanHref.setAttribute("href", "https://www."
-							+ tweets[i].url);
+					urlASpanHref.setAttribute("href", tweets[i].url);
 
 					var urlSpan = document.createElement("span");
-					urlSpan.className = "glyphicon glyphicon-send";
+					urlSpan.className = "glyphicon glyphicon-book";
 					urlSpan.style.color = '#800000';
 					urlSpan.style.cssFloat = 'left';
 					urlSpan.style.padding = '1px';
@@ -276,7 +276,7 @@
 				var paragraphForMessage = document.createElement("p");
 				paragraphForMessage
 						.appendChild(document
-								.createTextNode("There is no tweets for given parameters."));
+								.createTextNode("No results."));
 
 				td.appendChild(paragraphForMessage);
 				tr.appendChild(td);

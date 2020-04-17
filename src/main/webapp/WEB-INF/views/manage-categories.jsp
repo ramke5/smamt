@@ -14,15 +14,27 @@
 <body>
 
 <div class="tocenter">
-    <button id="category" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categories">
-        <span class="glyphicon glyphicon-plus-sign"></span> 
-		Add Category
-		
-    </button>
+	<div style="text-align: center;">
+	    <button style="float:center" id="category" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categories">
+	        <span class="glyphicon glyphicon-plus-sign"></span> 
+			Add Category
+	    </button>
+    </div>
+    
+   	<div style="text-align: center;">
+		<br>
+	</div>
+	<div style="text-align: center;">
+		<br>
+	</div>
+    
+<!--     <table class="table table-striped table-bordered" id="categoryTable"> -->
     <table class="table table-bordered table-hover" id="categoryTable">
         <thead>
             <tr>
                 <th style="margine: 0 auto">Name</th>
+                <th style="margine: 0 auto" class="text-center">Delete</th>
+                <th style="margine: 0 auto" class="text-center">Edit name</th>
             </tr>
         </thead>
     </table>
@@ -39,8 +51,8 @@
             <div class="modal-body">
                 <div class="category-block">
                     <div class="form-group">
-                        <label for="category">Title</label>
-                        <textarea rows="4" cols="70" placeholder="To add more than one category separate each one by comma. Ex: First,Second"
+                        <label for="category"></label>
+                        <textarea rows="4" cols="70" placeholder="To add more than one category separate each one by comma. Ex: Sport, Education..."
 									class="form-control" id="categoryName" name="categoryName"
 									required="required"></textarea>
                     </div>
@@ -70,7 +82,7 @@
                 <h4 class="modal-title">Delete</h4>
             </div>
             <div class="modal-body">
-						Are you sure you want to delete this category?
+						Do you want to delete this category?
 			</div>
             <div class="modal-footer">
                 <div class="btn-group">
@@ -94,7 +106,7 @@
                 <div class="category-block">
                     <div class="form-group">
                         <input type="text" class="form-control" id="newCategoryName"
-								placeholder="Please enter new name for category" required="required">
+								placeholder="Enter new name for category" required="required">
                         </div>
                     </div>
                 </div>
@@ -112,13 +124,13 @@
 		
 	<script type="text/javascript">
 	$(document).ready(function() {
-	    populateTable();
+	    populateTable();	    
 	});
-		
+
 	function populateTable() {
 	    $.ajax({
 	        type: "GET",
-	        url: "${home}activecategories?userId=" + $("#userID").text(),
+	        url: "${home}activecategories?userId=${userId}",
 	        timeout: 100000,
 	        success: function(data) {
 	            var trHTML = '';
@@ -127,7 +139,6 @@
 	                    for (var i = 0; i < value[j].categories.length; i++) {
 	                        trHTML += '<tr><td><a href="${baseURL}category-keywords?userId=${userId}&username=${username}&categoryId=' + value[j].categories[i].categoryId + '&categoryName=' + value[j].categories[i].categoryName + '" class="title">' + value[j].categories[i].categoryName + '</a>' +
 	                            '</td><td><center><a data-toggle="modal" data-target="#deleteCategoryModal" href="" onclick="deleteCategory(\'' + value[j].categories[i].categoryId + '\')" id ="dcat" class="glyphicon glyphicon-trash"></a></center>' +
-	                            '</td><td class="cat">' + value[j].categories[i].categoryId +
 	                            '</td><td><center><a data-toggle="modal" data-target="#changeCategoryNameModal" class="glyphicon glyphicon-edit" href="" onClick="changeCategoryName(this,\'' + value[j].categories[i].categoryId + '\')"></a></center>' +
 	                            '</td></tr>';
 	                    }
@@ -135,6 +146,8 @@
 	            });
 	            $("#categoryTable > tbody").html("");
 	            $('#categoryTable').append(trHTML);
+	            $('#categoryTable').DataTable();
+
 	        },
 	        error: function(e) {
 	            console.log("ERROR: ", e);
@@ -144,6 +157,7 @@
 	            console.log("DONE");
 	        }
 	    });
+		
 	}
 		
 	jQuery(document).ready(function($) {

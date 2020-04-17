@@ -50,6 +50,31 @@ public class DataSourceController {
 		}
 	}
 	
+	@RequestMapping(value = "/smamt/inactive-accounts", method = RequestMethod.GET)
+	public ModelAndView inactiveAccounts(HttpServletRequest request) {
+		Cookie[] cookie = request.getCookies();
+		boolean exists = false;
+		String userId = "";
+		String username = "";
+		for (Cookie c : cookie) {
+			if (c.getName().equals("session")) {
+				exists = true;
+				userId = c.getValue();
+			} else if (c.getName().equals("uname")) {
+				exists = true;
+				username = c.getValue();
+			}
+		}
+		if (exists == false) {
+			return new ModelAndView("redirect:/");
+		} else {
+			ModelAndView modelAndView = new ModelAndView("inactive-accounts");
+			modelAndView.addObject("userId", userId);
+			modelAndView.addObject("username", username);
+			return modelAndView;
+		}
+	}
+	
 	@RequestMapping(value = "/smamt/addtwitteraccount", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> addTwitterAccount(ModelMap modelMap, @ModelAttribute("userId") String userId, @ModelAttribute("pageUrl") String pageUrl) throws Exception {
