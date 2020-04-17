@@ -12,11 +12,24 @@
 <body>
 								<!-- Main Table -->
 
+	
+	
 <div class="tocenter">
-	<button style="float: right;" id="btnPage" class="btn btn-info btn-sm" data-toggle="modal" data-target="#dataSourcesModal">
-		<span class="glyphicon glyphicon-plus-sign"></span> 
-		Add Account
+
+	<div style="text-align: center;">
+		<button style="float:center" id="btnPage" class="btn btn-info btn-sm" data-toggle="modal" data-target="#dataSourcesModal">
+			<span class="glyphicon glyphicon-plus-sign"></span> 
+			Add Account
 		</button>
+	</div>
+	
+	<div style="text-align: center;">
+	<br>
+	</div>
+	<div style="text-align: center;">
+	<br>
+	</div>
+
 	<div class="btn-group">
 
  	</div>
@@ -45,8 +58,7 @@
 					<div class="modal-body">
 						<div class="category-block">
 							<div class="form-group">
-								<label for="page">Title</label> <textarea rows="4" cols="70" placeholder="Enter URL of account
-								https://www.twitter.com/ramke5/" class="form-control" id="page" required="required"></textarea>
+								<label for="page">Title</label> <textarea rows="4" cols="70" placeholder="Example: https://www.twitter.com/ramke5/" class="form-control" id="page" required="required"></textarea>
 							</div>
 						</div>
 					</div>

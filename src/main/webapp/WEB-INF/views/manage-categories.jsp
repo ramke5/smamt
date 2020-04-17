@@ -14,11 +14,20 @@
 <body>
 
 <div class="tocenter">
-    <button id="category" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categories">
-        <span class="glyphicon glyphicon-plus-sign"></span> 
-		Add Category
-		
-    </button>
+	<div style="text-align: center;">
+	    <button style="float:center" id="category" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categories">
+	        <span class="glyphicon glyphicon-plus-sign"></span> 
+			Add Category
+	    </button>
+    </div>
+    
+   	<div style="text-align: center;">
+		<br>
+	</div>
+	<div style="text-align: center;">
+		<br>
+	</div>
+    
 <!--     <table class="table table-striped table-bordered" id="categoryTable"> -->
     <table class="table table-bordered table-hover" id="categoryTable">
         <thead>
@@ -42,8 +51,8 @@
             <div class="modal-body">
                 <div class="category-block">
                     <div class="form-group">
-                        <label for="category">Title</label>
-                        <textarea rows="4" cols="70" placeholder="To add more than one category separate each one by comma. Ex: First, Second..."
+                        <label for="category"></label>
+                        <textarea rows="4" cols="70" placeholder="To add more than one category separate each one by comma. Ex: Sport, Education..."
 									class="form-control" id="categoryName" name="categoryName"
 									required="required"></textarea>
                     </div>
