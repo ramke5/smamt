@@ -42,19 +42,19 @@
 					<div class="col-xs-2">
 						<table>
 							<tr>
-								<div class="form-inline" style="float: left;">
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
 									<select id="category" class="form-control">
 									</select>				
 								</div>
 							</tr>
 							<tr>
-								<div class="form-inline" style="float: left;">
-									<input type="text" id="daterange" name="daterange" value="01/16/2020 - 04/16/2020" />
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
+									<input type="text" id="daterange" name="daterange" />
 								</div>
 							</tr>
 							<tr>
-								<div class="form-inline" style="float: left;">			
-									<button class="btn btn-default" onclick="validate()">Submit</button>
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
+									<button class="btn btn-default inline-block" style="float: center" onclick="validate()">Submit</button>
 								</div>
 							</tr>
 						</table>
@@ -102,6 +102,45 @@
 			});
 
 		});
+
+		function setInputDate(_id){
+		    var _dat = document.querySelector(_id);
+
+		    var dt = new Date();
+		    var weekBefore = dt.setDate(dt.getDate() - 60);
+		    var dateFrom = new Date(weekBefore);
+		    
+		    var hoy = dateFrom,
+		        d = hoy.getDate(),
+		        m = hoy.getMonth()+1, 
+		        y = hoy.getFullYear(),
+		        data;
+
+		    if(d < 10){
+		        d = "0"+d;
+		    };
+		    if(m < 10){
+		        m = "0"+m;
+		    };
+
+		    var hoy2 = new Date(),
+	        d2 = hoy2.getDate(),
+	        m2 = hoy2.getMonth()+1, 
+	        y2 = hoy2.getFullYear(),
+	        data2;
+
+		    if(d2 < 10){
+		        d2 = "0"+d2;
+		    };
+		    if(m2 < 10){
+		        m2 = "0"+m2;
+		    };
+
+		    data = m + "/" + d + "/" + y + " - " + m2 + "/" + d2 + "/" + y2;
+		    console.log(data);
+		    _dat.value = data;
+		};
+				
 
 		$(function() {
 			  $('input[name="daterange"]').daterangepicker({
@@ -306,6 +345,7 @@
 				type : "GET",
 				url : "${home}get-categories?userId=${userId}",
 				success : function(data) {
+					setInputDate("#daterange");
 					console.log(JSON.stringify(data));
 					populateDropdown(data);
 				},
@@ -370,10 +410,10 @@
 										zoomType : 'x'
 									},
 									title : {
-										text : 'Statistics by date'												
+										text : ''												
 									},
 									subtitle : {
-										text : 'Click and drag in the plot area to zoom in'
+										text : ''
 									},
 									xAxis : {
 										type : 'category'

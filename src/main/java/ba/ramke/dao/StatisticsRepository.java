@@ -1,5 +1,6 @@
 package ba.ramke.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,12 +63,19 @@ public class StatisticsRepository {
 	
 //	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
 	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId, Date dateFrom, Date dateUntil){
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.set(2019, 4, 1, 00, 00, 00);
-//		Calendar calendar2 = Calendar.getInstance();
-//		calendar2.set(2019, 8, 1, 00, 00, 00);
-//		Date dateFrom = calendar.getTime();
-//		Date dateUntil = calendar2.getTime();
+		
+	        // add one day to dateUntil
+	        Calendar c = Calendar.getInstance();
+	        c.setTime(dateUntil);
+	        c.add(Calendar.DATE, 1); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+	        dateUntil = c.getTime();
+	        
+	        // add two hours to dateFrom
+	        Calendar c2 = Calendar.getInstance();
+	        c2.setTime(dateFrom);
+	        c2.add(Calendar.HOUR, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+	        dateFrom = c2.getTime();
+		
 		Aggregation agg = Aggregation.newAggregation
 						(Aggregation.match(Criteria.where("user_id").is(userId)),
 						Aggregation.unwind("categoryId"),
