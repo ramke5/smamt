@@ -39,12 +39,29 @@
 			<div class="panel-heading" style="font-weight: bold;">Tweets per category by date</div>
 			<div class="panel-body">
 				<div class="col-xs-12">
-					<div class="form-inline" style="float: left;">
-						<select id="category" class="form-control">
-						</select>
-						<button class="btn btn-default" onclick="validate()">Submit</button>
+					<div class="col-xs-2">
+						<table>
+							<tr>
+								<div class="form-inline" style="float: left;">
+									<select id="category" class="form-control">
+									</select>				
+								</div>
+							</tr>
+							<tr>
+								<div class="form-inline" style="float: left;">
+									<input type="text" id="daterange" name="daterange" value="01/16/2020 - 04/16/2020" />
+								</div>
+							</tr>
+							<tr>
+								<div class="form-inline" style="float: left;">			
+									<button class="btn btn-default" onclick="validate()">Submit</button>
+								</div>
+							</tr>
+						</table>
 					</div>
-					<div id="byCategoryChart"></div>
+					<div class="col-xs-10">
+						<div id="byCategoryChart"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -85,6 +102,14 @@
 			});
 
 		});
+
+		$(function() {
+			  $('input[name="daterange"]').daterangepicker({
+			    opens: 'left'
+			  }, function(start, end, label) {
+			    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			  });
+			});
 
 		function getDailyChart() {
 			$.ajax({
@@ -306,7 +331,12 @@
 
 		function validate() {
 			var category = document.getElementById("category");
-
+			var selectedDate = document.getElementById("daterange");
+			var selectedDateSplited = selectedDate.value.split("-");
+			var startDate = selectedDateSplited[0];
+			var endDate = selectedDateSplited[1];
+			
+			
 			if (category.value == "") {
 				category.style.borderColor = 'red';
 			} else {
@@ -314,7 +344,7 @@
 				$.ajax({
 					type : "GET",
 					url : "${home}date-stats?userId=${userId}&categoryId="
-							+ category.value,
+							+ category.value + "&startDate=" + startDate + "&endDate=" + endDate ,
 					success : function(data) {
 						console.log(JSON.stringify(data));
 						drawByCategoryChart(data);

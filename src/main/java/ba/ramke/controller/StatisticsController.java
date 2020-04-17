@@ -1,6 +1,7 @@
 package ba.ramke.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -65,9 +66,14 @@ public class StatisticsController {
 	}
 
 	@RequestMapping(value = "/smamt/date-stats", method = RequestMethod.GET)
-	public @ResponseBody List<Categorized> statisiticsPerCategoryByDate(ModelMap model, @ModelAttribute("userId") String userId, @ModelAttribute("categoryId") String categoryId) {
-		return statisticsDao.statisiticsPerCategoryByDate(userId, categoryId);
+	public @ResponseBody List<Categorized> statisiticsPerCategoryByDate(ModelMap model, @ModelAttribute("userId") String userId, @ModelAttribute("categoryId") String categoryId, @ModelAttribute("startDate") Date startDate, @ModelAttribute("endDate") Date endDate) {
+		return statisticsDao.statisiticsPerCategoryByDate(userId, categoryId, startDate, endDate);
 	}
+	
+//	@RequestMapping(value = "/smamt/date-stats", method = RequestMethod.GET)
+//	public @ResponseBody List<Categorized> statisiticsPerCategoryByDate(ModelMap model, @ModelAttribute("userId") String userId, @ModelAttribute("categoryId") String categoryId) {
+//		return statisticsDao.statisiticsPerCategoryByDate(userId, categoryId);
+//	}
 
 	@RequestMapping(value = "/smamt/week-day", method = RequestMethod.GET)
 	public @ResponseBody List<Long> statisiticsPerWeekDay() {

@@ -25,6 +25,10 @@
 <link href="<c:url value="/resources/css/bootstrap.min.css" />"	rel="stylesheet" />
 <link href="<c:url value="/resources/css/bla2.css" />" rel="stylesheet" />
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 <script
 	src="<c:url value="/resources/js/bootstrap-datetimepicker.js" />"></script>
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /> -->

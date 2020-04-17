@@ -39,16 +39,14 @@ public class Crawler implements Runnable{
 		DataSource ds = twitterDataSource.getValidTwitterPagesByUserId(user);
 		Map<String, Map<String, String>> categories = twitterDataSource.getCrawlCategoriesByUserId(user);
 		
-		//
-		ArrayList<ArrayList<String>> listDatuma = new ArrayList<ArrayList<String>>();
-		ArrayList<String> singleList = new ArrayList<String>();
-		
+//		ArrayList<ArrayList<String>> listDatuma = new ArrayList<ArrayList<String>>();
+//		ArrayList<String> singleList = new ArrayList<String>();
+//		
 //		singleList = new ArrayList<String>();		
 //		singleList.add("25-31-2018");
 //		singleList.add("15-01-2019");
 //		listDatuma.add(singleList);
-//		
-//		
+//			
 //		singleList = new ArrayList<String>();		
 //		singleList.add("15-01-2019");
 //		singleList.add("30-01-2019");
@@ -128,97 +126,96 @@ public class Crawler implements Runnable{
 //		singleList.add("30-08-2019");			
 //		singleList.add("15-09-2019");			
 //		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-09-2019");			
-		singleList.add("30-09-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-09-2019");			
-		singleList.add("15-10-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-10-2019");			
-		singleList.add("30-10-2019");			
-		listDatuma.add(singleList);
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-10-2019");			
-		singleList.add("15-11-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-11-2019");			
-		singleList.add("30-11-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-11-2019");			
-		singleList.add("15-12-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-12-2019");			
-		singleList.add("30-12-2019");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-12-2019");			
-		singleList.add("15-01-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-01-2020");			
-		singleList.add("30-01-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-01-2020");			
-		singleList.add("15-02-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-02-2020");			
-		singleList.add("28-02-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("28-02-2020");			
-		singleList.add("15-03-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("15-03-2020");			
-		singleList.add("30-03-2020");			
-		listDatuma.add(singleList);	
-		
-		singleList = new ArrayList<String>();
-		singleList.add("30-03-2020");			
-		singleList.add("15-04-2020");			
-		listDatuma.add(singleList);			
-		
-		
-		for (int i=0; i<listDatuma.size(); i++) {
-			String dateOdGT= listDatuma.get(i).get(0);
-			String datedoLT = listDatuma.get(i).get(1);
-			List<Tweet> allPosts = twitterDataSource.getAllTwitterPosts(dateOdGT, datedoLT);
-			System.out.println("Total nuber of tweets: " + allPosts.size() + " for period " + dateOdGT + " to " + datedoLT);
-			System.out.println(categories.size());
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-09-2019");			
+//		singleList.add("30-09-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-09-2019");			
+//		singleList.add("15-10-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-10-2019");			
+//		singleList.add("30-10-2019");			
+//		listDatuma.add(singleList);
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-10-2019");			
+//		singleList.add("15-11-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-11-2019");			
+//		singleList.add("30-11-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-11-2019");			
+//		singleList.add("15-12-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-12-2019");			
+//		singleList.add("30-12-2019");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-12-2019");			
+//		singleList.add("15-01-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-01-2020");			
+//		singleList.add("30-01-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-01-2020");			
+//		singleList.add("15-02-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-02-2020");			
+//		singleList.add("28-02-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("28-02-2020");			
+//		singleList.add("15-03-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("15-03-2020");			
+//		singleList.add("30-03-2020");			
+//		listDatuma.add(singleList);	
+//		
+//		singleList = new ArrayList<String>();
+//		singleList.add("30-03-2020");			
+//		singleList.add("15-04-2020");			
+//		listDatuma.add(singleList);			
+//		
+//		for (int i=0; i<listDatuma.size(); i++) {
+//			String dateOdGT= listDatuma.get(i).get(0);
+//			String datedoLT = listDatuma.get(i).get(1);
+//			List<Tweet> allPosts = twitterDataSource.getAllTwitterPosts(dateOdGT, datedoLT);
+//			System.out.println("Total nuber of tweets: " + allPosts.size() + " for period " + dateOdGT + " to " + datedoLT);
+//			System.out.println(categories.size());
 			
 			try {
 				ce.categorize(ds, categories);
-				ce.recategorize(ds, categories, allPosts);
-	////			ce.parse(user);
-	////			ce.lastTweetId(user);
-	////			ce.spasiJedanTweet(user);
-	////			ce.updateLastSavedTweet(user);
-	//			
+//				ce.recategorize(ds, categories, allPosts);
+//				ce.parse(user);
+//				ce.lastTweetId(user);
+//				ce.spasiJedanTweet(user);
+//				ce.updateLastSavedTweet(user);
+				
 			} catch (TwitterException | IOException e) {
 	//			 TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+//		}
 	}
 }

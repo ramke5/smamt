@@ -21,7 +21,7 @@
 			<div class="" style="display:inline;">
 					<div class="panel panel-default panel-body col-xs-6" style="width: 49%; float: left; border-color:  #78c2ed;">
 						<div class="panel panel-default">
-							<div class="panel-heading" style="font-weight: bold; font-size: 16px; text-align: center">Tweets by category</div>
+							<div class="panel-heading" style="font-weight: bold; font-size: 14px; text-align: center">Tweets by category</div>
 						</div>
 						<div id="overalContainer"></div>
 					</div>

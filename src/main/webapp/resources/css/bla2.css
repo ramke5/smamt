@@ -2,7 +2,7 @@
  body{
 	margin: 0;
 	padding: 0;
-	font: 300 14px/18px Roboto;
+	font: 300 16px/20px Roboto;
 	background-image: url('../images/texture.png');
  }
   
@@ -29,7 +29,8 @@ ul{
 	padding: 0;
 }
 a, a:hover, a.active, a:active, a:visited, a:focus{
-	color:#fefefe;
+/* 	color:#fefefe; */
+	color:#333;
 	text-decoration:none;
 }
 /* .content{ */

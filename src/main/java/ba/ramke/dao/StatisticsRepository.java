@@ -1,6 +1,8 @@
 package ba.ramke.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,11 +60,19 @@ public class StatisticsRepository {
 		return categorized;
 	}
 	
-	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
+//	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
+	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId, Date dateFrom, Date dateUntil){
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.set(2019, 4, 1, 00, 00, 00);
+//		Calendar calendar2 = Calendar.getInstance();
+//		calendar2.set(2019, 8, 1, 00, 00, 00);
+//		Date dateFrom = calendar.getTime();
+//		Date dateUntil = calendar2.getTime();
 		Aggregation agg = Aggregation.newAggregation
 						(Aggregation.match(Criteria.where("user_id").is(userId)),
 						Aggregation.unwind("categoryId"),
 						Aggregation.match(Criteria.where("categoryId").is(categoryId)),
+						Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil)),
 						//Aggregation.limit(50000),
 						Aggregation.project("dateOfCreation").andExpression("year(dateOfCreation)").as("year")
 															.andExpression("month(dateOfCreation)").as("month")
@@ -201,6 +211,8 @@ public class StatisticsRepository {
 	
 	public List<Categorized> statisticsLocationByUserId(String userId) {
 		Aggregation agg = Aggregation.newAggregation(
+//				Aggregation.match(Criteria.where("userLocation").ne("x")),	
+				Aggregation.match(new Criteria().andOperator(Criteria.where("userLocation").ne("x"), Criteria.where("userLocation").ne("Uhljebistan"), Criteria.where("userLocation").ne("Folsom Prison"), Criteria.where("userLocation").ne(""))),				
 				Aggregation.group("userLocation").count().as("y"),
 				Aggregation.project("y").and("name").previousOperation(),
 				Aggregation.sort(Direction.DESC, "y"),
