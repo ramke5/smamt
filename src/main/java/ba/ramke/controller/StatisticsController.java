@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ba.ramke.dao.StatisticsRepository;
 import ba.ramke.helper.HeatMapResponse;
 import ba.ramke.model.Categorized;
+import ba.ramke.model.CategorizedWords;
 import ba.ramke.model.DayAggregation;
 
 @Controller
@@ -70,11 +71,11 @@ public class StatisticsController {
 		return statisticsDao.statisiticsPerCategoryByDate(userId, categoryId, startDate, endDate);
 	}
 	
-//	@RequestMapping(value = "/smamt/date-stats", method = RequestMethod.GET)
-//	public @ResponseBody List<Categorized> statisiticsPerCategoryByDate(ModelMap model, @ModelAttribute("userId") String userId, @ModelAttribute("categoryId") String categoryId) {
-//		return statisticsDao.statisiticsPerCategoryByDate(userId, categoryId);
-//	}
-
+	@RequestMapping(value = "/smamt/stats-keywords-per-date", method = RequestMethod.GET)
+	public @ResponseBody List<CategorizedWords> statisticsPerDateByUserId(ModelMap model, @ModelAttribute("userId") String userId,  @ModelAttribute("accountId") String accountId, @ModelAttribute("startDate") Date startDate, @ModelAttribute("endDate") Date endDate) {
+		return statisticsDao.statisticsKeywordsPerDateByUserId(userId, accountId, startDate, endDate);
+	}
+	
 	@RequestMapping(value = "/smamt/week-day", method = RequestMethod.GET)
 	public @ResponseBody List<Long> statisiticsPerWeekDay() {
 		List<DayAggregation> aggregated = statisticsDao.statisticsPerWeekDay();

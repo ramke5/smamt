@@ -108,6 +108,30 @@ public class DataSourceRepository {
 		}
 		return datasource;
 	}
+	
+	public List<DataSourcePage> getAllTwitterPagesWithValidStatus(String userId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(userId));
+		List<DataSource> datasource = mongoTemplate.find(query, DataSource.class, COLLECTION_NAME);
+		Iterator<DataSource> dataSourceIterator = datasource.iterator();
+		while (dataSourceIterator.hasNext()) {
+			DataSource ds = dataSourceIterator.next();
+			System.out.println("in: getAllTwitterPagesWithValidStatusByUserId " + ds.toString());
+			if (ds.getTwitterPages() == null)
+				break;
+			else {
+				Iterator<DataSourcePage> dspIterator = ds.getTwitterPages().iterator();
+				while (dspIterator.hasNext()) {
+					DataSourcePage dsp = dspIterator.next();
+					if (dsp.getStatus() == 0) {
+						dspIterator.remove();
+					}
+				}
+			}
+		}
+		List<DataSourcePage> listPages = datasource.get(0).getTwitterPages();
+		return listPages;
+	}
 
 	public List<DataSource> getAllDeletedTwitterPagesByUserId(String userId) {
 		Query query = new Query();

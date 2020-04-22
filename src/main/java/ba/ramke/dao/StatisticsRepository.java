@@ -1,6 +1,5 @@
 package ba.ramke.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +12,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import org.springframework.data.mongodb.core.aggregation.UnwindOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Repository;
 import ba.ramke.helper.HeatMapResponse;
 import ba.ramke.helper.StringIntMap;
 import ba.ramke.model.Categorized;
+import ba.ramke.model.CategorizedWords;
 import ba.ramke.model.Category;
 import ba.ramke.model.DateAggregation;
 import ba.ramke.model.DayAggregation;
@@ -61,7 +66,6 @@ public class StatisticsRepository {
 		return categorized;
 	}
 	
-//	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId){
 	public List<Categorized> statisiticsPerCategoryByDate(String userId, String categoryId, Date dateFrom, Date dateUntil){
 		
 	        // add one day to dateUntil
@@ -75,28 +79,64 @@ public class StatisticsRepository {
 	        c2.setTime(dateFrom);
 	        c2.add(Calendar.HOUR, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
 	        dateFrom = c2.getTime();
-		
-		Aggregation agg = Aggregation.newAggregation
-						(Aggregation.match(Criteria.where("user_id").is(userId)),
-						Aggregation.unwind("categoryId"),
-						Aggregation.match(Criteria.where("categoryId").is(categoryId)),
-						Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil)),
-						//Aggregation.limit(50000),
-						Aggregation.project("dateOfCreation").andExpression("year(dateOfCreation)").as("year")
-															.andExpression("month(dateOfCreation)").as("month")
-															.andExpression("dayOfMonth(dateOfCreation)").as("day"),
-						Aggregation.group(Fields.fields().and("day").and("month").and("year")).count().as("count"),
-						Aggregation.sort(Direction.DESC,"year").and(Direction.DESC,"month").and(Direction.DESC,"day")
-						);
-		AggregationResults<DateAggregation> result = mongoTemplate.aggregate(agg, "categorizedtweets", DateAggregation.class);
-		List<DateAggregation> aggregationResponse = result.getMappedResults();
-		List<Categorized> dateAggregation = new ArrayList<Categorized>();
-		for(DateAggregation date : aggregationResponse){
-			dateAggregation.add(new Categorized(date.day + "-" + date.month + "-" + date.year, date.count));
-		}
-		return dateAggregation;
+	        
+	    if("Sve".equals(categoryId)) {
+	    	Aggregation agg = Aggregation.newAggregation
+					(Aggregation.match(Criteria.where("user_id").is(userId)),
+					Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil)),
+					//Aggregation.limit(50000),
+					Aggregation.project("dateOfCreation").andExpression("year(dateOfCreation)").as("year")
+														.andExpression("month(dateOfCreation)").as("month")
+														.andExpression("dayOfMonth(dateOfCreation)").as("day"),
+					Aggregation.group(Fields.fields().and("day").and("month").and("year")).count().as("count"),
+					Aggregation.sort(Direction.ASC,"year").and(Direction.ASC,"month").and(Direction.ASC,"day")
+					);
+	    	AggregationResults<DateAggregation> result = mongoTemplate.aggregate(agg, "categorizedtweets", DateAggregation.class);
+	    	List<DateAggregation> aggregationResponse = result.getMappedResults();
+			List<Categorized> dateAggregation = new ArrayList<Categorized>();
+			for(DateAggregation date : aggregationResponse){
+				dateAggregation.add(new Categorized(date.day + "-" + date.month + "-" + date.year, date.count));
+			}
+			return dateAggregation;
+	    }
+	    else {    	
+			Aggregation agg = Aggregation.newAggregation
+							(Aggregation.match(Criteria.where("user_id").is(userId)),
+							Aggregation.unwind("categoryId"),
+							Aggregation.match(Criteria.where("categoryId").is(categoryId)),
+							Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil)),
+							//Aggregation.limit(50000),
+							Aggregation.project("dateOfCreation").andExpression("year(dateOfCreation)").as("year")
+																.andExpression("month(dateOfCreation)").as("month")
+																.andExpression("dayOfMonth(dateOfCreation)").as("day"),
+							Aggregation.group(Fields.fields().and("day").and("month").and("year")).count().as("count"),
+							Aggregation.sort(Direction.ASC,"year").and(Direction.ASC,"month").and(Direction.ASC,"day")
+							);
+			AggregationResults<DateAggregation> result = mongoTemplate.aggregate(agg, "categorizedtweets", DateAggregation.class);
+			List<DateAggregation> aggregationResponse = result.getMappedResults();
+			List<Categorized> dateAggregation = new ArrayList<Categorized>();
+			for(DateAggregation date : aggregationResponse){
+				dateAggregation.add(new Categorized(date.day + "-" + date.month + "-" + date.year, date.count));
+			}
+			return dateAggregation;
+	    }
 	}
 	
+	public List<CategorizedWords> statisticsKeywordsPerDateByUserId(String userId, String accountId, Date dateFrom, Date dateUntil){		
+		MatchOperation dateMatchStage = Aggregation.match(Criteria.where("dateOfCreation").gt(dateFrom).lt(dateUntil));
+		MatchOperation matchStage = Aggregation.match(new Criteria("source").is(accountId));
+		UnwindOperation unwindStage = Aggregation.unwind("tweetKeywords");
+		GroupOperation groupOperation = Aggregation.group("tweetKeywords").count().as("y");
+		SortOperation sortStage = Aggregation.sort(Direction.DESC, "y");
+		LimitOperation limitStage = Aggregation.limit(40);
+		Aggregation aggregation 
+		  = Aggregation.newAggregation(dateMatchStage, matchStage, unwindStage, groupOperation, sortStage, limitStage);
+		AggregationResults<CategorizedWords> output 
+		  = mongoTemplate.aggregate(aggregation, "categorizedtweets", CategorizedWords.class);
+		List<CategorizedWords> toRet = output.getMappedResults();
+		return toRet;
+	}
+		
 	public List<DayAggregation> statisticsPerWeekDay(){
 		Aggregation aggregate = Aggregation.newAggregation(
 				Aggregation.project("dateOfCreation").and("dateOfCreation").extractDayOfWeek().as("day"),
@@ -219,7 +259,6 @@ public class StatisticsRepository {
 	
 	public List<Categorized> statisticsLocationByUserId(String userId) {
 		Aggregation agg = Aggregation.newAggregation(
-//				Aggregation.match(Criteria.where("userLocation").ne("x")),	
 				Aggregation.match(new Criteria().andOperator(Criteria.where("userLocation").ne("x"), Criteria.where("userLocation").ne("Uhljebistan"), Criteria.where("userLocation").ne("Folsom Prison"), Criteria.where("userLocation").ne(""))),				
 				Aggregation.group("userLocation").count().as("y"),
 				Aggregation.project("y").and("name").previousOperation(),
@@ -228,9 +267,6 @@ public class StatisticsRepository {
 
 		AggregationResults<Categorized> result = mongoTemplate.aggregate(agg, "categorizedtweets", Categorized.class);
 		List<Categorized> toRet = result.getMappedResults();
-//		for(int i=0; i<toRet.size(); i++) {
-//			System.out.println(toRet.get(i).getName());
-//		}
 
 		return toRet;
 	}	

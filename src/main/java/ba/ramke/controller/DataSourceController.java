@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ba.ramke.dao.DataSourceRepository;
 import ba.ramke.model.DataSource;
+import ba.ramke.model.DataSourcePage;
 
 @Controller
 public class DataSourceController {
@@ -99,6 +100,19 @@ public class DataSourceController {
 	@ResponseBody
 	public List<DataSource> getActiveTwitterPages(ModelMap modelMap, @ModelAttribute("userId") String userId) {
 		return dataSourceDao.getAllTwitterPagesWithValidStatusByUserId(userId);
+	}
+	
+	@RequestMapping(value = "/smamt/twitterpages2", method = RequestMethod.GET)
+	@ResponseBody
+	public List<DataSourcePage> getActiveTwitterPages2(HttpServletRequest request, ModelMap modelMap) {
+		Cookie[] cookie = request.getCookies();
+		String userId = "";
+		for (Cookie c : cookie) {
+			if (c.getName().equals("session")) {
+				userId = c.getValue();
+			}
+		}
+		return dataSourceDao.getAllTwitterPagesWithValidStatus(userId);
 	}
 
 	@RequestMapping(value = "/smamt/deletedtwitterpages", method = RequestMethod.GET)

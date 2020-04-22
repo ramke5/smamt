@@ -66,19 +66,43 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="modal fade" id="loadingModal" role="dialog" style="display: none; width: auto;">
-		<div class="modal-dialog modal-sm">
-			<!-- Modal content -->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h5 class="modal-title" style="font-weight: bold">Loading, please wait</h5>
-				</div>
-				<div class="modal-body">
-					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
+	
+	<div class="row" style="margin-right: 15px; margin-left: 15px;">
+		<div class="panel panel-default" style="border-color:  #78c2ed;">
+			<div class="panel-heading" style="font-weight: bold;">Most used words per account by date</div>
+			<div class="panel-body">
+				<div class="col-xs-12">
+					<div class="col-xs-2">
+						<table>
+							<tr>
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
+									<select id="account" class="form-control">
+									</select>				
+								</div>
+							</tr>
+							<tr>
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
+									<input type="text" id="daterangeWords" name="daterangeWords" />
+								</div>
+							</tr>
+							<tr>
+								<div class="inline-block" style="width:90%; float: left; margin: 1%;">
+									<button class="btn btn-default inline-block" style="float: center" onclick="validateAccount()">Submit</button>
+								</div>
+							</tr>
+						</table>
+					</div>
+					<div class="col-xs-10">
+						<div id="byWordsChart"></div>
+					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="loadingModal" role="dialog" style="background-color: transparent; display: none; width: auto; position: absolute; left: 50%; top: 50%;  transform: translate(-50%, -50%);">
+		<div class="modal-body" style="background-color: transparent">
+			<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
 		</div>
 	</div>	
 
@@ -144,6 +168,14 @@
 
 		$(function() {
 			  $('input[name="daterange"]').daterangepicker({
+			    opens: 'left'
+			  }, function(start, end, label) {
+			    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			  });
+			});
+
+		$(function() {
+			  $('input[name="daterangeWords"]').daterangepicker({
 			    opens: 'left'
 			  }, function(start, end, label) {
 			    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
@@ -358,6 +390,26 @@
 			});
 		});
 
+		$(function() {
+			$.ajax({
+				type : "GET",
+				url : "${home}twitterpages2?userId=${userId}",
+				success : function(data) {
+					setInputDate("#daterangeWords");
+					console.log(JSON.stringify(data));
+					populateDropdownAccount(data);
+				},
+				error : function(e) {
+					alert("ERROR");
+				},
+				done : function(e) {
+					alert("DONE");
+				}
+			});
+		});
+		
+
+
 		function populateDropdown(data) {
 			var select = document.getElementById("category");
 
@@ -366,7 +418,19 @@
 				select.innerHTML += "<option id=" + data[i].id +" value=" + data[i].id + ">"
 						+ data[i].name + "</option>";
 			}
+			select.innerHTML += "<option id=" + "Sve" +" value=" + " Sve kategorije"+ ">" + "Sve kategorije" + "</option>";
 			validate();
+		}
+
+		function populateDropdownAccount(data) {
+			var select = document.getElementById("account");
+
+			for (var i = 0; i < data.length; i++) {
+				var opt = data[i];
+				select.innerHTML += "<option id=" + data[i].name +" value=" + data[i].name + ">"
+						+ data[i].name + "</option>";
+			}
+			validateAccount();
 		}
 
 		function validate() {
@@ -399,6 +463,36 @@
 			}
 		}
 
+		function validateAccount() {
+			var account = document.getElementById("account");
+			var selectedDate = document.getElementById("daterangeWords");
+			var selectedDateSplited = selectedDate.value.split("-");
+			var startDate = selectedDateSplited[0];
+			var endDate = selectedDateSplited[1];
+			
+			
+			if (account.value == "") {
+				account.style.borderColor = 'red';
+			} else {
+				account.style.borderColor = 'default';
+				$.ajax({
+					type : "GET",
+					url : "${home}stats-keywords-per-date?userId=${userId}&accountId="
+							+ account.value + "&startDate=" + startDate + "&endDate=" + endDate ,
+					success : function(data) {
+						console.log(JSON.stringify(data));
+						drawByWordsChart(data);
+					},
+					error : function(e) {
+						alert("ERROR");
+					},
+					done : function(e) {
+						alert("DONE");
+					}
+				});
+			}
+		}
+
 		function drawByCategoryChart(data) {
 			$(function() {
 				// Create the chart
@@ -420,7 +514,7 @@
 									},
 									yAxis : {
 										title : {
-											text : 'Tweets per day'
+											text : 'Number of occurrences'
 										}
 
 									},
@@ -443,6 +537,70 @@
 
 									series : [ {
 										name : 'Category',
+										colorByPoint : true,
+										data : data
+									} ],
+								});
+			});
+		}
+
+		function drawByWordsChart(data) {
+
+			var categ2 =  [];
+			data.forEach((element) => {
+				var bla = element._id;
+				
+// 				var res = bla.replace("name", "");
+// 				res = res.replace("month", "");
+
+			
+				categ2.push(bla);
+			
+			});
+			
+			$(function() {
+				// Create the chart
+				$('#byWordsChart')
+						.highcharts(
+								{
+									chart : {
+										type : 'column',
+										zoomType : 'x'
+									},
+									title : {
+										text : ''												
+									},
+									subtitle : {
+										text : ''
+									},
+									xAxis : {
+								    	categories : categ2,
+									},
+									yAxis : {
+										title : {
+											text : 'Tweets per day'
+										}
+
+									},
+									legend : {
+										enabled : false
+									},
+									plotOptions : {
+										series : {
+											borderWidth : 0,
+											dataLabels : {
+												enabled : true,
+												format : '<b>{point.y}</b>'
+											}
+										}
+									},
+
+									tooltip : {
+										pointFormat : '{point._id}: <b>{point.y} tweets</b>'
+									},
+
+									series : [ {
+										name : 'Words',
 										colorByPoint : true,
 										data : data
 									} ],
