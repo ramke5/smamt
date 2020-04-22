@@ -11,7 +11,6 @@
 	<div class="row" style="margin-right: 15px; margin-left: 15px;">
 		<div class="panel panel-default" style="border-color:  #78c2ed;">
 			<div class="panel-heading" style="font-weight: bold; font-size: 16px; text-align: center">Pie charts</div>
-			</div>
 		</div>
 	</div>
 	<div id="becko"></div>
@@ -57,20 +56,11 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="loadingModal" role="dialog" style="display: none; width: auto;">
-		<div class="modal-dialog modal-sm">
-			<!-- Modal content -->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h5 class="modal-title" style="font-weight: bold">Loading, please wait</h5>
-				</div>
-				<div class="modal-body">
-					<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
-				</div>
-			</div>
+	<div class="modal fade" id="loadingModal" role="dialog" style="background-color: transparent; display: none; width: auto; position: absolute; left: 50%; top: 50%;  transform: translate(-50%, -50%);">
+		<div class="modal-body" style="background-color: transparent">
+			<img style="display: block; margin: 0 auto;" alt="Loading" src="/resources/img/loadingblue.gif">
 		</div>
-	</div>	
+	</div>
 
 	<script type="text/javascript">
 		$(function() {
