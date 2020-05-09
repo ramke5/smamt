@@ -128,7 +128,7 @@ public class StatisticsRepository {
 		UnwindOperation unwindStage = Aggregation.unwind("tweetKeywords");
 		GroupOperation groupOperation = Aggregation.group("tweetKeywords").count().as("y");
 		SortOperation sortStage = Aggregation.sort(Direction.DESC, "y");
-		LimitOperation limitStage = Aggregation.limit(40);
+		LimitOperation limitStage = Aggregation.limit(65);
 		Aggregation aggregation 
 		  = Aggregation.newAggregation(dateMatchStage, matchStage, unwindStage, groupOperation, sortStage, limitStage);
 		AggregationResults<CategorizedWords> output 
